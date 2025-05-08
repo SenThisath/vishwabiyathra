@@ -189,7 +189,8 @@ export default function SponsorsLeaderboard() {
     };
 
     return (
-        <motion.div
+        <motion.section
+            id="leader board"
             ref={containerRef}
             className="min-h-screen text-white font-sans relative overflow-hidden"
             initial="initial"
@@ -339,6 +340,6 @@ export default function SponsorsLeaderboard() {
                     </div>
                 </FadeInWhenVisible>
             </div>
-        </motion.div>
+        </motion.section>
     );
 }

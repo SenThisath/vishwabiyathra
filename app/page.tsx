@@ -6,6 +6,7 @@ import MouseFollower from "@/components/MouseFollower";
 import { motion } from "framer-motion";
 import Competitions from "@/components/sections/Competitions";
 import LeaderBoard from "@/components/sections/LeaderBoard";
+import Footer from "@/components/sections/Footer";
 
 export default function Home() {
     const particles = Array.from({ length: 30 }, () => ({
@@ -45,11 +46,10 @@ export default function Home() {
             </div>
             <MouseFollower />
             <Hero />
-            <div className="relative z-10">
-                <About />
-                <Competitions />
-                <LeaderBoard />
-            </div>
+            <About />
+            <Competitions />
+            <LeaderBoard />
+            <Footer />
         </div>
     );
 }
