@@ -76,8 +76,8 @@ const Competitions = () => {
                             className="mySwiper mt-6 md:mt-8"
                         >
                             {[1, 2, 3, 4, 5].map((_, index) => (
-                                <SwiperSlide key={index}>
-                                    <div className="bg-gradient-to-b from-purple-900/50 to-black rounded-2xl overflow-hidden shadow-xl transform transition-all duration-300 hover:scale-105">
+                                <SwiperSlide key={index} className="mb-10">
+                                    <div className="bg-gradient-to-b from-purple-900/50 to-black rounded-2xl overflow-hidden shadow-xl transform transition-all duration-300">
                                         <div className="relative">
                                             <img
                                                 src="https://swiperjs.com/demos/images/nature-1.jpg"
@@ -106,44 +106,53 @@ const Competitions = () => {
                 </div>
             </div>
 
-            <style jsx global>{`
-                .mySwiper {
-                    padding: 0 5% !important;
-                    width: 100%;
-                }
-                .swiper-wrapper {
-                    align-items: center;
-                }
-                .swiper-pagination-bullet {
-                    background: white;
-                    opacity: 0.5;
-                }
-                .swiper-pagination-bullet-active {
-                    opacity: 1;
-                    background: #8b5cf6;
-                }
-                .swiper-button-next,
-                .swiper-button-prev {
-                    color: white;
-                    background: rgba(0, 0, 0, 0.3);
-                    width: 40px;
-                    height: 40px;
-                    border-radius: 50%;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                }
-                .swiper-button-next:after,
-                .swiper-button-prev:after {
-                    font-size: 18px;
-                }
-                @media (max-width: 640px) {
-                    .swiper-button-next,
-                    .swiper-button-prev {
-                        display: none;
-                    }
-                }
-            `}</style>
+            <style>{`
+                            .mySwiper {
+                                padding: 0 5% !important;
+                                width: 100%;
+                            }
+                            .swiper-wrapper {
+                                align-items: center;
+                            }
+                            .swiper-pagination-bullet {
+                                background: white;
+                                opacity: 0.5;
+                            }
+                            .swiper-pagination-bullet-active {
+                                opacity: 1;
+                                background: #8b5cf6;
+                            }
+                            .swiper-button-next{
+                               background-image: url("/arrow-right.svg");
+                                background-repeat: no-repeat;
+                                background-position: center;
+                                width: 60px;
+                                height: 60px;
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+                            }
+                            .swiper-button-prev {
+                               background-image: url("/arrow-left.svg");
+                                background-repeat: no-repeat;
+                                background-position: center;
+                                width: 60px;
+                                height: 60px;
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+                            }
+                            .swiper-button-next:after,
+                            .swiper-button-prev:after {
+                                display: none;
+                            }
+                            @media (max-width: 640px) {
+                                .swiper-button-next,
+                                .swiper-button-prev {
+                                    display: none;
+                                }
+                            }
+                        `}</style>
         </section>
     );
 };

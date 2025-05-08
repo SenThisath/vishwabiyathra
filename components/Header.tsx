@@ -102,13 +102,18 @@ export default function Header() {
     };
 
     return (
-        <header className="fixed w-full z-50 h-16 sm:h-20">
-            <div className="flex justify-between items-center py-4 sm:py-6 px-4 sm:px-8 bg-transparent">
+        <header className="fixed w-full z-50 h-16 sm:h-20 overflow-hidden">
+            <div className="flex justify-between items-center py-4 sm:py-6 px-4 sm:px-8 bg-transparent overflow-hidden">
                 {!isOpen && (
                     <Link href="/" className="relative z-50">
-                        <span className="text-base sm:text-lg font-bold">
-                            VISHWABHIYATHRA
-                        </span>
+                        <Image
+                            src="/logo.png"
+                            alt="Logo"
+                            className="object-contain"
+                            width={200}
+                            height={200}
+                            priority
+                        />
                     </Link>
                 )}
 
@@ -218,7 +223,7 @@ export default function Header() {
                                 duration: 0.5,
                                 ease: [0.6, 0.01, 0, 0.95],
                             }}
-                            className="w-full md:w-2/5 bg-white text-black py-4 px-4 sm:px-6 md:px-8 h-[50vh] md:h-screen overflow-y-auto"
+                            className="w-full md:w-2/5 bg-white text-black py-4 px-4 sm:px-6 md:px-8 h-[50vh] md:h-screen overflow-hidden"
                         >
                             <div className="flex flex-col h-full">
                                 <div className="flex justify-end">
@@ -275,10 +280,7 @@ export default function Header() {
                                         },
                                         {
                                             title: "SOCIAL",
-                                            content: [
-                                                "INSTAGRAM",
-                                                "FACEBOOK",
-                                            ],
+                                            content: ["INSTAGRAM", "FACEBOOK"],
                                         },
                                     ].map((item, index) => (
                                         <motion.div
