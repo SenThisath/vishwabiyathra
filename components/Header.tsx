@@ -1,11 +1,11 @@
 // Navbar.tsx
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
-import { Home, Info, Trophy, Target, Phone } from "lucide-react";
+import { Home, Info, Trophy, Target, Phone, X } from "lucide-react";
 
 const menuItems = [
     { number: "(1)", title: "HOME", href: "/", icon: Home },
@@ -17,6 +17,36 @@ const menuItems = [
 
 export default function Header() {
     const [isOpen, setIsOpen] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
+
+    // Check viewport size on mount and resize
+    useEffect(() => {
+        const checkScreenSize = () => {
+            setIsMobile(window.innerWidth < 768);
+        };
+
+        // Initial check
+        checkScreenSize();
+
+        // Add event listener
+        window.addEventListener("resize", checkScreenSize);
+
+        // Cleanup
+        return () => window.removeEventListener("resize", checkScreenSize);
+    }, []);
+
+    // Prevent body scroll when menu is open
+    useEffect(() => {
+        if (isOpen) {
+            document.body.style.overflow = "hidden";
+        } else {
+            document.body.style.overflow = "auto";
+        }
+
+        return () => {
+            document.body.style.overflow = "auto";
+        };
+    }, [isOpen]);
 
     const toggleMenu = () => {
         setIsOpen(!isOpen);
@@ -72,11 +102,11 @@ export default function Header() {
     };
 
     return (
-        <header className="fixed w-full z-50 h-20">
-            <div className="flex justify-between items-center py-6 px-8 bg-transparent">
+        <header className="fixed w-full z-50 h-16 sm:h-20">
+            <div className="flex justify-between items-center py-4 sm:py-6 px-4 sm:px-8 bg-transparent">
                 {!isOpen && (
                     <Link href="/" className="relative z-50">
-                        <span className="text-lg font-bold">
+                        <span className="text-base sm:text-lg font-bold">
                             VISHWABHIYATHRA
                         </span>
                     </Link>
@@ -86,19 +116,19 @@ export default function Header() {
                     onClick={toggleMenu}
                     className={`${
                         isOpen ? "hidden" : "block"
-                    } relative z-50 flex flex-col justify-center items-center space-y-1.5 w-8 h-8 focus:outline-none`}
+                    } relative z-50 flex flex-col justify-center items-center space-y-1 sm:space-y-1.5 w-6 h-6 sm:w-8 sm:h-8 focus:outline-none`}
                     aria-label="Toggle Menu"
                 >
                     <motion.span
                         animate={
                             isOpen ? { rotate: 45, y: 6 } : { rotate: 0, y: 0 }
                         }
-                        className="block w-6 h-0.5 bg-white"
+                        className="block w-5 sm:w-6 h-0.5 bg-white"
                         transition={{ duration: 0.3 }}
                     />
                     <motion.span
                         animate={isOpen ? { opacity: 0 } : { opacity: 1 }}
-                        className="block w-6 h-0.5 bg-white"
+                        className="block w-5 sm:w-6 h-0.5 bg-white"
                         transition={{ duration: 0.3 }}
                     />
                     <motion.span
@@ -107,7 +137,7 @@ export default function Header() {
                                 ? { rotate: -45, y: -6 }
                                 : { rotate: 0, y: 0 }
                         }
-                        className="block w-6 h-0.5 bg-white"
+                        className="block w-5 sm:w-6 h-0.5 bg-white"
                         transition={{ duration: 0.3 }}
                     />
                 </button>
@@ -120,7 +150,7 @@ export default function Header() {
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         transition={{ duration: 0.3 }}
-                        className="fixed inset-0 z-40 flex"
+                        className="fixed inset-0 z-40 flex flex-col w-screen h-screen md:flex-row"
                     >
                         {/* Left side - Menu */}
                         <motion.div
@@ -131,7 +161,7 @@ export default function Header() {
                                 duration: 0.5,
                                 ease: [0.6, 0.01, 0, 0.95],
                             }}
-                            className="w-full lg:w-3/5 bg-black overflow-y-auto"
+                            className="w-full md:w-3/5 bg-black h-[50vh] md:h-full overflow-y-auto"
                         >
                             <div className="h-full">
                                 <nav className="h-full overflow-hidden">
@@ -148,22 +178,26 @@ export default function Header() {
                                             >
                                                 <Link
                                                     href={item.href}
-                                                    className="flex justify-between items-center py-6 px-8 hover:bg-[#e0d7c5] transition-colors duration-300 h-full"
+                                                    className="flex justify-between items-center px-4 sm:px-8 hover:bg-[#e0d7c5] transition-colors duration-300 h-full"
                                                     onClick={() =>
                                                         setIsOpen(false)
                                                     }
                                                 >
-                                                    <div className="flex items-center space-x-4">
-                                                        <span className="text-sm font-light text-[#8b7f6c]">
+                                                    <div className="flex items-center space-x-2 sm:space-x-4">
+                                                        <span className="text-xs sm:text-sm font-light text-[#8b7f6c]">
                                                             {item.number}
                                                         </span>
-                                                        <span className="text-3xl font-light">
+                                                        <span className="text-xl sm:text-2xl md:text-3xl font-light">
                                                             {item.title}
                                                         </span>
                                                     </div>
-                                                    <div className="flex items-center justify-center w-12 h-12 rounded-full bg-[#b3957a] text-white">
+                                                    <div className="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full bg-[#b3957a] text-white">
                                                         <item.icon
-                                                            size={24}
+                                                            size={
+                                                                isMobile
+                                                                    ? 16
+                                                                    : 24
+                                                            }
                                                             color="white"
                                                         />
                                                     </div>
@@ -184,7 +218,7 @@ export default function Header() {
                                 duration: 0.5,
                                 ease: [0.6, 0.01, 0, 0.95],
                             }}
-                            className="hidden lg:block w-2/5 bg-white text-black py-6 px-8 h-screen"
+                            className="w-full md:w-2/5 bg-white text-black py-4 px-4 sm:px-6 md:px-8 h-[50vh] md:h-screen overflow-y-auto"
                         >
                             <div className="flex flex-col h-full">
                                 <div className="flex justify-end">
@@ -194,34 +228,38 @@ export default function Header() {
                                         animate={{ opacity: 1 }}
                                         exit={{ opacity: 0 }}
                                         transition={{ delay: 0.1 }}
+                                        className="flex items-center text-sm sm:text-base"
                                     >
-                                        CLOSE
+                                        <span className="mr-2">CLOSE</span>
+                                        <X size={isMobile ? 16 : 20} />
                                     </motion.button>
                                 </div>
 
-                                <div className="flex pt-12">
+                                <div className="flex pt-2 justify-center sm:justify-start">
                                     <motion.div
                                         variants={logoVariants}
                                         initial="closed"
                                         animate="open"
                                         exit="closed"
-                                        className="relative w-full max-w-[500px] h-[200px]"
+                                        className="flex flex-col items-center w-full"
                                     >
-                                        <Image
-                                            src="/logo.png"
-                                            alt="Logo"
-                                            className="object-contain invert mt-5"
-                                            fill
-                                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                                            priority
-                                        />
-                                        <h1 className="font-extrabold uppercase bg-gradient-to-t from-[#d72b59] to-[#fbe851] bg-clip-text text-transparent tracking-wider leading-relaxed mt-4">
+                                        <div className="relative w-full max-w-[400px] h-[200px]">
+                                            <Image
+                                                src="/logo.png"
+                                                alt="Logo"
+                                                className="object-contain invert"
+                                                fill
+                                                sizes="400px"
+                                                priority
+                                            />
+                                        </div>
+                                        <h1 className="text-sm md:text-lg font-extrabold uppercase bg-gradient-to-t from-[#d72b59] to-[#fbe851] bg-clip-text text-transparent tracking-wider leading-relaxed">
                                             A Paradise Where Legends Are Born
                                         </h1>
                                     </motion.div>
                                 </div>
 
-                                <div className="grid grid-cols-2 gap-12 mt-12">
+                                <div className="grid grid-cols-2 sm:grid-cols-2 gap-4 sm:gap-6 md:gap-8 mt-4 sm:mt-8 md:mt-12">
                                     {[
                                         {
                                             title: "EMAIL",
@@ -229,7 +267,7 @@ export default function Header() {
                                         },
                                         {
                                             title: "PHONE",
-                                            content: ["+94 71 054 8515)"],
+                                            content: ["+94 71 054 8515"],
                                         },
                                         {
                                             title: "MONDAY TO FRIDAY",
@@ -240,7 +278,6 @@ export default function Header() {
                                             content: [
                                                 "INSTAGRAM",
                                                 "FACEBOOK",
-                                                "TWITTER (X)",
                                             ],
                                         },
                                     ].map((item, index) => (
@@ -253,13 +290,13 @@ export default function Header() {
                                             exit="closed"
                                             className="group"
                                         >
-                                            <h3 className="text-lg font-medium mb-3 tracking-wide">
+                                            <h3 className="text-sm sm:text-base md:text-lg font-medium mb-1 sm:mb-2 md:mb-3 tracking-wide">
                                                 {item.title}
                                             </h3>
                                             {item.content.map((line, i) => (
                                                 <p
                                                     key={i}
-                                                    className="text-sm opacity-70 hover:opacity-100 transition-opacity cursor-pointer mb-1"
+                                                    className="text-xs sm:text-sm opacity-70 hover:opacity-100 transition-opacity cursor-pointer mb-1"
                                                 >
                                                     {line}
                                                 </p>
@@ -274,9 +311,9 @@ export default function Header() {
                                     initial="closed"
                                     animate="open"
                                     exit="closed"
-                                    className="mt-auto pt-8 flex justify-between items-center border-t border-gray-200"
+                                    className="mt-auto pt-4 sm:pt-6 md:pt-8 flex justify-between items-center border-t border-gray-200"
                                 >
-                                    <p className="text-sm opacity-70">
+                                    <p className="text-xs sm:text-sm opacity-70">
                                         © 2025 - BCSS - Senuka Thisath
                                     </p>
                                 </motion.div>

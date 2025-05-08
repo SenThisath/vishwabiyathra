@@ -1,9 +1,17 @@
-"use client"
+"use client";
 
 import { motion, useAnimation, useInView } from "motion/react";
-import { useEffect, useRef } from "react";
+import { ReactNode, useEffect, useRef } from "react";
 
-export const FadeInWhenVisible = ({ children, delay = 0, direction = "up" }) => {
+export const FadeInWhenVisible = ({
+    children,
+    delay = 0,
+    direction = "up",
+}: {
+    children: ReactNode;
+    delay?: number;
+    direction?: string;
+}) => {
     const controls = useAnimation();
     const ref = useRef(null);
     const isInView = useInView(ref, { once: false, amount: 0.3 });
