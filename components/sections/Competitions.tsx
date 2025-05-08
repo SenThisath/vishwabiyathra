@@ -41,7 +41,6 @@ const Competitions = () => {
             id="about"
             className="min-h-screen py-8 md:py-16 lg:py-24 relative z-0 flex flex-col items-center justify-center"
         >
-            <div className="absolute inset-0 bg-gradient-to-b from-purple-900/10 to-black pointer-events-none"></div>
             <div className="z-10 px-4 md:px-8 lg:px-16 w-full max-w-7xl mx-auto text-center">
                 <FadeInWhenVisible>
                     <div className="flex flex-col items-center">

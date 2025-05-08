@@ -196,7 +196,6 @@ export default function SponsorsLeaderboard() {
             animate="animate"
             variants={pageVariants}
         >
-            <div className="absolute inset-0 bg-gradient-to-b from-purple-900/10 to-black pointer-events-none"></div>
             {/* Hero section */}
             <div className="relative z-10 pt-24 px-8 md:px-16 lg:px-24">
                 {/* Animated title */}
