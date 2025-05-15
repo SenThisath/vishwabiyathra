@@ -7,28 +7,67 @@ import { motion } from "framer-motion";
 import Competitions from "@/components/sections/Competitions";
 import LeaderBoard from "@/components/sections/LeaderBoard";
 import Footer from "@/components/sections/Footer";
+import Header from "@/components/Header";
+import { useEffect, useState } from "react";
+import { useUser } from "@clerk/nextjs";
+import { Roles } from "@/types/globals";
+import { useMutation } from "convex/react";
+import { api } from "@/convex/_generated/api";
 
 export default function Home() {
-    const particles = Array.from({ length: 30 }, () => ({
-        size: Math.random() * 6 + 2,
-        x: Math.random() * 100,
-        y: Math.random() * 100,
-        delay: Math.random() * 5,
-        duration: Math.random() * 10 + 10,
-    }));
+    const { user } = useUser();
+    const insertStudent = useMutation(api.users.saveUser);
+    
 
+    useEffect(() => {
+        if (user) {
+            const role: Roles = user.publicMetadata.role as Roles;
+            console.log(role)
+            if (role === "competitor") {
+                insertStudent({
+                    email: user.emailAddresses[0].emailAddress,
+                    name: user.username || user.fullName || user.lastName || "",
+                    userId: user.id,
+                    role: "competitor"
+                });
+            }
+        }
+    }, [user, insertStudent]);
+
+    const [particles, setParticles] = useState<
+        {
+            top: string;
+            left: string;
+            width: number;
+            height: number;
+            delay: number;
+            duration: number;
+        }[]
+    >([]);
+
+    useEffect(() => {
+        const newParticles = Array.from({ length: 30 }).map(() => ({
+            top: `${Math.random() * 100}%`,
+            left: `${Math.random() * 100}%`,
+            width: Math.random() * 10,
+            height: Math.random() * 10,
+            delay: Math.random() * 5,
+            duration: Math.random() * 10 + 10,
+        }));
+        setParticles(newParticles);
+    }, []);
     return (
         <div className="relative min-h-screen">
-            <div className="fixed inset-0 z-0">
+            {/* <div className="fixed inset-0 z-0">
                 {particles.map((particle, index) => (
                     <motion.div
                         key={index}
                         className="absolute rounded-full bg-gradient-to-r from-blue-400 to-purple-500 opacity-20"
                         style={{
-                            width: particle.size,
-                            height: particle.size,
-                            left: `${particle.x}%`,
-                            top: `${particle.y}%`,
+                            width: particle.width,
+                            height: particle.height,
+                            left: `${particle.left}`,
+                            top: `${particle.top}`,
                         }}
                         animate={{
                             y: [0, -150, 0],
@@ -43,8 +82,9 @@ export default function Home() {
                         }}
                     />
                 ))}
-            </div>
-            <MouseFollower />
+            </div> */}
+            <Header />
+            {/* <MouseFollower /> */}
             <Hero />
             <About />
             <Competitions />

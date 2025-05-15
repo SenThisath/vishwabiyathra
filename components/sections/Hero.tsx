@@ -4,20 +4,182 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
 import { FadeInWhenVisible } from "../FadeInWhenVisible";
 import { useRef } from "react";
+import { useMutation, useQuery } from "convex/react";
+import { useUser } from "@clerk/nextjs";
+import { api } from "@/convex/_generated/api";
+
+import { Button } from "@/components/ui/button";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog";
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Roles } from "@/types/globals";
 
 export default function Hero() {
     const containerRef = useRef(null);
+    const { user } = useUser();
 
+    const role = user ? (user.publicMetadata.role as Roles) : undefined;
     const { scrollYProgress } = useScroll({
         target: containerRef,
         offset: ["start start", "end start"],
     });
     const y = useTransform(scrollYProgress, [0, 0.5], [0, -150]);
     const opacity = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
+    const checkOtherDetails = useQuery(
+        api.users.checkDetailsSaved,
+        user ? { userId: user.id } : "skip"
+    );
+
+    const formSchema = z.object({
+        name: z.string({ required_error: "Please enter your school name." }),
+        school: z.string({ required_error: "Please enter your school name." }),
+        phoneNumber: z.number({
+            required_error: "Please enter a phone number.",
+        }),
+        whatsappNumber: z.number({
+            required_error: "Please enter a phone number.",
+        }),
+    });
+    const form = useForm<z.infer<typeof formSchema>>({
+        resolver: zodResolver(formSchema),
+        defaultValues: {
+            name: undefined,
+            school: undefined,
+            phoneNumber: undefined,
+            whatsappNumber: undefined,
+        },
+    });
+
+    const saveOtherDetails = useMutation(api.users.saveOtherDetails);
+
+    function onSubmit(values: z.infer<typeof formSchema>) {
+        if (user) {
+            const newValues = { ...values, userId: user.id };
+            saveOtherDetails(newValues);
+        }
+    }
+
     return (
         <div className="min-h-screen flex flex-col bg-black">
             {/* Hero section */}
             <main className="overflow-x-hidden" ref={containerRef}>
+                {checkOtherDetails && role && role === "competitor" && (
+                    <Dialog open={checkOtherDetails}>
+                        <DialogContent className="sm:max-w-[425px]">
+                            <DialogHeader>
+                                <DialogTitle>
+                                    Please Fill the Details To Continue.
+                                </DialogTitle>
+                                <DialogDescription>
+                                    This makes easier for you to register to
+                                    competitions.
+                                </DialogDescription>
+                            </DialogHeader>
+                            <Form {...form}>
+                                <form
+                                    onSubmit={form.handleSubmit(onSubmit)}
+                                    className="space-y-8"
+                                >
+                                    <FormField
+                                        control={form.control}
+                                        name="name"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Full Name</FormLabel>
+                                                <FormControl>
+                                                    <Input {...field} />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <FormField
+                                        control={form.control}
+                                        name="school"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>School</FormLabel>
+                                                <FormControl>
+                                                    <Input {...field} />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <FormField
+                                        control={form.control}
+                                        name="phoneNumber"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>
+                                                    Phone Number
+                                                </FormLabel>
+                                                <FormControl>
+                                                    <Input
+                                                        {...field}
+                                                        type="number"
+                                                        onChange={(e) =>
+                                                            field.onChange(
+                                                                Number(
+                                                                    e.target
+                                                                        .value
+                                                                )
+                                                            )
+                                                        }
+                                                    />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <FormField
+                                        control={form.control}
+                                        name="whatsappNumber"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>
+                                                    WhatsApp Number
+                                                </FormLabel>
+                                                <FormControl>
+                                                    <Input
+                                                        {...field}
+                                                        type="number"
+                                                        onChange={(e) =>
+                                                            field.onChange(
+                                                                Number(
+                                                                    e.target
+                                                                        .value
+                                                                )
+                                                            )
+                                                        }
+                                                    />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <Button type="submit">Save changes</Button>
+                                </form>
+                            </Form>
+                        </DialogContent>
+                    </Dialog>
+                )}
                 <motion.section
                     style={{ y, opacity }}
                     className="relative min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 md:p-10"

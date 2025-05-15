@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
 import { Home, Info, Trophy, Target, Phone, X } from "lucide-react";
+import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 
 const menuItems = [
     { number: "(1)", title: "HOME", href: "/", icon: Home },
@@ -146,6 +147,14 @@ export default function Header() {
                         transition={{ duration: 0.3 }}
                     />
                 </button>
+                <SignedOut>
+                    <SignInButton mode="modal">
+                        <button>Sign In</button>
+                    </SignInButton>
+                </SignedOut>
+                <SignedIn>
+                    <UserButton showName={true} />
+                </SignedIn>
             </div>
 
             <AnimatePresence>
