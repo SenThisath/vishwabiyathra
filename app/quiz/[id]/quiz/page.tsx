@@ -28,14 +28,9 @@ import { cn } from "@/lib/utils";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useUser } from "@clerk/nextjs";
+import { useParams } from "next/navigation";
 
-export default function QuizApp({
-    params,
-}: {
-    params: {
-        id: string;
-    };
-}) {
+export default function QuizApp() {
     // State variables
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [selectedAnswer, setSelectedAnswer] = useState<number | null>();
@@ -50,6 +45,7 @@ export default function QuizApp({
     const [animateIn, setAnimateIn] = useState(false);
 
     const { user } = useUser();
+    const params = useParams();
     const getReservations = useQuery(api.reservations.getReservations);
 
     const resevation = getReservations?.find(
