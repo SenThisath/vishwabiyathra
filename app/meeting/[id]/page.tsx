@@ -17,6 +17,7 @@ interface PageProps {
   };
 }
 
+
 const Meeting = ({ params }: PageProps) => {
   const [call, setCall] = useState<Call>();
   const [deviceStatus, setDeviceStatus] = useState({
