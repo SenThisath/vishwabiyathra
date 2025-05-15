@@ -11,14 +11,8 @@ import {
 } from "@stream-io/video-react-sdk";
 import React, { useState, useEffect } from "react";
 
-interface PageProps {
-  params: {
-    id: string;
-  };
-}
 
-
-const Meeting = ({ params }: PageProps) => {
+const Meeting = ({ params }: { params: { id: string } }) => {
   const [call, setCall] = useState<Call>();
   const [deviceStatus, setDeviceStatus] = useState({
     camera: false,
