@@ -9,10 +9,10 @@ import {
   StreamTheme,
   useStreamVideoClient,
 } from "@stream-io/video-react-sdk";
+import { useParams } from "next/navigation";
 import React, { useState, useEffect } from "react";
 
-
-const Meeting = ({ params }: { params: { id: string } }) => {
+const Meeting = () => {
   const [call, setCall] = useState<Call>();
   const [deviceStatus, setDeviceStatus] = useState({
     camera: false,
@@ -21,6 +21,7 @@ const Meeting = ({ params }: { params: { id: string } }) => {
   });
   const [isJoined, setIsJoined] = useState(false);
   const client = useStreamVideoClient();
+  const params = useParams();
 
   // Function to check camera status
   const checkCamera = async () => {
@@ -94,7 +95,7 @@ const Meeting = ({ params }: { params: { id: string } }) => {
     const screenShareReady = await checkScreenShare();
 
     if (cameraReady && microphoneReady && screenShareReady) {
-      const newCall = client.call("default", params.id);
+      const newCall = client.call("default", params.id as string);
       await newCall.join();
       setCall(newCall);
       setIsJoined(true);
