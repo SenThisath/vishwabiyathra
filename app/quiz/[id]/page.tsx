@@ -4,16 +4,12 @@ import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { useUser } from "@clerk/nextjs";
 import { useMutation, useQuery } from "convex/react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
-interface PageProps {
-  params: {
-    id: string;
-  };
-}
-
-const QuizPage = ({ params }: PageProps) => {
+const QuizPage = () => {
   const { user } = useUser();
+  const params = useParams();
+
   const competitionId = params.id as Id<"competitions">;
 
   const competition = useQuery(api.competitions.getCompetitionById, {
