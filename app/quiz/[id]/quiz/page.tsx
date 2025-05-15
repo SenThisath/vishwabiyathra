@@ -74,7 +74,7 @@ export default function QuizApp() {
 
     // Handle timer
     useEffect(() => {
-        let interval;
+        let interval: ReturnType<typeof setInterval>;
 
         if (isRunning) {
             interval = setInterval(() => {
