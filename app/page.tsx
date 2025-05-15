@@ -58,7 +58,7 @@ export default function Home() {
     }, []);
     return (
         <div className="relative min-h-screen">
-            {/* <div className="fixed inset-0 z-0">
+            <div className="fixed inset-0 z-0">
                 {particles.map((particle, index) => (
                     <motion.div
                         key={index}
@@ -82,9 +82,9 @@ export default function Home() {
                         }}
                     />
                 ))}
-            </div> */}
+            </div>
             <Header />
-            {/* <MouseFollower /> */}
+            <MouseFollower />
             <Hero />
             <About />
             <Competitions />

@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import { useUser } from "@clerk/nextjs";
 import {
   AlertCircle,
   Clock,
@@ -16,7 +15,7 @@ import {
   Home,
   RefreshCw,
   RotateCcw,
-  BookOpen
+  BookOpen,
 } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -65,8 +64,8 @@ interface QuizResults {
 
 export default function QuizPage() {
   const router = useRouter();
-  const { user } = useUser();
-  
+  // const { user } = useUser();
+
   // State variables
   const [selectedSubject, setSelectedSubject] = useState<string>("");
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
@@ -83,27 +82,36 @@ export default function QuizPage() {
   const [animateIn, setAnimateIn] = useState<boolean>(false);
   const [quizResults, setQuizResults] = useState<QuizResults | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  console.log(quizResults);
 
   // Fetch all available subjects from quizzes table
   const allQuizzes = useQuery(api.quizzes.getAllQuizzes);
-  
+
   // Extract unique subjects
   const subjects = allQuizzes
-    ? [...new Set(allQuizzes.filter(quiz => quiz.subject).map(quiz => quiz.subject))]
+    ? [
+        ...new Set(
+          allQuizzes.filter((quiz) => quiz.subject).map((quiz) => quiz.subject),
+        ),
+      ]
     : [];
-  
+
   // Fetch quizzes for selected subject only
   const getQuizzesBySubject = useQuery(
     api.quizzes.getQuizzesBySubject,
-    selectedSubject ? { subject: selectedSubject } : "skip"
+    selectedSubject ? { subject: selectedSubject } : "skip",
   );
 
   // Type assertion to fix compatibility with QuizQuestion[] type
-  const quizQuestions: QuizQuestion[] = 
-    (getQuizzesBySubject && subjectSelected ? getQuizzesBySubject.quizzes || [] : []) as QuizQuestion[];
-    
+  const quizQuestions: QuizQuestion[] = (
+    getQuizzesBySubject && subjectSelected
+      ? getQuizzesBySubject.quizzes || []
+      : []
+  ) as QuizQuestion[];
+
   const totalQuestions: number = quizQuestions.length;
-  const currentQuestion: QuizQuestion | undefined = quizQuestions[currentQuestionIndex];
+  const currentQuestion: QuizQuestion | undefined =
+    quizQuestions[currentQuestionIndex];
 
   // Handle timer
   useEffect(() => {
@@ -131,7 +139,7 @@ export default function QuizPage() {
   const handleSubjectSelect = (subject: string): void => {
     setSelectedSubject(subject);
     setLoading(true);
-    
+
     // Simulate loading data
     setTimeout(() => {
       setSubjectSelected(true);
@@ -187,17 +195,17 @@ export default function QuizPage() {
           // End quiz
           setIsRunning(false);
           setQuizCompleted(true);
-          
+
           // Save results
           const results: QuizResults = {
             subject: selectedSubject,
             score: score + (correct ? 1 : 0),
             totalQuestions: totalQuestions,
             timeSpent: timer,
-            date: new Date().toISOString()
+            date: new Date().toISOString(),
           };
           setQuizResults(results);
-          
+
           // Log results to console
           console.log("Quiz Results:", results);
         }
@@ -214,7 +222,10 @@ export default function QuizPage() {
       return "bg-green-600 hover:bg-green-600 text-white border-green-700";
     }
 
-    if (selectedAnswer === index && !currentQuestion?.answers[index].isCorrect) {
+    if (
+      selectedAnswer === index &&
+      !currentQuestion?.answers[index].isCorrect
+    ) {
       return "bg-red-600 hover:bg-red-600 text-white border-red-700";
     }
 
@@ -276,8 +287,12 @@ export default function QuizPage() {
           <div className="animate-spin mb-4">
             <RefreshCw size={32} className="text-white" />
           </div>
-          <h2 className="text-2xl font-semibold text-white mb-2">Loading quiz...</h2>
-          <p className="text-purple-200">Please wait while we prepare your questions</p>
+          <h2 className="text-2xl font-semibold text-white mb-2">
+            Loading quiz...
+          </h2>
+          <p className="text-purple-200">
+            Please wait while we prepare your questions
+          </p>
         </div>
       </div>
     );
@@ -295,10 +310,7 @@ export default function QuizPage() {
 
             <CardHeader className="text-center pb-2 relative">
               <div className="mx-auto w-24 h-24 rounded-full bg-purple-100 flex items-center justify-center mb-6 ring-4 ring-purple-200">
-                <BookOpen
-                  size={40}
-                  className="text-purple-700"
-                />
+                <BookOpen size={40} className="text-purple-700" />
               </div>
               <CardTitle className="text-4xl font-bold tracking-tight text-purple-900">
                 Select Subject
@@ -326,8 +338,9 @@ export default function QuizPage() {
                 </div>
 
                 <p className="text-gray-700 text-center">
-                  Select from available subjects to begin your quiz journey. Each subject 
-                  contains a unique set of questions to test your knowledge.
+                  Select from available subjects to begin your quiz journey.
+                  Each subject contains a unique set of questions to test your
+                  knowledge.
                 </p>
               </div>
             </CardContent>
@@ -350,10 +363,7 @@ export default function QuizPage() {
 
             <CardHeader className="text-center pb-2 relative">
               <div className="mx-auto w-24 h-24 rounded-full bg-purple-100 flex items-center justify-center mb-6 ring-4 ring-purple-200">
-                <BrainCircuit
-                  size={40}
-                  className="text-purple-700"
-                />
+                <BrainCircuit size={40} className="text-purple-700" />
               </div>
               <CardTitle className="text-4xl font-bold tracking-tight text-purple-900">
                 {selectedSubject} Quiz
@@ -370,10 +380,7 @@ export default function QuizPage() {
                     variant="outline"
                     className="py-1.5 px-3 text-indigo-800 border-indigo-300 bg-indigo-100"
                   >
-                    <AlertCircle
-                      size={14}
-                      className="mr-1"
-                    />
+                    <AlertCircle size={14} className="mr-1" />
                     {quizQuestions.length} Questions
                   </Badge>
 
@@ -395,8 +402,8 @@ export default function QuizPage() {
                 </div>
 
                 <p className="text-gray-700">
-                  Are you ready to challenge yourself? This
-                  quiz will test your knowledge about {selectedSubject}. Answer all questions 
+                  Are you ready to challenge yourself? This quiz will test your
+                  knowledge about {selectedSubject}. Answer all questions
                   correctly to earn a high score!
                 </p>
               </div>
@@ -411,7 +418,7 @@ export default function QuizPage() {
                 <ArrowRight size={16} className="mr-2 rotate-180" />
                 Change Subject
               </Button>
-              
+
               {quizQuestions.length === 0 ? (
                 <Button
                   disabled
@@ -450,11 +457,7 @@ export default function QuizPage() {
                 </Badge>
 
                 <Progress
-                  value={
-                    ((currentQuestionIndex + 1) /
-                      totalQuestions) *
-                    100
-                  }
+                  value={((currentQuestionIndex + 1) / totalQuestions) * 100}
                   className="h-2 w-32 md:w-48 bg-gray-200"
                 />
               </div>
@@ -484,7 +487,7 @@ export default function QuizPage() {
                   "mb-6 shadow-lg animate-fadeIn border-2",
                   isCorrect
                     ? "bg-green-100 border-green-500 text-green-800"
-                    : "bg-red-100 border-red-500 text-red-800"
+                    : "bg-red-100 border-red-500 text-red-800",
                 )}
               >
                 <div className="flex items-center">
@@ -498,11 +501,9 @@ export default function QuizPage() {
                   </AlertTitle>
                 </div>
                 <AlertDescription className="pl-7">
-                  {isCorrect ? (
-                    "Great job! Moving to the next question..."
-                  ) : (
-                    `The correct answer was: ${currentQuestion?.answers.find((a) => a.isCorrect)?.answer}`
-                  )}
+                  {isCorrect
+                    ? "Great job! Moving to the next question..."
+                    : `The correct answer was: ${currentQuestion?.answers.find((a) => a.isCorrect)?.answer}`}
                 </AlertDescription>
               </Alert>
             )}
@@ -513,7 +514,7 @@ export default function QuizPage() {
                 "bg-white shadow-2xl transition-all duration-500 relative overflow-hidden",
                 animateIn
                   ? "opacity-100 transform translate-y-0"
-                  : "opacity-0 transform translate-y-4"
+                  : "opacity-0 transform translate-y-4",
               )}
             >
               <div className="absolute top-0 left-0 right-0 h-2 bg-purple-600"></div>
@@ -546,25 +547,21 @@ export default function QuizPage() {
                 )}
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {currentQuestion?.answers.map(
-                    (answer, index) => (
-                      <Button
-                        key={index}
-                        variant="outline"
-                        size="lg"
-                        className={cn(
-                          "h-auto py-6 border-2 flex items-center justify-center text-lg font-medium transition-all duration-300",
-                          getAnswerStyle(index)
-                        )}
-                        onClick={() =>
-                          handleAnswerSelect(index)
-                        }
-                        disabled={feedbackShown}
-                      >
-                        {answer.answer}
-                      </Button>
-                    )
-                  )}
+                  {currentQuestion?.answers.map((answer, index) => (
+                    <Button
+                      key={index}
+                      variant="outline"
+                      size="lg"
+                      className={cn(
+                        "h-auto py-6 border-2 flex items-center justify-center text-lg font-medium transition-all duration-300",
+                        getAnswerStyle(index),
+                      )}
+                      onClick={() => handleAnswerSelect(index)}
+                      disabled={feedbackShown}
+                    >
+                      {answer.answer}
+                    </Button>
+                  ))}
                 </div>
               </CardContent>
             </Card>
@@ -578,9 +575,7 @@ export default function QuizPage() {
               <div className="mx-auto w-24 h-24 rounded-full bg-purple-100 flex items-center justify-center mb-4 ring-4 ring-purple-200">
                 <Award size={40} className="text-purple-700" />
               </div>
-              <div className="text-6xl font-bold mb-2">
-                {getScoreEmoji()}
-              </div>
+              <div className="text-6xl font-bold mb-2">{getScoreEmoji()}</div>
               <CardTitle className="text-3xl font-bold text-purple-900">
                 Quiz Completed!
               </CardTitle>
@@ -592,30 +587,22 @@ export default function QuizPage() {
             <CardContent className="pt-6">
               <div className="grid grid-cols-2 gap-4 mb-6">
                 <div className="bg-indigo-100 border border-indigo-300 rounded-lg p-4 text-center">
-                  <p className="text-indigo-700 text-sm mb-1">
-                    Score
-                  </p>
+                  <p className="text-indigo-700 text-sm mb-1">Score</p>
                   <p className="text-3xl font-bold text-indigo-900">
                     {score}/{totalQuestions}
                   </p>
                   <p className="text-indigo-700 text-sm mt-1">
-                    {Math.round(
-                      (score / totalQuestions) * 100
-                    )}
-                    %
+                    {Math.round((score / totalQuestions) * 100)}%
                   </p>
                 </div>
 
                 <div className="bg-purple-100 border border-purple-300 rounded-lg p-4 text-center">
-                  <p className="text-purple-700 text-sm mb-1">
-                    Time
-                  </p>
+                  <p className="text-purple-700 text-sm mb-1">Time</p>
                   <p className="text-3xl font-bold text-purple-900">
                     {formatTime(timer)}
                   </p>
                   <p className="text-purple-700 text-sm mt-1">
-                    {Math.round(timer / totalQuestions)}{" "}
-                    sec/question
+                    {Math.round(timer / totalQuestions)} sec/question
                   </p>
                 </div>
               </div>
@@ -625,10 +612,7 @@ export default function QuizPage() {
               <div className="space-y-4">
                 <div className="flex justify-between items-center px-1">
                   <span className="flex items-center text-gray-800">
-                    <CheckCircle
-                      size={16}
-                      className="text-green-600 mr-2"
-                    />
+                    <CheckCircle size={16} className="text-green-600 mr-2" />
                     Correct Answers
                   </span>
                   <Badge
@@ -641,10 +625,7 @@ export default function QuizPage() {
 
                 <div className="flex justify-between items-center px-1">
                   <span className="flex items-center text-gray-800">
-                    <XCircle
-                      size={16}
-                      className="text-red-600 mr-2"
-                    />
+                    <XCircle size={16} className="text-red-600 mr-2" />
                     Incorrect Answers
                   </span>
                   <Badge
@@ -666,7 +647,7 @@ export default function QuizPage() {
                 <ArrowRight size={16} className="mr-2 rotate-180" />
                 Try Another Subject
               </Button>
-              
+
               <Button
                 className="bg-gradient-to-r from-indigo-600 to-purple-700 hover:from-indigo-700 hover:to-purple-800 text-white"
                 onClick={handleRestartQuiz}

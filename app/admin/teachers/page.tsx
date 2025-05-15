@@ -68,7 +68,7 @@ const Teachers = () => {
                         <DialogTitle>Edit profile</DialogTitle>
                         <DialogDescription>
                             Make changes to your profile here. Click save when
-                            you're done.
+                            you&apos;re done.
                         </DialogDescription>
                     </DialogHeader>
                     <Form {...form}>
