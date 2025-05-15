@@ -329,7 +329,7 @@ export default function QuizPage() {
                     </SelectTrigger>
                     <SelectContent>
                       {subjects.map((subject, index) => (
-                        <SelectItem key={index} value={subject}>
+                        <SelectItem key={index} value={subject as string}>
                           {subject}
                         </SelectItem>
                       ))}
