@@ -120,3 +120,8 @@
     @apply bg-background text-foreground;
   }
 }
+
+.comicFont {
+  font-family: var(--font-comic-neue);
+  font-weight: 700;
+}

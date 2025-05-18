@@ -1,338 +1,335 @@
-// Navbar.tsx
 "use client";
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
-import { Home, Info, Trophy, Target, Phone, X } from "lucide-react";
+import {
+  Home,
+  Info,
+  Trophy,
+  Phone,
+  X,
+  Menu,
+  Gamepad2,
+  Users,
+} from "lucide-react";
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 
 const menuItems = [
-    { number: "(1)", title: "HOME", href: "/", icon: Home },
-    { number: "(2)", title: "ABOUT", href: "#about", icon: Info },
-    { number: "(3)", title: "LEADER BOARD", href: "/", icon: Trophy },
-    { number: "(4)", title: "COMPETITIONS", href: "/", icon: Target },
-    { number: "(5)", title: "CONTACT US", href: "/", icon: Phone },
+  {
+    number: "01",
+    title: "HOME",
+    href: "/",
+    icon: Home,
+    color: "from-purple-500 to-blue-500",
+  },
+  {
+    number: "02",
+    title: "ABOUT",
+    href: "#about",
+    icon: Info,
+    color: "from-blue-500 to-teal-500",
+  },
+  {
+    number: "03",
+    title: "LEADERBOARD",
+    href: "/",
+    icon: Trophy,
+    color: "from-yellow-500 to-orange-500",
+  },
+  {
+    number: "04",
+    title: "COMPETITIONS",
+    href: "/",
+    icon: Gamepad2,
+    color: "from-red-500 to-pink-500",
+  },
+  {
+    number: "05",
+    title: "CONTACT US",
+    href: "/",
+    icon: Phone,
+    color: "from-indigo-500 to-purple-500",
+  },
 ];
 
 export default function Header() {
-    const [isOpen, setIsOpen] = useState(false);
-    const [isMobile, setIsMobile] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
-    // Check viewport size on mount and resize
-    useEffect(() => {
-        const checkScreenSize = () => {
-            setIsMobile(window.innerWidth < 768);
-        };
-
-        // Initial check
-        checkScreenSize();
-
-        // Add event listener
-        window.addEventListener("resize", checkScreenSize);
-
-        // Cleanup
-        return () => window.removeEventListener("resize", checkScreenSize);
-    }, []);
-
-    // Prevent body scroll when menu is open
-    useEffect(() => {
-        if (isOpen) {
-            document.body.style.overflow = "hidden";
-        } else {
-            document.body.style.overflow = "auto";
-        }
-
-        return () => {
-            document.body.style.overflow = "auto";
-        };
-    }, [isOpen]);
-
-    const toggleMenu = () => {
-        setIsOpen(!isOpen);
+  // Check screen size on mount and when window resizes
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsMobile(window.innerWidth < 768);
     };
 
-    // Animation variants
-    const menuItemVariants = {
-        closed: {
-            opacity: 0,
-            y: 20,
-        },
-        open: (i: number) => ({
-            opacity: 1,
-            y: 0,
-            transition: {
-                delay: 0.1 + i * 0.1,
-                ease: [0.6, 0.01, 0, 0.95],
-                duration: 0.6,
-            },
-        }),
+    // Initial check
+    checkScreenSize();
+
+    // Add event listener
+    window.addEventListener("resize", checkScreenSize);
+
+    // Cleanup
+    return () => window.removeEventListener("resize", checkScreenSize);
+  }, []);
+
+  // Prevent body scroll when menu is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+
+    return () => {
+      document.body.style.overflow = "auto";
     };
+  }, [isOpen]);
 
-    const contactItemVariants = {
-        closed: {
-            opacity: 0,
-            y: 20,
-        },
-        open: (i: number) => ({
-            opacity: 1,
-            y: 0,
-            transition: {
-                delay: 0.5 + i * 0.1,
-                ease: [0.6, 0.01, 0, 0.95],
-                duration: 0.6,
-            },
-        }),
-    };
+  // Close menu when screen size changes from mobile to desktop
+  useEffect(() => {
+    if (!isMobile && isOpen) {
+      setIsOpen(false);
+    }
+  }, [isMobile, isOpen]);
 
-    const logoVariants = {
-        closed: {
-            opacity: 0,
-            scale: 0.8,
-        },
-        open: {
-            opacity: 1,
-            scale: 1,
-            transition: {
-                delay: 0.2,
-                ease: [0.6, 0.01, 0, 0.95],
-                duration: 0.5,
-            },
-        },
-    };
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
+  };
 
-    return (
-        <header className="fixed w-full z-50 h-16 sm:h-20 overflow-hidden">
-            <div className="flex justify-between items-center py-4 sm:py-6 px-4 sm:px-8 bg-transparent overflow-hidden">
-                {!isOpen && (
-                    <Link href="/" className="relative z-50">
-                        <Image
-                            src="/logo.png"
-                            alt="Logo"
-                            className="object-contain"
-                            width={200}
-                            height={200}
-                            priority
-                        />
-                    </Link>
-                )}
+  return (
+    <header className="fixed w-full z-50 overflow-hidden comicFont">
+      <div className="flex justify-between items-center py-2 xs:py-3 sm:py-4 px-3 xs:px-4 sm:px-6 lg:px-8 bg-black/30 backdrop-blur-md overflow-hidden border-b border-white/10">
+        {/* Logo */}
+        <Link href="/" className="relative z-50 flex items-center">
+          <div className="relative">
+            <Image
+              src="/logo.png"
+              alt="Logo"
+              className="object-contain w-24 xs:w-28 sm:w-32 md:w-36 h-auto"
+              width={150}
+              height={150}
+              priority
+            />
+          </div>
+          <span className="ml-1 xs:ml-2 text-[10px] xs:text-xs font-bold text-white hidden xs:block uppercase tracking-widest">
+            BCSS 2025
+          </span>
+        </Link>
 
-                <button
-                    onClick={toggleMenu}
-                    className={`${
-                        isOpen ? "hidden" : "block"
-                    } relative z-50 flex flex-col justify-center items-center space-y-1 sm:space-y-1.5 w-6 h-6 sm:w-8 sm:h-8 focus:outline-none`}
-                    aria-label="Toggle Menu"
-                >
-                    <motion.span
-                        animate={
-                            isOpen ? { rotate: 45, y: 6 } : { rotate: 0, y: 0 }
-                        }
-                        className="block w-5 sm:w-6 h-0.5 bg-white"
-                        transition={{ duration: 0.3 }}
-                    />
-                    <motion.span
-                        animate={isOpen ? { opacity: 0 } : { opacity: 1 }}
-                        className="block w-5 sm:w-6 h-0.5 bg-white"
-                        transition={{ duration: 0.3 }}
-                    />
-                    <motion.span
-                        animate={
-                            isOpen
-                                ? { rotate: -45, y: -6 }
-                                : { rotate: 0, y: 0 }
-                        }
-                        className="block w-5 sm:w-6 h-0.5 bg-white"
-                        transition={{ duration: 0.3 }}
-                    />
-                </button>
-                <SignedOut>
-                    <SignInButton mode="modal">
-                        <button>Sign In</button>
-                    </SignInButton>
-                </SignedOut>
-                <SignedIn>
-                    <UserButton showName={true} />
-                </SignedIn>
+        {/* Desktop Navigation */}
+        <nav className="hidden md:flex items-center space-x-6">
+          {menuItems.map((item, i) => (
+            <Link
+              key={i}
+              href={item.href}
+              className="text-sm text-white font-medium hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-purple-400 hover:to-pink-600 transition-all duration-200"
+            >
+              <span className="flex items-center">{item.title}</span>
+            </Link>
+          ))}
+        </nav>
+
+        {/* Sign In / User Button and Mobile Menu Toggle */}
+        <div className="flex items-center space-x-2 xs:space-x-3 sm:space-x-4">
+          <SignedOut>
+            <SignInButton mode="modal">
+              <button className="bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white px-2 xs:px-3 sm:px-4 py-1 xs:py-1.5 rounded-full text-xs sm:text-sm font-medium transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-purple-500/30 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-black">
+                <Users size={14} className="mr-1" />
+                <span className="hidden xs:inline">Sign In</span>
+              </button>
+            </SignInButton>
+          </SignedOut>
+          <SignedIn>
+            <UserButton />
+          </SignedIn>
+
+          <button
+            onClick={toggleMenu}
+            className="md:hidden relative z-50 bg-gradient-to-r from-indigo-500 to-purple-600 p-1.5 xs:p-2 rounded-md focus:outline-none"
+            aria-label="Toggle Menu"
+          >
+            {isOpen ? (
+              <X size={18} className="text-white" />
+            ) : (
+              <Menu size={18} className="text-white" />
+            )}
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile Menu */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "calc(100vh - 1rem)" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            className="fixed inset-x-0 top-0 z-40 flex flex-col w-screen overflow-hidden bg-gradient-to-b from-gray-900 via-black to-purple-900/80"
+          >
+            <div className="flex justify-between items-center p-3 xs:p-4 border-b border-gray-800/50">
+              <Link
+                href="/"
+                className="relative flex items-center"
+                onClick={() => setIsOpen(false)}
+              >
+                <Image
+                  src="/logo.png"
+                  alt="Logo"
+                  className="object-contain w-24 xs:w-28 sm:w-32"
+                  width={120}
+                  height={120}
+                  priority
+                />
+                <span className="ml-1 xs:ml-2 text-[10px] xs:text-xs font-bold text-white uppercase tracking-widest">
+                  BCSS 2025
+                </span>
+              </Link>
+
+              <button
+                onClick={() => setIsOpen(false)}
+                className="flex items-center justify-center h-8 w-8 xs:h-10 xs:w-10 text-white bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 rounded-full transition-all duration-300 transform hover:scale-105 hover:rotate-12"
+              >
+                <X size={18} />
+              </button>
             </div>
 
-            <AnimatePresence>
-                {isOpen && (
+            <div className="relative flex flex-col h-full overflow-auto">
+              {/* Decorative elements */}
+              <div className="absolute top-10 left-10 w-40 h-40 bg-purple-500/10 rounded-full blur-3xl"></div>
+              <div className="absolute bottom-20 right-10 w-60 h-60 bg-indigo-500/10 rounded-full blur-3xl"></div>
+
+              {/* Menu title */}
+              <div className="text-center py-4 xs:py-6">
+                <h2 className="text-xl xs:text-2xl sm:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">
+                  EXPLORE BCSS
+                </h2>
+                <div className="w-16 xs:w-20 h-1 bg-gradient-to-r from-purple-500 to-pink-500 mx-auto mt-2"></div>
+              </div>
+
+              {/* Menu Items */}
+              <nav className="flex-1 px-3 xs:px-4 sm:px-6 md:px-8 pb-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 xs:gap-3">
+                  {menuItems.map((item, i) => (
                     <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.3 }}
-                        className="fixed inset-0 z-40 flex flex-col w-screen h-screen md:flex-row"
+                      key={i}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: i * 0.1, duration: 0.5 }}
+                      className="bg-white/5 backdrop-blur-md rounded-xl overflow-hidden border border-white/10 hover:border-white/20 hover:shadow-lg hover:shadow-purple-500/10 transition-all duration-300"
                     >
-                        {/* Left side - Menu */}
-                        <motion.div
-                            initial={{ x: "-100%" }}
-                            animate={{ x: 0 }}
-                            exit={{ x: "-100%" }}
-                            transition={{
-                                duration: 0.5,
-                                ease: [0.6, 0.01, 0, 0.95],
-                            }}
-                            className="w-full md:w-3/5 bg-black h-[50vh] md:h-full overflow-y-auto"
-                        >
-                            <div className="h-full">
-                                <nav className="h-full overflow-hidden">
-                                    <div className="h-full flex flex-col">
-                                        {menuItems.map((item, i) => (
-                                            <motion.div
-                                                key={i}
-                                                custom={i}
-                                                initial="closed"
-                                                animate="open"
-                                                exit="closed"
-                                                variants={menuItemVariants}
-                                                className="border-b border-[#e0d7c5] flex-1"
-                                            >
-                                                <Link
-                                                    href={item.href}
-                                                    className="flex justify-between items-center px-4 sm:px-8 hover:bg-[#e0d7c5] transition-colors duration-300 h-full"
-                                                    onClick={() =>
-                                                        setIsOpen(false)
-                                                    }
-                                                >
-                                                    <div className="flex items-center space-x-2 sm:space-x-4">
-                                                        <span className="text-xs sm:text-sm font-light text-[#8b7f6c]">
-                                                            {item.number}
-                                                        </span>
-                                                        <span className="text-xl sm:text-2xl md:text-3xl font-light">
-                                                            {item.title}
-                                                        </span>
-                                                    </div>
-                                                    <div className="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full bg-[#b3957a] text-white">
-                                                        <item.icon
-                                                            size={
-                                                                isMobile
-                                                                    ? 16
-                                                                    : 24
-                                                            }
-                                                            color="white"
-                                                        />
-                                                    </div>
-                                                </Link>
-                                            </motion.div>
-                                        ))}
-                                    </div>
-                                </nav>
-                            </div>
-                        </motion.div>
-
-                        {/* Right side - Contact & Logo */}
-                        <motion.div
-                            initial={{ x: "100%" }}
-                            animate={{ x: 0 }}
-                            exit={{ x: "100%" }}
-                            transition={{
-                                duration: 0.5,
-                                ease: [0.6, 0.01, 0, 0.95],
-                            }}
-                            className="w-full md:w-2/5 bg-white text-black py-4 px-4 sm:px-6 md:px-8 h-[50vh] md:h-screen overflow-hidden"
-                        >
-                            <div className="flex flex-col h-full">
-                                <div className="flex justify-end">
-                                    <motion.button
-                                        onClick={() => setIsOpen(false)}
-                                        initial={{ opacity: 0 }}
-                                        animate={{ opacity: 1 }}
-                                        exit={{ opacity: 0 }}
-                                        transition={{ delay: 0.1 }}
-                                        className="flex items-center text-sm sm:text-base"
-                                    >
-                                        <span className="mr-2">CLOSE</span>
-                                        <X size={isMobile ? 16 : 20} />
-                                    </motion.button>
-                                </div>
-
-                                <div className="flex pt-2 justify-center sm:justify-start">
-                                    <motion.div
-                                        variants={logoVariants}
-                                        initial="closed"
-                                        animate="open"
-                                        exit="closed"
-                                        className="flex flex-col items-center w-full"
-                                    >
-                                        <div className="relative w-full max-w-[400px] h-[200px]">
-                                            <Image
-                                                src="/logo.png"
-                                                alt="Logo"
-                                                className="object-contain invert"
-                                                fill
-                                                sizes="400px"
-                                                priority
-                                            />
-                                        </div>
-                                        <h1 className="text-sm md:text-lg font-extrabold uppercase bg-gradient-to-t from-[#d72b59] to-[#fbe851] bg-clip-text text-transparent tracking-wider leading-relaxed">
-                                            A Paradise Where Legends Are Born
-                                        </h1>
-                                    </motion.div>
-                                </div>
-
-                                <div className="grid grid-cols-2 sm:grid-cols-2 gap-4 sm:gap-6 md:gap-8 mt-4 sm:mt-8 md:mt-12">
-                                    {[
-                                        {
-                                            title: "EMAIL",
-                                            content: ["bcss@gmail.com"],
-                                        },
-                                        {
-                                            title: "PHONE",
-                                            content: ["+94 71 054 8515"],
-                                        },
-                                        {
-                                            title: "MONDAY TO FRIDAY",
-                                            content: ["9:00 AM - 6:00 PM"],
-                                        },
-                                        {
-                                            title: "SOCIAL",
-                                            content: ["INSTAGRAM", "FACEBOOK"],
-                                        },
-                                    ].map((item, index) => (
-                                        <motion.div
-                                            key={item.title}
-                                            custom={index}
-                                            variants={contactItemVariants}
-                                            initial="closed"
-                                            animate="open"
-                                            exit="closed"
-                                            className="group"
-                                        >
-                                            <h3 className="text-sm sm:text-base md:text-lg font-medium mb-1 sm:mb-2 md:mb-3 tracking-wide">
-                                                {item.title}
-                                            </h3>
-                                            {item.content.map((line, i) => (
-                                                <p
-                                                    key={i}
-                                                    className="text-xs sm:text-sm opacity-70 hover:opacity-100 transition-opacity cursor-pointer mb-1"
-                                                >
-                                                    {line}
-                                                </p>
-                                            ))}
-                                        </motion.div>
-                                    ))}
-                                </div>
-
-                                <motion.div
-                                    custom={6}
-                                    variants={contactItemVariants}
-                                    initial="closed"
-                                    animate="open"
-                                    exit="closed"
-                                    className="mt-auto pt-4 sm:pt-6 md:pt-8 flex justify-between items-center border-t border-gray-200"
-                                >
-                                    <p className="text-xs sm:text-sm opacity-70">
-                                        © 2025 - BCSS - Senuka Thisath
-                                    </p>
-                                </motion.div>
-                            </div>
-                        </motion.div>
+                      <Link
+                        href={item.href}
+                        className="flex justify-between items-center p-3 xs:p-4 hover:bg-white/5 transition-colors duration-300"
+                        onClick={() => setIsOpen(false)}
+                      >
+                        <div className="flex items-center space-x-2 xs:space-x-4">
+                          <div
+                            className={`flex flex-col items-center justify-center w-10 h-10 xs:w-12 xs:h-12 rounded-lg bg-gradient-to-br ${item.color} text-white shadow-lg`}
+                          >
+                            <span className="text-xs font-bold">
+                              {item.number}
+                            </span>
+                          </div>
+                          <span className="text-lg xs:text-xl sm:text-2xl font-medium text-white">
+                            {item.title}
+                          </span>
+                        </div>
+                        <div className="w-6 h-6 xs:w-8 xs:h-8 rounded-full bg-white/10 flex items-center justify-center">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-3 w-3 xs:h-4 xs:w-4 text-white"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M9 5l7 7-7 7"
+                            />
+                          </svg>
+                        </div>
+                      </Link>
                     </motion.div>
-                )}
-            </AnimatePresence>
-        </header>
-    );
+                  ))}
+                </div>
+              </nav>
+
+              <div className="bg-white/10 backdrop-blur-lg py-4 xs:py-6 px-4 xs:px-6 rounded-t-3xl mt-2 xs:mt-4 border-t border-white/20">
+                <div className="mb-3 xs:mb-4">
+                  <h2 className="text-lg xs:text-xl font-bold text-white mb-1">
+                    GET IN TOUCH
+                  </h2>
+                  <p className="text-white/70 text-xs xs:text-sm">
+                    We&apos;d love to hear from you
+                  </p>
+                </div>
+
+                {/* Contact grid that adapts to extra small screens */}
+                <div className="grid grid-cols-1 xs:grid-cols-3 gap-4 xs:gap-6">
+                  {[
+                    {
+                      title: "EMAIL",
+                      content: ["bcss@gmail.com"],
+                      icon: "📧",
+                    },
+                    {
+                      title: "PHONE",
+                      content: ["+94 71 054 8515"],
+                      icon: "📱",
+                    },
+                    {
+                      title: "FOLLOW US",
+                      content: ["Stay connected for updates"],
+                      icon: "🌐",
+                    },
+                  ].map((item) => (
+                    <div key={item.title} className="group">
+                      <h3 className="text-sm font-bold mb-1 xs:mb-2 tracking-wide flex items-center text-white">
+                        <span className="mr-2 bg-white/10 w-6 h-6 xs:w-8 xs:h-8 rounded-full flex items-center justify-center text-xs xs:text-sm">
+                          {item.icon}
+                        </span>
+                        {item.title}
+                      </h3>
+                      {item.content.map((line, i) => (
+                        <p
+                          key={i}
+                          className="text-xs text-white/70 hover:text-white transition-all cursor-pointer mb-1 pl-8 xs:pl-10 hover:pl-9 xs:hover:pl-12"
+                        >
+                          {line}
+                        </p>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+
+                {/* Social Media Icons */}
+                <div className="mt-4 xs:mt-6 pt-3 xs:pt-4 flex flex-col xs:flex-row justify-between items-center border-t border-white/20">
+                  <p className="text-xs text-white/70 mb-3 xs:mb-0">
+                    © 2025 - BCSS - Senuka Thisath
+                  </p>
+                  <div className="flex space-x-3">
+                    {["FB", "IG", "YT", "TW"].map((social, i) => (
+                      <div
+                        key={i}
+                        className="w-7 h-7 xs:w-8 xs:h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white cursor-pointer shadow-md shadow-purple-500/20 hover:shadow-purple-500/40 hover:scale-110 transition-all duration-300"
+                      >
+                        <span className="text-[10px] xs:text-xs font-bold">
+                          {social}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </header>
+  );
 }

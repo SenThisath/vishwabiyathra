@@ -12,16 +12,14 @@ import {
   StreamTheme,
   useStreamVideoClient,
 } from "@stream-io/video-react-sdk";
-import { useParams } from "next/navigation";
 import React, { useState, useEffect } from "react";
 
-const Meeting = () => {
+const Meeting = ({ id }: { id: string }) => {
   const [call, setCall] = useState<Call>();
   const [deviceStatus, setDeviceStatus] = useState({
     camera: false,
     microphone: false,
   });
-  const params = useParams();
   const [isJoined, setIsJoined] = useState(false);
   const client = useStreamVideoClient();
   const { user } = useUser();
@@ -87,7 +85,7 @@ const Meeting = () => {
     const microphoneReady = await checkMicrophone();
 
     if (cameraReady && microphoneReady) {
-      const newCall = client.call("default", params.id as string);
+      const newCall = client.call("default", id);
       await newCall.join();
       setCall(newCall);
       setIsJoined(true);
@@ -97,7 +95,7 @@ const Meeting = () => {
   };
 
   // Loading state
-  if (!client) return <div>Loading...</div>;
+  if (!client) return;
 
   // Pre-meeting device check state
   if (!call) {

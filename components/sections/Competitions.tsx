@@ -22,35 +22,16 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-
 import { Input } from "@/components/ui/input";
 import { useUser } from "@clerk/nextjs";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
 import { Id } from "@/convex/_generated/dataModel";
-import { createUser } from "@/actions/createUser";
 import Link from "next/link";
-import { subjects } from "../SubjectSelection";
-import { getUserByEmail } from "@/actions/getUserByEmail";
+import TeamForm from "../TeamForm";
+import SingleForm from "../SingleForm";
 
 const Competitions = () => {
+  // State to hold the anonymous user ID
+  const [anonId, setAnonId] = useState<string | null>(null);
   const [slidesPerView, setSlidesPerView] = useState(1);
   const competitions = useQuery(api.competitions.getCompetitions);
   const [isOneSlide, setIsOneSlide] = useState(false);
@@ -65,14 +46,15 @@ const Competitions = () => {
     isOpened: boolean;
     isTeam: boolean;
   }>();
-  const [teamMembersCount, setTeamMembersCount] = useState<number>(1);
 
   const { user } = useUser();
 
-  const getUserDetails = useQuery(
-    api.users.getUserDetails,
-    user ? { userId: user.id } : "skip",
-  );
+  useEffect(() => {
+    const storedId = localStorage.getItem("id");
+    if (storedId) {
+      setAnonId(storedId);
+    }
+  }, []);
 
   useEffect(() => {
     const handleResize = () => {
@@ -97,105 +79,49 @@ const Competitions = () => {
     }
   }, [competitions]);
 
-  const formSchema = z.object({
-    name: z.string({ required_error: "Please enter your school name." }),
-    school: z.string({ required_error: "Please enter your school name." }),
-    phoneNumber: z.number({
-      required_error: "Please enter a phone number.",
-    }),
-    whatsappNumber: z.number({
-      required_error: "Please enter a phone number.",
-    }),
-    teamMembers: z.array(
-      z.object({
-        email: z
-          .string()
-          .min(1, { message: "This field has to be filled." })
-          .email("This is not a valid email."),
-        subject: z.string({
-          required_error: "Subject must be selected.",
-        }),
-      }),
-    ),
-  });
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: undefined,
-      school: undefined,
-      phoneNumber: undefined,
-      whatsappNumber: undefined,
-      teamMembers: [{ email: undefined, subject: undefined }],
-    },
-  });
-
-  useEffect(() => {
-    if (getUserDetails) {
-      form.reset({
-        name: getUserDetails.name,
-        school: getUserDetails.school,
-        phoneNumber: getUserDetails.phoneNumber,
-        whatsappNumber: getUserDetails.whatsappNumber,
-      });
-    }
-  }, [getUserDetails, form]);
-
-  const insertReservation = useMutation(api.reservations.insertReservation);
   const getReservations = useQuery(api.reservations.getReservations);
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log("object");
-    if (user && selectedCompetition) {
-      if (selectedCompetition.isTeam) {
-        if (teamMembersCount === 3) {
-          try {
-            const createdAccounts = await Promise.all(
-              values.teamMembers?.map(async (member) => {
-                const createdAccount = await createUser(
-                  member.email,
-                  "competitor",
-                );
-                if (createdAccount.error) {
-                  const existingUser = await getUserByEmail(member.email);
-                  return existingUser?.userId ?? null;
-                }
-                return createdAccount.userId;
-              }),
-            );
-            console.log("Raw createdAccounts:", createdAccounts);
-            if (createdAccounts.length === 3) {
-              const teamMembersWithSubjects = createdAccounts.map(
-                (userId, index) => ({
-                  user: userId!.toString(), // Non-null assertion
-                  subject: values.teamMembers[index].subject,
-                }),
-              );
-              console.log("Team members:", teamMembersWithSubjects);
-              insertReservation({
-                competitionId: selectedCompetition._id,
-                teamLeader: user.id,
-                teamMembers: teamMembersWithSubjects,
-              });
-            } else {
-              console.log("Some users were not created or found successfully.");
-            }
-          } catch (error) {
-            console.log(error);
-          }
-        } else {
-          console.log("Please fill all team members.");
-        }
-        console.log(selectedCompetition.isTeam);
-      } else {
-        // insertReservation({
-        //   competitionId: selectedCompetition._id,
-        //   teamLeader: user.id,
-        // });
-        console.log(selectedCompetition.isTeam);
-        console.log("hey");
-      }
-    }
-  }
+  const insertInter = useMutation(api.inter.insertInter);
+  const getInter = useQuery(api.inter.getInter);
+
+  const insertIntra = useMutation(api.intra.insertIntra);
+  const getIntra = useQuery(api.intra.getIntra);
+  const patchIntra = useMutation(api.intra.patchIntra);
+
+  const isIntraRegistered = (competitionId: Id<"competitions">) => {
+    return getIntra?.some(
+      (intra) =>
+        intra.competitionId === competitionId && intra.userId === anonId,
+    );
+  };
+  const hasSubmittedProject = (competitionId: Id<"competitions">) => {
+    const userIntra = getIntra?.find(
+      (intra) =>
+        intra.userId === anonId && intra.competitionId === competitionId,
+    );
+
+    return (
+      userIntra &&
+      userIntra.projectLink !== undefined &&
+      userIntra.projectLink !== null &&
+      userIntra.projectLink !== ""
+    );
+  };
+
+  const requiresProjectSubmission = (competition: {
+    _id: Id<"competitions">;
+    _creationTime: number;
+    name: string;
+    description: string;
+    img: string;
+    startTime: number;
+    endTime: number;
+    isOpened: boolean;
+    isTeam: boolean;
+  }) => {
+    return !competition.isTeam;
+  };
+
   const renderContent = (competition: {
     _id: Id<"competitions">;
     _creationTime: number;
@@ -208,7 +134,7 @@ const Competitions = () => {
     isTeam: boolean;
   }) => {
     return (
-      <div className="bg-gradient-to-b from-purple-900/50 to-black rounded-2xl overflow-hidden shadow-xl transform transition-all duration-300">
+      <div className="bg-gradient-to-b from-purple-900/50 to-black rounded-2xl overflow-hidden shadow-xl transform transition-all duration-300 comicFont">
         <div className="relative">
           <Image
             src={competition.img}
@@ -270,7 +196,7 @@ const Competitions = () => {
                   }
 
                   return competition.isOpened
-                    ? "Reserve Your Seat"
+                    ? "Inter-School Competitor Entry"
                     : "Coming Soon...!";
                 })()}
               </Button>
@@ -279,280 +205,20 @@ const Competitions = () => {
               <DialogHeader>
                 <DialogTitle>Register to {competition.name}</DialogTitle>
               </DialogHeader>
-              <Form {...form}>
-                <form
-                  onSubmit={form.handleSubmit(onSubmit)}
-                  className="space-y-8"
-                >
-                  {competition.isTeam ? (
-                    <>
-                      {/* Leader Section with improved styling */}
-                      <div className="bg-white rounded-xl shadow-md p-6 mb-6">
-                        <h2 className="text-xl font-semibold mb-4 text-indigo-700 border-b pb-2">
-                          Team Leader Details
-                        </h2>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
-                          <FormField
-                            control={form.control}
-                            name="name"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel className="font-medium text-gray-700">
-                                  Full Name
-                                </FormLabel>
-                                <FormControl>
-                                  <Input
-                                    {...field}
-                                    className="border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                                    placeholder="Enter your full name"
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            control={form.control}
-                            name="school"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel className="font-medium text-gray-700">
-                                  School
-                                </FormLabel>
-                                <FormControl>
-                                  <Input
-                                    {...field}
-                                    className="border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                                    placeholder="Enter school name"
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            control={form.control}
-                            name="phoneNumber"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel className="font-medium text-gray-700">
-                                  Phone Number
-                                </FormLabel>
-                                <FormControl>
-                                  <Input
-                                    {...field}
-                                    type="tel"
-                                    className="border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                                    placeholder="Enter phone number"
-                                    onChange={(e) =>
-                                      field.onChange(Number(e.target.value))
-                                    }
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            control={form.control}
-                            name="whatsappNumber"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel className="font-medium text-gray-700">
-                                  WhatsApp Number
-                                </FormLabel>
-                                <FormControl>
-                                  <Input
-                                    {...field}
-                                    type="tel"
-                                    className="border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                                    placeholder="Enter WhatsApp number"
-                                    onChange={(e) =>
-                                      field.onChange(Number(e.target.value))
-                                    }
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                        </div>
-                      </div>
-
-                      {/* Team Members Section with horizontal layout */}
-                      <div className="bg-white rounded-xl shadow-md p-6">
-                        <div className="flex justify-between items-center mb-4">
-                          <h2 className="text-xl font-semibold text-indigo-700">
-                            Team Members
-                          </h2>
-                          <div className="flex space-x-4">
-                            <Button
-                              type="button"
-                              onClick={() => setTeamMembersCount((i) => i + 1)}
-                              disabled={teamMembersCount === 3}
-                              className={`px-4 py-2 text-white rounded-md font-medium flex items-center gap-2 ${
-                                teamMembersCount === 3
-                                  ? "bg-gray-400 cursor-not-allowed"
-                                  : "bg-indigo-600 hover:bg-indigo-700 transition-all duration-200"
-                              }`}
-                            >
-                              {teamMembersCount === 3
-                                ? "Maximum Reached"
-                                : "Add Member"}
-                            </Button>
-                          </div>
-                        </div>
-
-                        {/* Horizontal team members layout */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 mt-4">
-                          {Array.from({
-                            length: teamMembersCount,
-                          }).map((_, index) => (
-                            <div
-                              key={index}
-                              className="p-4 border border-gray-200 rounded-lg bg-gray-50 shadow-sm hover:shadow-md transition-shadow duration-200"
-                            >
-                              <h3 className="text-md font-medium mb-3 text-gray-700 border-b pb-2">
-                                Member {index + 1}
-                              </h3>
-                              <FormField
-                                control={form.control}
-                                name={`teamMembers.${index}.email`}
-                                render={({ field }) => (
-                                  <FormItem className="mb-3">
-                                    <FormLabel className="text-sm text-gray-700">
-                                      Email
-                                    </FormLabel>
-                                    <FormControl>
-                                      <Input
-                                        {...field}
-                                        type="email"
-                                        className="text-sm border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                                        placeholder="Enter email"
-                                      />
-                                    </FormControl>
-                                    <FormMessage className="text-xs text-red-500" />
-                                  </FormItem>
-                                )}
-                              />
-                              <FormField
-                                control={form.control}
-                                name={`teamMembers.${index}.subject`}
-                                render={({ field }) => (
-                                  <FormItem>
-                                    <FormLabel>Subject</FormLabel>
-                                    <Select
-                                      onValueChange={field.onChange}
-                                      defaultValue={field.value}
-                                    >
-                                      <FormControl>
-                                        <SelectTrigger>
-                                          <SelectValue placeholder="Select a subject." />
-                                        </SelectTrigger>
-                                      </FormControl>
-                                      <SelectContent>
-                                        {subjects.map((subject) => (
-                                          <SelectItem
-                                            key={subject.name}
-                                            value={subject.name}
-                                          >
-                                            {subject.name}
-                                          </SelectItem>
-                                        ))}
-                                      </SelectContent>
-                                    </Select>
-                                    <FormMessage />
-                                  </FormItem>
-                                )}
-                              />
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <FormField
-                        control={form.control}
-                        name="name"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Full Name</FormLabel>
-                            <FormControl>
-                              <Input {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="school"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>School</FormLabel>
-                            <FormControl>
-                              <Input {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="phoneNumber"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Phone Number</FormLabel>
-                            <FormControl>
-                              <Input
-                                {...field}
-                                type="number"
-                                onChange={(e) =>
-                                  field.onChange(Number(e.target.value))
-                                }
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="whatsappNumber"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>WhatsApp Number</FormLabel>
-                            <FormControl>
-                              <Input
-                                {...field}
-                                type="number"
-                                onChange={(e) =>
-                                  field.onChange(Number(e.target.value))
-                                }
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </>
-                  )}
-                  <Button
-                    type="submit"
-                    onClick={() => form.handleSubmit(onSubmit)}
-                  >
-                    Save changes
-                  </Button>
-                </form>
-              </Form>
+              {selectedCompetition && selectedCompetition.isTeam && (
+                <TeamForm {...selectedCompetition} />
+              )}
+              {selectedCompetition && !selectedCompetition.isTeam && (
+                <SingleForm {...selectedCompetition} />
+              )}
             </DialogContent>
           </Dialog>
+
+          {/* Inter-School Competition Logic (for signed-in users) */}
           {user &&
             getReservations?.find((res) => {
               if (res.competitionId === competition._id) {
                 if (competition.isTeam) {
-                  // Check if user is part of the team
                   return (
                     res.teamMembers?.some(
                       (member) => member.user === user.id,
@@ -569,36 +235,44 @@ const Competitions = () => {
                   Join Live
                 </Link>
               </Button>
+            ) : getReservations.find(
+                (res) => res.competitionId === competition._id,
+              )?._id ===
+              getInter?.find((inter) => inter.reservationId)?.reservationId ? (
+              <Button>You&apos;ve Submitted Your Project.</Button>
             ) : (
-              <Button>Submit Your Work</Button>
-            ))}
-
-          {competition.isOpened &&
-            competition.isTeam &&
-            !getReservations?.some(
-              (res) => res.competitionId === competition._id,
-            ) && (
               <Dialog>
                 <DialogTrigger asChild>
-                  <Button className="bg-blue-600 hover:bg-blue-700 text-white mt-4">
-                    Intra-School Competitor Entry
+                  <Button
+                    className="bg-blue-600 hover:bg-blue-700 text-white mt-4"
+                    onClick={() => {
+                      setSelectedCompetition(competition);
+                    }}
+                  >
+                    Submit Your Work.
                   </Button>
                 </DialogTrigger>
                 <DialogContent>
                   <DialogHeader>
-                    <DialogTitle>Enter Student Details</DialogTitle>
+                    <DialogTitle>Submit Your Project.</DialogTitle>
                   </DialogHeader>
                   <form
                     onSubmit={(e) => {
                       e.preventDefault();
                       const form = new FormData(e.currentTarget);
-                      const name = form.get("studentName");
-                      const admission = form.get("admissionNumber");
-                      const grade = form.get("grade");
-                      const whatsapp = form.get("whatsapp");
-
-                      if (name && admission && grade && whatsapp) {
-                        console.log(name);
+                      const projectLink = form.get("projectLink");
+                      if (projectLink) {
+                        getReservations?.find((res) => {
+                          if (
+                            res.competitionId === competition._id &&
+                            res.teamLeader === user.id
+                          ) {
+                            insertInter({
+                              reservationId: res._id,
+                              projectLink: projectLink.toString(),
+                            });
+                          }
+                        });
                       } else {
                         alert("Please fill all fields.");
                       }
@@ -606,26 +280,190 @@ const Competitions = () => {
                     className="space-y-4"
                   >
                     <div>
-                      <Input name="studentName" placeholder="Enter full name" />
-                    </div>
-                    <div>
-                      <Input
-                        name="admissionNumber"
-                        placeholder="Admission number"
-                      />
-                    </div>
-                    <div>
-                      <Input name="grade" placeholder="Grade" />
-                    </div>
-                    <div>
-                      <Input name="whatsapp" placeholder="WhatsApp number" />
+                      <Input name="projectLink" placeholder="Project Link" />
                     </div>
                     <Button type="submit" className="w-full">
-                      Start Quiz
+                      Submit
                     </Button>
                   </form>
                 </DialogContent>
               </Dialog>
+            ))}
+
+          {competition.isOpened &&
+            !getReservations?.some(
+              (res) => res.competitionId === competition._id,
+            ) && (
+              <>
+                {isIntraRegistered(competition._id) ? (
+                  requiresProjectSubmission(competition) ? (
+                    hasSubmittedProject(competition._id) ? (
+                      <Button className="bg-green-600 text-white mt-4">
+                        You&apos;ve Submitted Your Project
+                      </Button>
+                    ) : (
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button
+                            className="bg-blue-600 hover:bg-blue-700 text-white mt-4"
+                            onClick={() => {
+                              setSelectedCompetition(competition);
+                            }}
+                          >
+                            Submit Your Work
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                          <DialogHeader>
+                            <DialogTitle>Submit Your Project</DialogTitle>
+                          </DialogHeader>
+                          <form
+                            onSubmit={(e) => {
+                              e.preventDefault();
+                              const form = new FormData(e.currentTarget);
+                              const projectLink = form.get("projectLink");
+                              if (
+                                projectLink &&
+                                selectedCompetition &&
+                                anonId
+                              ) {
+                                patchIntra({
+                                  userId: anonId,
+                                  competitionId: selectedCompetition._id,
+                                  projectLink: projectLink.toString(),
+                                });
+                              } else {
+                                alert("Please fill all fields.");
+                              }
+                            }}
+                            className="space-y-4"
+                          >
+                            <div>
+                              <Input
+                                name="projectLink"
+                                placeholder="Project Link"
+                              />
+                            </div>
+                            <Button type="submit" className="w-full">
+                              Submit
+                            </Button>
+                          </form>
+                        </DialogContent>
+                      </Dialog>
+                    )
+                  ) : (
+                    /* Competition doesn't require project submission, show participation status */
+                    <Button asChild>
+                      <Link
+                        href={`/quiz/${
+                          getIntra?.find(
+                            (intra) =>
+                              intra.userId === anonId &&
+                              intra.competitionId === competition._id,
+                          )?._id
+                        }`}
+                        className="text-white"
+                      >
+                        Join Live
+                      </Link>
+                    </Button>
+                  )
+                ) : (
+                  /* User is not registered for this intra-school competition */
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button
+                        className="bg-blue-600 hover:bg-blue-700 text-white mt-4"
+                        onClick={() => setSelectedCompetition(competition)}
+                      >
+                        Intra-School Competitor Entry
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Enter Student Details</DialogTitle>
+                      </DialogHeader>
+                      {/* Modified Form with Subject Selection for Team Competitions */}
+                      <form
+                        onSubmit={(e) => {
+                          e.preventDefault();
+                          const form = new FormData(e.currentTarget);
+                          // Use existing anonId if available, or generate a new one
+                          const userId = anonId || crypto.randomUUID();
+                          const name = form.get("studentName");
+                          const admission = form.get("admissionNumber");
+                          const grade = form.get("grade");
+                          const cls = form.get("cls");
+                          const whatsapp = form.get("whatsapp");
+
+                          if (
+                            name &&
+                            admission &&
+                            grade &&
+                            cls &&
+                            whatsapp &&
+                            selectedCompetition
+                          ) {
+                            insertIntra({
+                              userId,
+                              fullName: name.toString(),
+                              admissionNumber: Number(admission),
+                              grade: Number(grade),
+                              cls: cls?.toString(),
+                              whatsAppNumber: Number(whatsapp),
+                              competitionId: selectedCompetition._id,
+                            });
+
+                            // Only store the ID in localStorage if we don't have one already
+                            if (!anonId) {
+                              localStorage.setItem("id", userId);
+                              setAnonId(userId); // Update state as well
+                            }
+                          } else {
+                            alert("Please fill all fields.");
+                          }
+                        }}
+                        className="space-y-4"
+                      >
+                        <div>
+                          <Input
+                            name="studentName"
+                            placeholder="Enter full name"
+                          />
+                        </div>
+                        <div>
+                          <Input
+                            name="admissionNumber"
+                            type="number"
+                            placeholder="Admission number"
+                          />
+                        </div>
+                        <div>
+                          <Input
+                            name="grade"
+                            placeholder="Grade"
+                            type="number"
+                          />
+                        </div>
+                        <div>
+                          <Input name="cls" placeholder="Class" />
+                        </div>
+                        <div>
+                          <Input
+                            name="whatsapp"
+                            placeholder="WhatsApp number"
+                            type="number"
+                          />
+                        </div>
+
+                        <Button type="submit" className="w-full">
+                          Register
+                        </Button>
+                      </form>
+                    </DialogContent>
+                  </Dialog>
+                )}
+              </>
             )}
         </div>
       </div>
@@ -633,7 +471,7 @@ const Competitions = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-black">
+    <div className="min-h-screen flex flex-col bg-[#0d0d0d]">
       <section
         id="competitions"
         className="min-h-screen py-8 md:py-16 lg:py-24 relative z-0 flex flex-col items-center justify-center"

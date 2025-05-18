@@ -1,18 +1,14 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Comic_Neue } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ConvexClientProvider } from "@/components/ConvexClientProvider";
 import ClientProvider from "@/components/ClientProvider";
 import "./globals.css";
 import "@stream-io/video-react-sdk/dist/css/styles.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const comicNeue = Comic_Neue({
+  variable: "--font-comic-neue",
+  weight: ["300", "400", "700"],
   subsets: ["latin"],
 });
 
@@ -30,7 +26,7 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en">
         <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+          className={`${comicNeue.variable} antialiased`}
           suppressHydrationWarning
         >
           <ClientProvider>

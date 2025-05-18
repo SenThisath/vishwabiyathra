@@ -76,7 +76,7 @@ export default function Hero() {
     }
 
     return (
-        <div className="min-h-screen flex flex-col bg-black">
+        <div className="min-h-screen flex flex-col bg-[#0d0d0d]">
             {/* Hero section */}
             <main className="overflow-x-hidden" ref={containerRef}>
                 {checkOtherDetails && role && role === "competitor" && (
@@ -231,7 +231,7 @@ export default function Hero() {
                                             repeat: Infinity,
                                         }}
                                     />
-                                    <span className="relative">
+                                    <span className="relative comicFont">
                                         VISHWABHIYATHRA&apos;25 is organized
                                         proudly by The Science Society of
                                         Bandaranayake College, Gampaha.
@@ -240,41 +240,6 @@ export default function Hero() {
                             </p>
                         </FadeInWhenVisible>
 
-                        <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center mt-8 sm:mt-12 px-4">
-                            <FadeInWhenVisible direction="left" delay={0.5}>
-                                <motion.button
-                                    whileHover={{
-                                        scale: 1.05,
-                                        boxShadow:
-                                            "0 0 25px rgba(236, 72, 153, 0.6)",
-                                    }}
-                                    whileTap={{ scale: 0.95 }}
-                                    className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 rounded-full font-medium border-2 border-pink-500 text-white relative overflow-hidden group"
-                                >
-                                    <motion.span className="absolute inset-0 bg-gradient-to-r from-pink-500 to-rose-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                                    <span className="relative z-10">
-                                        Register Now
-                                    </span>
-                                </motion.button>
-                            </FadeInWhenVisible>
-
-                            <FadeInWhenVisible direction="right" delay={0.6}>
-                                <motion.button
-                                    whileHover={{
-                                        scale: 1.05,
-                                        boxShadow:
-                                            "0 0 25px rgba(236, 72, 153, 0.6)",
-                                    }}
-                                    whileTap={{ scale: 0.95 }}
-                                    className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 rounded-full font-medium border-2 border-pink-500 text-white relative overflow-hidden group"
-                                >
-                                    <motion.span className="absolute inset-0 bg-gradient-to-r from-pink-500 to-rose-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                                    <span className="relative z-10">
-                                        Register Now
-                                    </span>
-                                </motion.button>
-                            </FadeInWhenVisible>
-                        </div>
                     </div>
                     <motion.div
                         className="absolute bottom-20 sm:bottom-10 left-0 right-0 flex justify-center"
@@ -285,7 +250,7 @@ export default function Hero() {
                         <div className="px-6 sm:px-8 py-2 sm:py-3 rounded-full bg-purple-900/10 backdrop-blur-md flex items-center gap-3 border border-purple-500/20">
                             <div className="w-2 sm:w-3 h-2 sm:h-3 bg-green-500 rounded-full animate-pulse" />
                             <motion.span
-                                className="font-mono text-blue-100 text-sm sm:text-base"
+                                className="font-mono text-blue-100 text-sm sm:text-base comicFont"
                                 animate={{
                                     textShadow: [
                                         "0 0 5px rgba(56, 189, 248, 0)",

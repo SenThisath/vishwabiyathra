@@ -1,345 +1,377 @@
-import { useState, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Diamond, Trophy, Award, Medal, Star } from "lucide-react";
 import { FadeInWhenVisible } from "../FadeInWhenVisible";
 import { Title } from "../Title";
+import { useState, useRef } from "react";
+import { motion, useInView } from "framer-motion";
 
 export default function SponsorsLeaderboard() {
-    const [activeCategory, setActiveCategory] = useState("diamond");
-    const containerRef = useRef(null);
+  const platinumRef = useRef(null);
+  const line1Ref = useRef(null);
+  const goldLineRef = useRef(null);
+  const silverLineRef = useRef(null);
+  const bronzeLineRef = useRef(null);
 
-    const sponsorTiers = [
-        {
-            type: "diamond",
-            title: "The Diamond Sponsors",
-            icon: <Diamond className="w-8 h-8" />,
-            color: "from-blue-400 to-cyan-300",
-            bgColor: "bg-blue-900/10",
-            borderColor: "border-blue-400",
-            textColor: "text-blue-400",
-            sponsors: [
-                {
-                    id: 1,
-                    name: "ICTFROMABC",
-                    logo: "http://place-hold.it/200x200/666",
-                    description: "Leading the digital transformation",
-                },
-            ],
-        },
-        {
-            type: "platinum",
-            title: "The Platinum Sponsors",
-            icon: <Trophy className="w-8 h-8" />,
-            color: "from-indigo-400 to-purple-400",
-            bgColor: "bg-indigo-900/10",
-            borderColor: "border-indigo-400",
-            textColor: "text-indigo-400",
-            sponsors: [
-                {
-                    id: 1,
-                    name: "ICTFROMABC",
-                    logo: "http://place-hold.it/200x200/666",
-                    description: "Leading the digital transformation",
-                },
-            ],
-        },
-        {
-            type: "gold",
-            title: "The Gold Sponsors",
-            icon: <Award className="w-8 h-8" />,
-            color: "from-yellow-400 to-amber-300",
-            bgColor: "bg-yellow-900/10",
-            borderColor: "border-yellow-400",
-            textColor: "text-yellow-400",
-            sponsors: [
-                {
-                    id: 1,
-                    name: "ICTFROMABC",
-                    logo: "http://place-hold.it/200x200/666",
-                    description: "Leading the digital transformation",
-                },
-            ],
-        },
-        {
-            type: "silver",
-            title: "The Silver Sponsors",
-            icon: <Medal className="w-8 h-8" />,
-            color: "from-gray-400 to-slate-300",
-            bgColor: "bg-gray-800/10",
-            borderColor: "border-gray-400",
-            textColor: "text-gray-400",
-            sponsors: [
-                {
-                    id: 1,
-                    name: "ICTFROMABC",
-                    logo: "http://place-hold.it/200x200/666",
-                    description: "Leading the digital transformation",
-                },
-            ],
-        },
-        {
-            type: "bronze",
-            title: "The Bronze Sponsors",
-            icon: <Star className="w-8 h-8" />,
-            color: "from-orange-400 to-amber-300",
-            bgColor: "bg-orange-900/10",
-            borderColor: "border-orange-400",
-            textColor: "text-orange-400",
-            sponsors: [
-                {
-                    id: 1,
-                    name: "ICTFROMABC",
-                    logo: "http://place-hold.it/200x200/666",
-                    description: "Leading the digital transformation",
-                },
-            ],
-        },
-    ];
+  const platinumInView = useInView(platinumRef, { once: false, amount: 0.5 });
+  const line1InView = useInView(line1Ref, { once: false, amount: 0.8 });
+  const goldLineInView = useInView(goldLineRef, { once: false, amount: 0.5 });
+  const silverLineInView = useInView(silverLineRef, {
+    once: false,
+    amount: 0.5,
+  });
+  const silverRef = useRef(null);
+  const silverInView = useInView(silverRef, {
+    once: true,
+    amount: 0.3,
+  });
+  const bronzeLineInView = useInView(bronzeLineRef, {
+    once: false,
+    amount: 0.5,
+  });
 
-    // Find active tier
-    const activeTier = sponsorTiers.find(
-        (tier) => tier.type === activeCategory
-    );
+  const bronzeRef = useRef(null);
+  const bronzeInView = useInView(bronzeRef, {
+    once: true,
+    amount: 0.3,
+  });
 
-    // Advanced animation variants
-    const pageVariants = {
-        initial: { opacity: 0 },
-        animate: {
-            opacity: 1,
-            transition: {
-                staggerChildren: 0.08,
-                delayChildren: 0.1,
-            },
-        },
-        exit: {
-            opacity: 0,
-            transition: {
-                staggerChildren: 0.05,
-                staggerDirection: -1,
-            },
-        },
-    };
+  const [sponsors] = useState({
+    main: {
+      name: "Platinum Sponsor",
+      logo: "https://place-hold.it/500x300/666",
+      company: "Tech Solutions Inc.",
+    },
+    gold: [
+      {
+        name: "Gold Sponsor",
+        logo: "https://place-hold.it/500x300/666",
+        company: "Digital Innovations",
+      },
+      {
+        name: "Gold Sponsor",
+        logo: "https://place-hold.it/500x300/666",
+        company: "Future Systems",
+      },
+    ],
+    silver: [
+      {
+        name: "Silver Sponsor",
+        logo: "https://place-hold.it/500x300/666",
+        company: "WebTech Co.",
+      },
+      {
+        name: "Silver Sponsor",
+        logo: "https://place-hold.it/500x300/666",
+        company: "Creative Design",
+      },
+      {
+        name: "Silver Sponsor",
+        logo: "https://place-hold.it/500x300/666",
+        company: "Cloud Services",
+      },
+    ],
+    bronze: [
+      {
+        name: "Bronze Sponsor",
+        logo: "https://place-hold.it/500x300/666",
+        company: "Local Business",
+      },
+      {
+        name: "Bronze Sponsor",
+        logo: "https://place-hold.it/500x300/666",
+        company: "Startup Hub",
+      },
+      {
+        name: "Bronze Sponsor",
+        logo: "https://place-hold.it/500x300/666",
+        company: "Marketing Pro",
+      },
+      {
+        name: "Bronze Sponsor",
+        logo: "https://place-hold.it/500x300/666",
+        company: "Tech Academy",
+      },
+    ],
+  });
 
-    const headerRevealVariants = {
-        initial: { width: "100%" },
-        animate: {
-            width: "100%",
-            transition: {
-                duration: 1.2,
-                ease: [0.83, 0, 0.17, 1],
-            },
-        },
-    };
-
-    const cardGridVariants = {
-        initial: { opacity: 0 },
-        animate: {
-            opacity: 1,
-            transition: {
-                delayChildren: 0.2,
-                staggerChildren: 0.1,
-            },
-        },
-        exit: {
-            opacity: 0,
-            transition: {
-                staggerChildren: 0.05,
-                staggerDirection: -1,
-            },
-        },
-    };
-
-    const cardVariants = {
-        initial: { opacity: 0, y: 30 },
-        animate: {
-            opacity: 1,
-            y: 0,
-            transition: {
-                duration: 0.8,
-                ease: [0.215, 0.61, 0.355, 1],
-            },
-        },
-        exit: {
-            opacity: 0,
-            y: 20,
-            transition: {
-                duration: 0.4,
-                ease: [0.215, 0.61, 0.355, 1],
-            },
-        },
-        hover: {
-            y: -10,
-            transition: {
-                duration: 0.4,
-                ease: [0.215, 0.61, 0.355, 1],
-            },
-        },
-    };
-
-    const iconRevealVariants = {
-        initial: { scale: 0, rotate: -180 },
-        animate: {
-            scale: 1,
-            rotate: 0,
-            transition: {
-                duration: 0.6,
-                ease: [0.34, 1.56, 0.64, 1],
-            },
-        },
-    };
-
-    return (
-        <motion.section
-            id="leader board"
-            ref={containerRef}
-            className="min-h-screen text-white font-sans relative overflow-hidden"
-            initial="initial"
-            animate="animate"
-            variants={pageVariants}
-        >
-            {/* Hero section */}
-            <div className="relative z-10 pt-24 px-8 md:px-16 lg:px-24">
-                {/* Animated title */}
-                <FadeInWhenVisible>
-                    <div className="flex flex-col items-center">
-                        <Title
-                            mainText="THE FUTURE OF"
-                            subText="TABLETOP IS HERE"
-                        />
-                    </div>
-                </FadeInWhenVisible>
-
-                <FadeInWhenVisible delay={0.2}>
-                    <motion.div className="mt-12 mb-24 md:mb-15 flex flex-nowrap relative w-full max-w-full no-scrollbar">
-                        <div className="absolute bottom-0 left-0 right-0 h-px bg-gray-800" />
-
-                        {sponsorTiers.map((tier, i) => (
-                            <motion.div
-                                key={tier.type}
-                                className={`mr-6 md:mr-12 last:mr-0 relative flex-shrink-0 flex-1 flex justify-center w-full`}
-                                whileHover={{ scale: 1.03 }}
-                                whileTap={{ scale: 0.97 }}
-                            >
-                                <button
-                                    onClick={() => setActiveCategory(tier.type)}
-                                    className={`flex flex-col md:flex-row items-center pb-4 relative`}
-                                >
-                                    <FadeInWhenVisible delay={i * 0.3}>
-                                        <div
-                                            className={`p-2 rounded-full bg-gradient-to-br ${tier.color} opacity-80`}
-                                        >
-                                            {tier.icon}
-                                        </div>
-                                    </FadeInWhenVisible>
-                                    {activeCategory === tier.type && (
-                                        <motion.div
-                                            className={`absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r ${tier.color}`}
-                                            layoutId="activeTab"
-                                        />
-                                    )}
-                                </button>
-                            </motion.div>
-                        ))}
-                    </motion.div>
-
-                    <div className="mb-20">
-                        <FadeInWhenVisible delay={0.4} direction="left">
-                            <div className="overflow-hidden">
-                                <motion.div
-                                    className="relative h-16 mb-12 overflow-hidden"
-                                    initial="initial"
-                                    animate="animate"
-                                    key={activeTier?.type}
-                                >
-                                    <motion.div
-                                        className="absolute inset-0 flex items-center"
-                                        variants={headerRevealVariants}
-                                    >
-                                        <div className="flex items-center">
-                                            <motion.div
-                                                className={`p-3 rounded-lg bg-gradient-to-br ${activeTier?.color} mr-4`}
-                                                variants={iconRevealVariants}
-                                            >
-                                                {activeTier?.icon}
-                                            </motion.div>
-
-                                            <div>
-                                                <motion.h2
-                                                    className="text-3xl font-bold mb-1"
-                                                    initial={{
-                                                        opacity: 0,
-                                                        y: 20,
-                                                    }}
-                                                    animate={{
-                                                        opacity: 1,
-                                                        y: 0,
-                                                    }}
-                                                    transition={{
-                                                        delay: 0.3,
-                                                        duration: 0.6,
-                                                    }}
-                                                >
-                                                    {activeTier?.title}
-                                                </motion.h2>
-                                            </div>
-                                        </div>
-                                    </motion.div>
-                                </motion.div>
-                            </div>
-                        </FadeInWhenVisible>
-
-                        <AnimatePresence mode="wait">
-                            <motion.div
-                                key={activeCategory}
-                                variants={cardGridVariants}
-                                initial="initial"
-                                animate="animate"
-                                exit="exit"
-                                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-                            >
-                                {activeTier?.sponsors.map((sponsor) => (
-                                    <motion.div
-                                        key={`${activeCategory}-${sponsor.id}`}
-                                        variants={cardVariants}
-                                        whileHover="hover"
-                                        className="relative group"
-                                    >
-                                        <motion.div
-                                            className={`
-                      relative p-8 py-12 rounded-lg overflow-hidden backdrop-blur-sm
-                      ${activeTier.bgColor} border border-gray-800
-                      group-hover:border-opacity-100 transition-all duration-300
-                    `}
-                                        >
-                                            {/* Logo container */}
-                                            <div className="mb-6 h-24 flex items-center justify-center">
-                                                <img
-                                                    src={sponsor.logo}
-                                                    alt={sponsor.name}
-                                                    className="max-w-full max-h-20 object-contain"
-                                                />
-                                            </div>
-
-                                            {/* Sponsor info */}
-                                            <div className="text-center">
-                                                <h3
-                                                    className={`text-lg font-bold mb-2 ${activeTier.textColor}`}
-                                                >
-                                                    {sponsor.name}
-                                                </h3>
-
-                                                <p className="text-sm text-gray-400">
-                                                    {sponsor.description}
-                                                </p>
-                                            </div>
-                                        </motion.div>
-                                    </motion.div>
-                                ))}
-                            </motion.div>
-                        </AnimatePresence>
-                    </div>
-                </FadeInWhenVisible>
+  return (
+    <div className="min-h-screen flex flex-col bg-black">
+      <section
+        id="about"
+        className="min-h-screen py-8 md:py-16 lg:py-24 relative z-10 flex flex-col items-center justify-center"
+      >
+        <div className="absolute inset-0 pointer-events-none"></div>
+        <div className="z-10 px-4 md:px-8 lg:px-16 w-full max-w-7xl mx-auto text-center">
+          <FadeInWhenVisible>
+            <div className="flex flex-col items-center">
+              <Title mainText="THE FUTURE OF" subText="TABLETOP IS HERE" />
             </div>
-        </motion.section>
-    );
+          </FadeInWhenVisible>
+          <div className="flex flex-col items-center w-full p-4 min-h-screen">
+            <div className="org-chart w-full max-w-6xl px-4">
+              {/* Main/Platinum Sponsor */}
+              <div className="flex justify-center mb-12" ref={platinumRef}>
+                <motion.div
+                  className="sponsor-card platinum-sponsor bg-white p-6 rounded-xl shadow-lg border-t-4 border-indigo-600 max-w-xs w-full transform"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={
+                    platinumInView
+                      ? { opacity: 1, scale: 1 }
+                      : { opacity: 0, scale: 0.8 }
+                  }
+                  transition={{ duration: 0.5 }}
+                  whileHover={{
+                    y: -8,
+                    boxShadow: "0 15px 30px -10px rgba(79, 70, 229, 0.3)",
+                  }}
+                >
+                  <div className="flex flex-col items-center">
+                    <div className="rounded-full bg-indigo-50 p-4 mb-4">
+                      <img
+                        src={sponsors.main.logo}
+                        alt={sponsors.main.company}
+                        className="rounded-lg"
+                      />
+                    </div>
+                    <h3 className="text-2xl font-bold text-indigo-800 mb-1">
+                      {sponsors.main.company}
+                    </h3>
+                    <span className="text-indigo-600 font-semibold uppercase tracking-wider text-sm">
+                      {sponsors.main.name}
+                    </span>
+                  </div>
+                </motion.div>
+              </div>
+
+              {/* Connecting Line */}
+              <motion.div
+                ref={line1Ref}
+                className="flex justify-center"
+                initial={{ opacity: 0, scaleY: 0 }}
+                animate={
+                  line1InView
+                    ? { opacity: 1, scaleY: 1 }
+                    : { opacity: 0, scaleY: 0 }
+                }
+                transition={{ duration: 0.3 }}
+              >
+                <div className="w-0.5 h-16 bg-gradient-to-b from-indigo-600 to-yellow-500"></div>
+              </motion.div>
+
+              {/* Gold Sponsors */}
+              <div className="relative mb-16" ref={goldLineRef}>
+                <motion.div
+                  className="h-0.5 w-4/5 md:w-3/4 bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-500 mx-auto rounded-full"
+                  initial={{ opacity: 0, scaleX: 0 }}
+                  animate={
+                    goldLineInView
+                      ? { opacity: 1, scaleX: 1 }
+                      : { opacity: 0, scaleX: 0 }
+                  }
+                  transition={{ duration: 0.5 }}
+                ></motion.div>
+                <div className="flex flex-wrap justify-center md:justify-around gap-8 mt-16">
+                  {sponsors.gold.map((sponsor, index) => {
+                    const goldRef = useRef(null);
+                    const goldInView = useInView(goldRef, {
+                      once: true,
+                      amount: 0.3,
+                    });
+
+                    return (
+                      <div
+                        key={`gold-${index}`}
+                        className="relative md:px-4"
+                        ref={goldRef}
+                      >
+                        <motion.div
+                          className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-full"
+                          initial={{ opacity: 0, scaleY: 0 }}
+                          animate={
+                            goldInView
+                              ? { opacity: 1, scaleY: 1 }
+                              : { opacity: 0, scaleY: 0 }
+                          }
+                          transition={{ duration: 0.3, delay: 0.1 }}
+                        >
+                          <div className="h-16 w-0.5 bg-gradient-to-b from-yellow-500 to-yellow-400"></div>
+                        </motion.div>
+                        <motion.div
+                          className="sponsor-card gold-sponsor bg-white p-5 rounded-xl shadow-md border-t-4 border-yellow-500 max-w-xs w-full"
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={
+                            goldInView
+                              ? { opacity: 1, y: 0 }
+                              : { opacity: 0, y: 20 }
+                          }
+                          transition={{ duration: 0.4, delay: 0.2 }}
+                          whileHover={{
+                            y: -6,
+                            boxShadow:
+                              "0 12px 25px -7px rgba(234, 179, 8, 0.3)",
+                          }}
+                        >
+                          <div className="flex flex-col items-center">
+                            <div className="rounded-full bg-yellow-50 p-3 mb-3">
+                              <img
+                                src={sponsor.logo}
+                                alt={sponsor.company}
+                                className="rounded"
+                              />
+                            </div>
+                            <h3 className="text-xl font-bold text-yellow-700 mb-1">
+                              {sponsor.company}
+                            </h3>
+                            <span className="text-yellow-600 font-semibold uppercase tracking-wider text-xs">
+                              {sponsor.name}
+                            </span>
+                          </div>
+                        </motion.div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Silver Sponsors */}
+              <div className="relative mb-16" ref={silverLineRef}>
+                <motion.div
+                  className="h-0.5 w-11/12 bg-gradient-to-r from-gray-400 via-gray-300 to-gray-400 mx-auto rounded-full"
+                  initial={{ opacity: 0, scaleX: 0 }}
+                  animate={
+                    silverLineInView
+                      ? { opacity: 1, scaleX: 1 }
+                      : { opacity: 0, scaleX: 0 }
+                  }
+                  transition={{ duration: 0.5 }}
+                ></motion.div>
+                <div className="flex flex-wrap justify-center gap-6 mt-16">
+                  {sponsors.silver.map((sponsor, index) => {
+                    return (
+                      <div
+                        key={`silver-${index}`}
+                        className="relative"
+                        ref={silverRef}
+                      >
+                        <motion.div
+                          className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-full"
+                          initial={{ opacity: 0, scaleY: 0 }}
+                          animate={
+                            silverInView
+                              ? { opacity: 1, scaleY: 1 }
+                              : { opacity: 0, scaleY: 0 }
+                          }
+                          transition={{ duration: 0.3, delay: 0.1 }}
+                        >
+                          <div className="h-16 w-0.5 bg-gradient-to-b from-gray-400 to-gray-300"></div>
+                        </motion.div>
+                        <motion.div
+                          className="sponsor-card silver-sponsor bg-white p-4 rounded-xl shadow-md border-t-4 border-gray-400 w-64"
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={
+                            silverInView
+                              ? { opacity: 1, y: 0 }
+                              : { opacity: 0, y: 20 }
+                          }
+                          transition={{ duration: 0.4, delay: 0.1 }}
+                          whileHover={{
+                            y: -5,
+                            boxShadow:
+                              "0 10px 20px -5px rgba(156, 163, 175, 0.3)",
+                          }}
+                        >
+                          <div className="flex flex-col items-center">
+                            <div className="rounded-full bg-gray-50 p-3 mb-3">
+                              <img
+                                src={sponsor.logo}
+                                alt={sponsor.company}
+                                className="rounded"
+                              />
+                            </div>
+                            <h3 className="text-lg font-bold text-gray-700 mb-1">
+                              {sponsor.company}
+                            </h3>
+                            <span className="text-gray-600 font-semibold uppercase tracking-wider text-xs">
+                              {sponsor.name}
+                            </span>
+                          </div>
+                        </motion.div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Bronze Sponsors */}
+              <div className="relative" ref={bronzeLineRef}>
+                <motion.div
+                  className="h-0.5 w-full bg-gradient-to-r from-amber-700 via-amber-600 to-amber-700 mx-auto rounded-full"
+                  initial={{ opacity: 0, scaleX: 0 }}
+                  animate={
+                    bronzeLineInView
+                      ? { opacity: 1, scaleX: 1 }
+                      : { opacity: 0, scaleX: 0 }
+                  }
+                  transition={{ duration: 0.5 }}
+                ></motion.div>
+                <div className="flex flex-wrap justify-center gap-4 mt-16">
+                  {sponsors.bronze.map((sponsor, index) => {
+                    return (
+                      <div
+                        key={`bronze-${index}`}
+                        className="relative"
+                        ref={bronzeRef}
+                      >
+                        <motion.div
+                          className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-full"
+                          initial={{ opacity: 0, scaleY: 0 }}
+                          animate={
+                            bronzeInView
+                              ? { opacity: 1, scaleY: 1 }
+                              : { opacity: 0, scaleY: 0 }
+                          }
+                          transition={{ duration: 0.3, delay: 0.1 }}
+                        >
+                          <div className="h-16 w-0.5 bg-gradient-to-b from-amber-700 to-amber-600"></div>
+                        </motion.div>
+                        <motion.div
+                          className="sponsor-card bronze-sponsor bg-white p-3 rounded-xl shadow-md border-t-4 border-amber-700 w-56"
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={
+                            bronzeInView
+                              ? { opacity: 1, y: 0 }
+                              : { opacity: 0, y: 20 }
+                          }
+                          transition={{ duration: 0.4, delay: 0.1 }}
+                          whileHover={{
+                            y: -4,
+                            boxShadow:
+                              "0 8px 15px -4px rgba(146, 64, 14, 0.25)",
+                          }}
+                        >
+                          <div className="flex flex-col items-center">
+                            <div className="rounded-full bg-amber-50 p-2 mb-2">
+                              <img
+                                src={sponsor.logo}
+                                alt={sponsor.company}
+                                className="rounded w-12"
+                              />
+                            </div>
+                            <h3 className="text-base font-bold text-amber-800 mb-1">
+                              {sponsor.company}
+                            </h3>
+                            <span className="text-amber-700 font-semibold uppercase tracking-wider text-xs">
+                              {sponsor.name}
+                            </span>
+                          </div>
+                        </motion.div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
 }

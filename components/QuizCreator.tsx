@@ -34,6 +34,13 @@ import {
 } from "@/components/ui/accordion";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useMutation, useQuery } from "convex/react";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 
 import { useUser } from "@clerk/nextjs";
 import { api } from "@/convex/_generated/api";
@@ -44,6 +51,7 @@ interface Answer {
 }
 
 interface QuizQuestion {
+    quizType: string;
     quiz: string;
     image?: string;
     answers: Answer[];
@@ -56,6 +64,7 @@ export default function QuizCreator() {
 
     // New quiz state
     const [currentQuiz, setCurrentQuiz] = useState<QuizQuestion>({
+        quizType: "intra", // Default quiz type
         quiz: "",
         image: "",
         answers: [
@@ -135,6 +144,7 @@ export default function QuizCreator() {
 
         // Reset form
         setCurrentQuiz({
+            quizType: currentQuiz.quizType, // Maintain the same quiz type for consecutive entries
             quiz: "",
             image: "",
             answers: [
@@ -146,20 +156,21 @@ export default function QuizCreator() {
 
     const removeQuiz = (index: number) => {
         const updatedQuizzes = quizzes.filter((_, i) => i !== index);
-        const updatedPreviousQuizzes = getPreviousSavedQuestions?.filter(
-            (_, i) => i !== index
-        );
-
-        if (user && getSelectedSubjectOfTeacher) {
-            saveQuiz({
-                teacherId: user.id,
-                subject: getSelectedSubjectOfTeacher,
-                quizzes: updatedPreviousQuizzes || [],
-            });
-        }
-
         setQuizzes(updatedQuizzes);
     };
+
+    // const removeSavedQuiz = (index: number) => {
+    //     if (user && getSelectedSubjectOfTeacher && getPreviousSavedQuestions) {
+    //         const updatedPreviousQuizzes = [...getPreviousSavedQuestions];
+    //         updatedPreviousQuizzes.splice(index, 1);
+            
+    //         saveQuiz({
+    //             teacherId: user.id,
+    //             subject: getSelectedSubjectOfTeacher,
+    //             quizzes: updatedPreviousQuizzes,
+    //         });
+    //     }
+    // };
 
     const { user } = useUser();
 
@@ -192,8 +203,6 @@ export default function QuizCreator() {
         (answer) => answer.isCorrect
     );
 
-    console.log(getPreviousSavedQuestions);
-
     return (
         <div className="space-y-8">
             <Tabs
@@ -218,6 +227,24 @@ export default function QuizCreator() {
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-6">
+                            <div className="space-y-2">
+                                <Label htmlFor="quizType">Quiz Type</Label>
+                                <Select
+                                    value={currentQuiz.quizType}
+                                    onValueChange={(value) =>
+                                        handleQuizChange("quizType", value)
+                                    }
+                                >
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Select quiz type" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="intra">Intra Competition</SelectItem>
+                                        <SelectItem value="inter">Inter Competition</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+
                             <div className="space-y-2">
                                 <Label htmlFor="question">Question</Label>
                                 <Textarea
@@ -361,6 +388,7 @@ export default function QuizCreator() {
                                 variant="outline"
                                 onClick={() => {
                                     setCurrentQuiz({
+                                        quizType: currentQuiz.quizType, // Maintain the quiz type
                                         quiz: "",
                                         image: "",
                                         answers: [
@@ -417,6 +445,9 @@ export default function QuizCreator() {
                                                         </span>
                                                         <span className="ml-2 inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800 dark:bg-green-900/30 dark:text-green-300">
                                                             Newly Added
+                                                        </span>
+                                                        <span className="ml-2 inline-flex items-center rounded-full bg-purple-100 px-2.5 py-0.5 text-xs font-medium text-purple-800 dark:bg-purple-900/30 dark:text-purple-300">
+                                                            {quiz.quizType === "intra" ? "Intra" : "Inter"}
                                                         </span>
                                                     </div>
                                                 </AccordionTrigger>
@@ -555,49 +586,40 @@ export default function QuizCreator() {
                                         ))}
 
                                         {getPreviousSavedQuestions &&
-                                            getPreviousSavedQuestions.length >
-                                                0 &&
+                                            getPreviousSavedQuestions.length > 0 &&
                                             getPreviousSavedQuestions.map(
                                                 (quiz, quizIndex) => (
                                                     <AccordionItem
-                                                        value={`quiz-${quizIndex}`}
-                                                        key={quizIndex}
+                                                        value={`saved-quiz-${quizIndex}`}
+                                                        key={`saved-${quizIndex}`}
                                                     >
                                                         <AccordionTrigger className="hover:bg-slate-50 dark:hover:bg-slate-800 px-4 -mx-4 rounded-md">
                                                             <div className="flex items-center gap-2 text-left">
                                                                 <span className="font-semibold">
-                                                                    Q
-                                                                    {quizIndex +
-                                                                        1}
-                                                                    :
+                                                                    Q{quizIndex + 1}:
                                                                 </span>
                                                                 <span className="text-slate-600 dark:text-slate-300 truncate max-w-xl">
                                                                     {quiz.quiz}
                                                                 </span>
                                                                 <span className="ml-2 inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-900/30 dark:text-blue-300">
-                                                                    Previously
-                                                                    Added
+                                                                    Previously Added
+                                                                </span>
+                                                                <span className="ml-2 inline-flex items-center rounded-full bg-purple-100 px-2.5 py-0.5 text-xs font-medium text-purple-800 dark:bg-purple-900/30 dark:text-purple-300">
+                                                                    {quiz.quizType === "intra" ? "Intra" : "Inter"}
                                                                 </span>
                                                             </div>
                                                         </AccordionTrigger>
                                                         <AccordionContent>
                                                             <div className="space-y-4 p-4 bg-slate-50 dark:bg-slate-800 rounded-md">
-                                                                <p>
-                                                                    {quiz.quiz}
-                                                                </p>
+                                                                <p>{quiz.quiz}</p>
 
                                                                 {quiz.image && (
                                                                     <img
-                                                                        src={
-                                                                            quiz.image
-                                                                        }
+                                                                        src={quiz.image}
                                                                         alt="Question"
                                                                         className="max-h-40 rounded my-2"
-                                                                        onError={(
-                                                                            e
-                                                                        ) => {
-                                                                            e.currentTarget.onerror =
-                                                                                null;
+                                                                        onError={(e) => {
+                                                                            e.currentTarget.onerror = null;
                                                                             e.currentTarget.src =
                                                                                 "https://placehold.co/400x200?text=Invalid+Image+URL";
                                                                         }}
@@ -610,20 +632,13 @@ export default function QuizCreator() {
                                                                     </p>
                                                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                                                                         {quiz.answers.map(
-                                                                            (
-                                                                                answer,
-                                                                                answerIndex
-                                                                            ) => (
+                                                                            (answer, answerIndex) => (
                                                                                 <div
-                                                                                    key={
-                                                                                        answerIndex
-                                                                                    }
+                                                                                    key={answerIndex}
                                                                                     className={`p-2 rounded-md border ${
-                                                                                        (
-                                                                                            answer.isCorrect
-                                                                                        ) ?
-                                                                                            "border-green-500 bg-green-50 dark:bg-green-900/20"
-                                                                                        :   "border-slate-200 dark:border-slate-700"
+                                                                                        answer.isCorrect
+                                                                                            ? "border-green-500 bg-green-50 dark:bg-green-900/20"
+                                                                                            : "border-slate-200 dark:border-slate-700"
                                                                                     }`}
                                                                                 >
                                                                                     <div className="flex items-center gap-2">
@@ -631,9 +646,7 @@ export default function QuizCreator() {
                                                                                             <Check className="h-4 w-4 text-green-500" />
                                                                                         )}
                                                                                         <span>
-                                                                                            {
-                                                                                                answer.answer
-                                                                                            }
+                                                                                            {answer.answer}
                                                                                         </span>
                                                                                     </div>
                                                                                 </div>
@@ -641,6 +654,7 @@ export default function QuizCreator() {
                                                                         )}
                                                                     </div>
                                                                 </div>
+
 
                                                                 <div className="flex justify-between pt-2">
                                                                     <Dialog>

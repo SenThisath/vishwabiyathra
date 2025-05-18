@@ -27,15 +27,38 @@ export default defineSchema({
       v.array(v.object({ user: v.string(), subject: v.string() })),
     ),
   }),
+  inter: defineTable({
+    reservationId: v.id("reservations"),
+    projectLink: v.optional(v.string()),
+    teamMarks: v.optional(
+      v.array(
+        v.object({
+          user: v.string(),
+          subject: v.string(),
+          marks: v.number(),
+          time: v.number(),
+        }),
+      ),
+    ),
+  }),
   intra: defineTable({
+    userId: v.string(),
     fullName: v.string(),
     admissionNumber: v.number(),
     grade: v.number(),
-    class: v.string(),
+    cls: v.string(),
     whatsAppNumber: v.number(),
-    subject: v.string(),
-    marks: v.string(),
-    time: v.number(),
+    competitionId: v.id("competitions"),
+    projectLink: v.optional(v.string()),
+    subjectMarks: v.optional(
+      v.array(
+        v.object({
+          subject: v.string(),
+          marks: v.number(),
+          time: v.number(),
+        }),
+      ),
+    ),
   }),
   quizzes: defineTable({
     teacherId: v.string(),
@@ -43,6 +66,7 @@ export default defineSchema({
     quizzes: v.optional(
       v.array(
         v.object({
+          quizType: v.string(),
           quiz: v.string(),
           image: v.optional(v.string()),
           answers: v.array(
