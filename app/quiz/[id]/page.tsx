@@ -78,8 +78,6 @@ const QuizPage = () => {
         entry.userId === anonId,
   );
 
-  console.log(userIntraEntry?.subject)
-
   // Find team reservation if this is a team competition
   const teamReservation = getReservations?.find((res) => {
     if (res.competitionId === identifiedCompetitionId && competition?.isTeam) {
@@ -150,8 +148,8 @@ const QuizPage = () => {
         <div className="text-center p-8 max-w-md">
           <p className="text-xl text-red-600 mb-2">Competition not found</p>
           <p className="text-gray-600">
-            The competition you're looking for doesn't exist or you may not have
-            access to it.
+            The competition you&apos;re looking for doesn&apos;t exist or you
+            may not have access to it.
           </p>
         </div>
       </div>
@@ -318,12 +316,24 @@ const QuizPage = () => {
                       {userIntraEntry.whatsAppNumber}
                     </p>
                   </div>
-                  {userIntraEntry.subject && (
-                    <div>
-                      <p className="text-sm text-gray-500">Subject</p>
-                      <p className="font-medium">{userIntraEntry.subject}</p>
-                    </div>
-                  )}
+                  {userIntraEntry.subjectMarks?.map((subjectMarks) => (
+                    <>
+                      <div>
+                        <p className="text-sm text-gray-500">Subject</p>
+                        <p className="font-medium">{subjectMarks.subject}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-500">Marks</p>
+                        <p className="font-medium">{subjectMarks.marks}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-500">Time</p>
+                        <p className="font-medium">
+                          {subjectMarks.time} minutes
+                        </p>
+                      </div>
+                    </>
+                  ))}
                   {userIntraEntry.projectLink && (
                     <div className="col-span-2">
                       <p className="text-sm text-gray-500">Project Link</p>
@@ -335,20 +345,6 @@ const QuizPage = () => {
                       >
                         {userIntraEntry.projectLink}
                       </a>
-                    </div>
-                  )}
-                  {userIntraEntry.marks && (
-                    <div>
-                      <p className="text-sm text-gray-500">Marks</p>
-                      <p className="font-medium">{userIntraEntry.marks}</p>
-                    </div>
-                  )}
-                  {userIntraEntry.time && (
-                    <div>
-                      <p className="text-sm text-gray-500">Time</p>
-                      <p className="font-medium">
-                        {userIntraEntry.time} minutes
-                      </p>
                     </div>
                   )}
                 </div>

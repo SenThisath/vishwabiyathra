@@ -1,15 +1,24 @@
+"use client";
+
 import { FadeInWhenVisible } from "../FadeInWhenVisible";
 import { Title } from "../Title";
 import { useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
 
 export default function SponsorsLeaderboard() {
+  // Main section refs
   const platinumRef = useRef(null);
   const line1Ref = useRef(null);
   const goldLineRef = useRef(null);
   const silverLineRef = useRef(null);
   const bronzeLineRef = useRef(null);
 
+  // Gold, Silver, Bronze container refs
+  const goldContainerRef = useRef(null);
+  const silverContainerRef = useRef(null);
+  const bronzeContainerRef = useRef(null);
+
+  // InView states for main elements
   const platinumInView = useInView(platinumRef, { once: false, amount: 0.5 });
   const line1InView = useInView(line1Ref, { once: false, amount: 0.8 });
   const goldLineInView = useInView(goldLineRef, { once: false, amount: 0.5 });
@@ -17,18 +26,21 @@ export default function SponsorsLeaderboard() {
     once: false,
     amount: 0.5,
   });
-  const silverRef = useRef(null);
-  const silverInView = useInView(silverRef, {
-    once: true,
-    amount: 0.3,
-  });
   const bronzeLineInView = useInView(bronzeLineRef, {
     once: false,
     amount: 0.5,
   });
 
-  const bronzeRef = useRef(null);
-  const bronzeInView = useInView(bronzeRef, {
+  // InView states for sponsor containers
+  const goldContainerInView = useInView(goldContainerRef, {
+    once: true,
+    amount: 0.3,
+  });
+  const silverContainerInView = useInView(silverContainerRef, {
+    once: true,
+    amount: 0.3,
+  });
+  const bronzeContainerInView = useInView(bronzeContainerRef, {
     once: true,
     amount: 0.3,
   });
@@ -36,57 +48,57 @@ export default function SponsorsLeaderboard() {
   const [sponsors] = useState({
     main: {
       name: "Platinum Sponsor",
-      logo: "https://place-hold.it/500x300/666",
+      logo: "/api/placeholder/500/300",
       company: "Tech Solutions Inc.",
     },
     gold: [
       {
         name: "Gold Sponsor",
-        logo: "https://place-hold.it/500x300/666",
+        logo: "/api/placeholder/500/300",
         company: "Digital Innovations",
       },
       {
         name: "Gold Sponsor",
-        logo: "https://place-hold.it/500x300/666",
+        logo: "/api/placeholder/500/300",
         company: "Future Systems",
       },
     ],
     silver: [
       {
         name: "Silver Sponsor",
-        logo: "https://place-hold.it/500x300/666",
+        logo: "/api/placeholder/500/300",
         company: "WebTech Co.",
       },
       {
         name: "Silver Sponsor",
-        logo: "https://place-hold.it/500x300/666",
+        logo: "/api/placeholder/500/300",
         company: "Creative Design",
       },
       {
         name: "Silver Sponsor",
-        logo: "https://place-hold.it/500x300/666",
+        logo: "/api/placeholder/500/300",
         company: "Cloud Services",
       },
     ],
     bronze: [
       {
         name: "Bronze Sponsor",
-        logo: "https://place-hold.it/500x300/666",
+        logo: "/api/placeholder/500/300",
         company: "Local Business",
       },
       {
         name: "Bronze Sponsor",
-        logo: "https://place-hold.it/500x300/666",
+        logo: "/api/placeholder/500/300",
         company: "Startup Hub",
       },
       {
         name: "Bronze Sponsor",
-        logo: "https://place-hold.it/500x300/666",
+        logo: "/api/placeholder/500/300",
         company: "Marketing Pro",
       },
       {
         name: "Bronze Sponsor",
-        logo: "https://place-hold.it/500x300/666",
+        logo: "/api/placeholder/500/300",
         company: "Tech Academy",
       },
     ],
@@ -168,66 +180,58 @@ export default function SponsorsLeaderboard() {
                   }
                   transition={{ duration: 0.5 }}
                 ></motion.div>
-                <div className="flex flex-wrap justify-center md:justify-around gap-8 mt-16">
-                  {sponsors.gold.map((sponsor, index) => {
-                    const goldRef = useRef(null);
-                    const goldInView = useInView(goldRef, {
-                      once: true,
-                      amount: 0.3,
-                    });
 
-                    return (
-                      <div
-                        key={`gold-${index}`}
-                        className="relative md:px-4"
-                        ref={goldRef}
+                {/* Gold Sponsors Container */}
+                <div
+                  className="flex flex-wrap justify-center md:justify-around gap-8 mt-16"
+                  ref={goldContainerRef}
+                >
+                  {sponsors.gold.map((sponsor, index) => (
+                    <div key={`gold-${index}`} className="relative md:px-4">
+                      <motion.div
+                        className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-full"
+                        initial={{ opacity: 0, scaleY: 0 }}
+                        animate={
+                          goldContainerInView
+                            ? { opacity: 1, scaleY: 1 }
+                            : { opacity: 0, scaleY: 0 }
+                        }
+                        transition={{ duration: 0.3, delay: index * 0.1 }}
                       >
-                        <motion.div
-                          className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-full"
-                          initial={{ opacity: 0, scaleY: 0 }}
-                          animate={
-                            goldInView
-                              ? { opacity: 1, scaleY: 1 }
-                              : { opacity: 0, scaleY: 0 }
-                          }
-                          transition={{ duration: 0.3, delay: 0.1 }}
-                        >
-                          <div className="h-16 w-0.5 bg-gradient-to-b from-yellow-500 to-yellow-400"></div>
-                        </motion.div>
-                        <motion.div
-                          className="sponsor-card gold-sponsor bg-white p-5 rounded-xl shadow-md border-t-4 border-yellow-500 max-w-xs w-full"
-                          initial={{ opacity: 0, y: 20 }}
-                          animate={
-                            goldInView
-                              ? { opacity: 1, y: 0 }
-                              : { opacity: 0, y: 20 }
-                          }
-                          transition={{ duration: 0.4, delay: 0.2 }}
-                          whileHover={{
-                            y: -6,
-                            boxShadow:
-                              "0 12px 25px -7px rgba(234, 179, 8, 0.3)",
-                          }}
-                        >
-                          <div className="flex flex-col items-center">
-                            <div className="rounded-full bg-yellow-50 p-3 mb-3">
-                              <img
-                                src={sponsor.logo}
-                                alt={sponsor.company}
-                                className="rounded"
-                              />
-                            </div>
-                            <h3 className="text-xl font-bold text-yellow-700 mb-1">
-                              {sponsor.company}
-                            </h3>
-                            <span className="text-yellow-600 font-semibold uppercase tracking-wider text-xs">
-                              {sponsor.name}
-                            </span>
+                        <div className="h-16 w-0.5 bg-gradient-to-b from-yellow-500 to-yellow-400"></div>
+                      </motion.div>
+                      <motion.div
+                        className="sponsor-card gold-sponsor bg-white p-5 rounded-xl shadow-md border-t-4 border-yellow-500 max-w-xs w-full"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={
+                          goldContainerInView
+                            ? { opacity: 1, y: 0 }
+                            : { opacity: 0, y: 20 }
+                        }
+                        transition={{ duration: 0.4, delay: 0.2 + index * 0.1 }}
+                        whileHover={{
+                          y: -6,
+                          boxShadow: "0 12px 25px -7px rgba(234, 179, 8, 0.3)",
+                        }}
+                      >
+                        <div className="flex flex-col items-center">
+                          <div className="rounded-full bg-yellow-50 p-3 mb-3">
+                            <img
+                              src={sponsor.logo}
+                              alt={sponsor.company}
+                              className="rounded"
+                            />
                           </div>
-                        </motion.div>
-                      </div>
-                    );
-                  })}
+                          <h3 className="text-xl font-bold text-yellow-700 mb-1">
+                            {sponsor.company}
+                          </h3>
+                          <span className="text-yellow-600 font-semibold uppercase tracking-wider text-xs">
+                            {sponsor.name}
+                          </span>
+                        </div>
+                      </motion.div>
+                    </div>
+                  ))}
                 </div>
               </div>
 
@@ -243,60 +247,59 @@ export default function SponsorsLeaderboard() {
                   }
                   transition={{ duration: 0.5 }}
                 ></motion.div>
-                <div className="flex flex-wrap justify-center gap-6 mt-16">
-                  {sponsors.silver.map((sponsor, index) => {
-                    return (
-                      <div
-                        key={`silver-${index}`}
-                        className="relative"
-                        ref={silverRef}
+
+                {/* Silver Sponsors Container */}
+                <div
+                  className="flex flex-wrap justify-center gap-6 mt-16"
+                  ref={silverContainerRef}
+                >
+                  {sponsors.silver.map((sponsor, index) => (
+                    <div key={`silver-${index}`} className="relative">
+                      <motion.div
+                        className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-full"
+                        initial={{ opacity: 0, scaleY: 0 }}
+                        animate={
+                          silverContainerInView
+                            ? { opacity: 1, scaleY: 1 }
+                            : { opacity: 0, scaleY: 0 }
+                        }
+                        transition={{ duration: 0.3, delay: index * 0.1 }}
                       >
-                        <motion.div
-                          className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-full"
-                          initial={{ opacity: 0, scaleY: 0 }}
-                          animate={
-                            silverInView
-                              ? { opacity: 1, scaleY: 1 }
-                              : { opacity: 0, scaleY: 0 }
-                          }
-                          transition={{ duration: 0.3, delay: 0.1 }}
-                        >
-                          <div className="h-16 w-0.5 bg-gradient-to-b from-gray-400 to-gray-300"></div>
-                        </motion.div>
-                        <motion.div
-                          className="sponsor-card silver-sponsor bg-white p-4 rounded-xl shadow-md border-t-4 border-gray-400 w-64"
-                          initial={{ opacity: 0, y: 20 }}
-                          animate={
-                            silverInView
-                              ? { opacity: 1, y: 0 }
-                              : { opacity: 0, y: 20 }
-                          }
-                          transition={{ duration: 0.4, delay: 0.1 }}
-                          whileHover={{
-                            y: -5,
-                            boxShadow:
-                              "0 10px 20px -5px rgba(156, 163, 175, 0.3)",
-                          }}
-                        >
-                          <div className="flex flex-col items-center">
-                            <div className="rounded-full bg-gray-50 p-3 mb-3">
-                              <img
-                                src={sponsor.logo}
-                                alt={sponsor.company}
-                                className="rounded"
-                              />
-                            </div>
-                            <h3 className="text-lg font-bold text-gray-700 mb-1">
-                              {sponsor.company}
-                            </h3>
-                            <span className="text-gray-600 font-semibold uppercase tracking-wider text-xs">
-                              {sponsor.name}
-                            </span>
+                        <div className="h-16 w-0.5 bg-gradient-to-b from-gray-400 to-gray-300"></div>
+                      </motion.div>
+                      <motion.div
+                        className="sponsor-card silver-sponsor bg-white p-4 rounded-xl shadow-md border-t-4 border-gray-400 w-64"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={
+                          silverContainerInView
+                            ? { opacity: 1, y: 0 }
+                            : { opacity: 0, y: 20 }
+                        }
+                        transition={{ duration: 0.4, delay: 0.1 + index * 0.1 }}
+                        whileHover={{
+                          y: -5,
+                          boxShadow:
+                            "0 10px 20px -5px rgba(156, 163, 175, 0.3)",
+                        }}
+                      >
+                        <div className="flex flex-col items-center">
+                          <div className="rounded-full bg-gray-50 p-3 mb-3">
+                            <img
+                              src={sponsor.logo}
+                              alt={sponsor.company}
+                              className="rounded"
+                            />
                           </div>
-                        </motion.div>
-                      </div>
-                    );
-                  })}
+                          <h3 className="text-lg font-bold text-gray-700 mb-1">
+                            {sponsor.company}
+                          </h3>
+                          <span className="text-gray-600 font-semibold uppercase tracking-wider text-xs">
+                            {sponsor.name}
+                          </span>
+                        </div>
+                      </motion.div>
+                    </div>
+                  ))}
                 </div>
               </div>
 
@@ -312,60 +315,61 @@ export default function SponsorsLeaderboard() {
                   }
                   transition={{ duration: 0.5 }}
                 ></motion.div>
-                <div className="flex flex-wrap justify-center gap-4 mt-16">
-                  {sponsors.bronze.map((sponsor, index) => {
-                    return (
-                      <div
-                        key={`bronze-${index}`}
-                        className="relative"
-                        ref={bronzeRef}
+
+                {/* Bronze Sponsors Container */}
+                <div
+                  className="flex flex-wrap justify-center gap-4 mt-16"
+                  ref={bronzeContainerRef}
+                >
+                  {sponsors.bronze.map((sponsor, index) => (
+                    <div key={`bronze-${index}`} className="relative">
+                      <motion.div
+                        className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-full"
+                        initial={{ opacity: 0, scaleY: 0 }}
+                        animate={
+                          bronzeContainerInView
+                            ? { opacity: 1, scaleY: 1 }
+                            : { opacity: 0, scaleY: 0 }
+                        }
+                        transition={{ duration: 0.3, delay: index * 0.05 }}
                       >
-                        <motion.div
-                          className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-full"
-                          initial={{ opacity: 0, scaleY: 0 }}
-                          animate={
-                            bronzeInView
-                              ? { opacity: 1, scaleY: 1 }
-                              : { opacity: 0, scaleY: 0 }
-                          }
-                          transition={{ duration: 0.3, delay: 0.1 }}
-                        >
-                          <div className="h-16 w-0.5 bg-gradient-to-b from-amber-700 to-amber-600"></div>
-                        </motion.div>
-                        <motion.div
-                          className="sponsor-card bronze-sponsor bg-white p-3 rounded-xl shadow-md border-t-4 border-amber-700 w-56"
-                          initial={{ opacity: 0, y: 20 }}
-                          animate={
-                            bronzeInView
-                              ? { opacity: 1, y: 0 }
-                              : { opacity: 0, y: 20 }
-                          }
-                          transition={{ duration: 0.4, delay: 0.1 }}
-                          whileHover={{
-                            y: -4,
-                            boxShadow:
-                              "0 8px 15px -4px rgba(146, 64, 14, 0.25)",
-                          }}
-                        >
-                          <div className="flex flex-col items-center">
-                            <div className="rounded-full bg-amber-50 p-2 mb-2">
-                              <img
-                                src={sponsor.logo}
-                                alt={sponsor.company}
-                                className="rounded w-12"
-                              />
-                            </div>
-                            <h3 className="text-base font-bold text-amber-800 mb-1">
-                              {sponsor.company}
-                            </h3>
-                            <span className="text-amber-700 font-semibold uppercase tracking-wider text-xs">
-                              {sponsor.name}
-                            </span>
+                        <div className="h-16 w-0.5 bg-gradient-to-b from-amber-700 to-amber-600"></div>
+                      </motion.div>
+                      <motion.div
+                        className="sponsor-card bronze-sponsor bg-white p-3 rounded-xl shadow-md border-t-4 border-amber-700 w-56"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={
+                          bronzeContainerInView
+                            ? { opacity: 1, y: 0 }
+                            : { opacity: 0, y: 20 }
+                        }
+                        transition={{
+                          duration: 0.4,
+                          delay: 0.1 + index * 0.05,
+                        }}
+                        whileHover={{
+                          y: -4,
+                          boxShadow: "0 8px 15px -4px rgba(146, 64, 14, 0.25)",
+                        }}
+                      >
+                        <div className="flex flex-col items-center">
+                          <div className="rounded-full bg-amber-50 p-2 mb-2">
+                            <img
+                              src={sponsor.logo}
+                              alt={sponsor.company}
+                              className="rounded w-12"
+                            />
                           </div>
-                        </motion.div>
-                      </div>
-                    );
-                  })}
+                          <h3 className="text-base font-bold text-amber-800 mb-1">
+                            {sponsor.company}
+                          </h3>
+                          <span className="text-amber-700 font-semibold uppercase tracking-wider text-xs">
+                            {sponsor.name}
+                          </span>
+                        </div>
+                      </motion.div>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>

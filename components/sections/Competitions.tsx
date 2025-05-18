@@ -27,7 +27,6 @@ import { useUser } from "@clerk/nextjs";
 import { Id } from "@/convex/_generated/dataModel";
 import Link from "next/link";
 import TeamForm from "../TeamForm";
-import SingleForm from "../SingleForm";
 
 const Competitions = () => {
   // State to hold the anonymous user ID
@@ -207,9 +206,6 @@ const Competitions = () => {
               </DialogHeader>
               {selectedCompetition && selectedCompetition.isTeam && (
                 <TeamForm {...selectedCompetition} />
-              )}
-              {selectedCompetition && !selectedCompetition.isTeam && (
-                <SingleForm {...selectedCompetition} />
               )}
             </DialogContent>
           </Dialog>
