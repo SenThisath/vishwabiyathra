@@ -165,7 +165,7 @@ export default function SponsorsLeaderboard() {
                 }
                 transition={{ duration: 0.3 }}
               >
-                <div className="w-0.5 h-16 bg-gradient-to-b from-indigo-600 to-yellow-500"></div>
+                <div className="w-0.5 h-5 bg-gradient-to-b from-indigo-600 to-yellow-500"></div>
               </motion.div>
 
               {/* Gold Sponsors */}
@@ -198,7 +198,7 @@ export default function SponsorsLeaderboard() {
                         }
                         transition={{ duration: 0.3, delay: index * 0.1 }}
                       >
-                        <div className="h-16 w-0.5 bg-gradient-to-b from-yellow-500 to-yellow-400"></div>
+                        <div className="h-5 w-0.5 bg-gradient-to-b from-red-500 to-yellow-400"></div>
                       </motion.div>
                       <motion.div
                         className="sponsor-card gold-sponsor bg-white p-5 rounded-xl shadow-md border-t-4 border-yellow-500 max-w-xs w-full"
@@ -265,7 +265,7 @@ export default function SponsorsLeaderboard() {
                         }
                         transition={{ duration: 0.3, delay: index * 0.1 }}
                       >
-                        <div className="h-16 w-0.5 bg-gradient-to-b from-gray-400 to-gray-300"></div>
+                        <div className="h-5 w-0.5 bg-gradient-to-b from-gray-400 to-gray-300"></div>
                       </motion.div>
                       <motion.div
                         className="sponsor-card silver-sponsor bg-white p-4 rounded-xl shadow-md border-t-4 border-gray-400 w-64"
@@ -333,7 +333,7 @@ export default function SponsorsLeaderboard() {
                         }
                         transition={{ duration: 0.3, delay: index * 0.05 }}
                       >
-                        <div className="h-16 w-0.5 bg-gradient-to-b from-amber-700 to-amber-600"></div>
+                        <div className="h-5 w-0.5 bg-gradient-to-b from-amber-700 to-amber-600"></div>
                       </motion.div>
                       <motion.div
                         className="sponsor-card bronze-sponsor bg-white p-3 rounded-xl shadow-md border-t-4 border-amber-700 w-56"
