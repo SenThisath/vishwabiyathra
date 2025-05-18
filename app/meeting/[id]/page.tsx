@@ -22,7 +22,6 @@ const Meeting = () => {
     microphone: false,
   });
   const params = useParams();
-  const [isJoined, setIsJoined] = useState(false);
   const client = useStreamVideoClient();
   const { user } = useUser();
   const [role, setRole] = useState<Roles | undefined>();
@@ -90,7 +89,6 @@ const Meeting = () => {
       const newCall = client.call("default", params.id as string);
       await newCall.join();
       setCall(newCall);
-      setIsJoined(true);
     } else {
       alert("Please ensure camera and microphone are enabled before joining");
     }
