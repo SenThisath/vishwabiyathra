@@ -14,7 +14,6 @@ import {
   Trophy,
   Home,
   RefreshCw,
-  RotateCcw,
   BookOpen,
 } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -112,8 +111,6 @@ export default function QuizPage() {
   const totalQuestions: number = quizQuestions.length;
   const currentQuestion: QuizQuestion | undefined =
     quizQuestions[currentQuestionIndex];
-
-  const getAllIntra = useQuery(api.intra.getIntra);
 
   // Handle timer
   useEffect(() => {

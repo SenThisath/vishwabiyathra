@@ -64,7 +64,6 @@ const QuizPage = () => {
   const [showMeeting, setShowMeeting] = useState<boolean>(false);
   const [currentView, setCurrentView] = useState<"team" | "individual">("team");
   const getInter = useQuery(api.inter.getInter);
-  const getIntra = useQuery(api.intra.getIntra);
 
   // Update current view whenever competition data changes
   useEffect(() => {

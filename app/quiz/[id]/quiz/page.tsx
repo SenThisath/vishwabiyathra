@@ -4,15 +4,10 @@ import { useState, useEffect } from "react";
 import {
   AlertCircle,
   Clock,
-  Award,
   CheckCircle,
   XCircle,
   ArrowRight,
-  BrainCircuit,
   Trophy,
-  Book,
-  LayoutList,
-  RotateCcw,
 } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -26,7 +21,6 @@ import {
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
