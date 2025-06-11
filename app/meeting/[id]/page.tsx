@@ -100,44 +100,83 @@ const Meeting = () => {
   // Pre-meeting device check state
   if (!call) {
     return (
-      <div className="p-4 flex flex-col gap-4 items-center justify-center">
-        <h2 className="text-xl font-bold">Device Status Check</h2>
+      <div className="p-8 flex flex-col gap-6 items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+        <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md backdrop-blur-sm bg-opacity-90 border border-gray-100">
+          <h2 className="text-3xl font-bold text-center mb-8 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">
+            Meeting Preparation
+          </h2>
 
-        <div className="flex flex-col gap-2 w-full max-w-md">
-          <div className="flex justify-between items-center">
-            <span>Camera:</span>
-            <span
-              className={
-                deviceStatus.camera ? "text-green-500" : "text-red-500"
-              }
-            >
-              {deviceStatus.camera ? "Ready" : "Not Ready"}
-            </span>
-          </div>
+          <div className="space-y-6">
+            <div className="p-6 rounded-xl bg-gray-50 border border-gray-200 hover:border-blue-300 transition-all duration-300 shadow-sm">
+              <div className="flex justify-between items-center mb-4">
+                <div className="flex items-center gap-3">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6 text-gray-600"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
+                    />
+                  </svg>
+                  <span className="font-medium text-gray-700">Camera</span>
+                </div>
+                <span
+                  className={`px-3 py-1 rounded-full text-sm font-medium ${deviceStatus.camera ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}
+                >
+                  {deviceStatus.camera ? "Ready" : "Not Ready"}
+                </span>
+              </div>
 
-          <div className="flex justify-between items-center">
-            <span>Microphone:</span>
-            <span
-              className={
-                deviceStatus.microphone ? "text-green-500" : "text-red-500"
-              }
+              <div className="flex justify-between items-center">
+                <div className="flex items-center gap-3">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6 text-gray-600"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"
+                    />
+                  </svg>
+                  <span className="font-medium text-gray-700">Microphone</span>
+                </div>
+                <span
+                  className={`px-3 py-1 rounded-full text-sm font-medium ${deviceStatus.microphone ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}
+                >
+                  {deviceStatus.microphone ? "Ready" : "Not Ready"}
+                </span>
+              </div>
+            </div>
+
+            <Button
+              onClick={handleJoinMeeting}
+              disabled={!deviceStatus.camera || !deviceStatus.microphone}
+              className={`w-full py-3 text-lg font-medium transition-all duration-300 ${
+                deviceStatus.camera && deviceStatus.microphone
+                  ? "bg-blue-600 hover:bg-blue-700 text-white"
+                  : "bg-gray-200 text-gray-500 cursor-not-allowed"
+              }`}
             >
-              {deviceStatus.microphone ? "Ready" : "Not Ready"}
-            </span>
+              {deviceStatus.camera && deviceStatus.microphone
+                ? "Join Meeting"
+                : "Please Enable Devices"}
+            </Button>
           </div>
         </div>
-
-        <Button
-          onClick={handleJoinMeeting}
-          disabled={!deviceStatus.camera || !deviceStatus.microphone}
-          className="mt-4"
-        >
-          Join Meeting
-        </Button>
       </div>
     );
   }
-
   // In-call state
   return (
     <div className="relative">

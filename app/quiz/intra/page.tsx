@@ -113,6 +113,8 @@ export default function QuizPage() {
   const currentQuestion: QuizQuestion | undefined =
     quizQuestions[currentQuestionIndex];
 
+  const getAllIntra = useQuery(api.intra.getIntra);
+
   // Handle timer
   useEffect(() => {
     let interval: NodeJS.Timeout | undefined;
@@ -255,19 +257,6 @@ export default function QuizPage() {
     router.push("/subjects");
   };
 
-  // Handle quiz restart
-  const handleRestartQuiz = (): void => {
-    setCurrentQuestionIndex(0);
-    setSelectedAnswer(null);
-    setScore(0);
-    setTimer(0);
-    setQuizCompleted(false);
-    setFeedbackShown(false);
-    setShowFeedbackAlert(false);
-    setQuizStarted(false);
-    setAnimateIn(false);
-    setQuizResults(null);
-  };
 
   // Handle reset subject selection
   const handleResetSubjectSelection = (): void => {
@@ -562,7 +551,8 @@ export default function QuizPage() {
                       {answer.answer}
                     </Button>
                   ))}
-                </div>
+                    </div>
+                    
               </CardContent>
             </Card>
           </>
@@ -636,26 +626,8 @@ export default function QuizPage() {
                   </Badge>
                 </div>
               </div>
-            </CardContent>
-
-            <CardFooter className="flex justify-between pt-4 pb-8 px-6">
-              <Button
-                variant="outline"
-                className="border-purple-300 text-purple-700 hover:bg-purple-50"
-                onClick={handleResetSubjectSelection}
-              >
-                <ArrowRight size={16} className="mr-2 rotate-180" />
-                Try Another Subject
-              </Button>
-
-              <Button
-                className="bg-gradient-to-r from-indigo-600 to-purple-700 hover:from-indigo-700 hover:to-purple-800 text-white"
-                onClick={handleRestartQuiz}
-              >
-                <RotateCcw size={16} className="mr-2" />
-                Try Again
-              </Button>
-            </CardFooter>
+                  </CardContent>
+                  
           </Card>
         )}
       </div>

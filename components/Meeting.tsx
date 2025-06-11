@@ -98,40 +98,96 @@ const Meeting = ({ id }: { id: string }) => {
   // Pre-meeting device check state
   if (!call) {
     return (
-      <div className="p-4 flex flex-col gap-4 items-center justify-center">
-        <h2 className="text-xl font-bold">Device Status Check</h2>
+      <div className="p-8 flex flex-col gap-6 items-center justify-center min-h-screen bg-black">
+        <div className="bg-black p-8 rounded-2xl shadow-lg w-full max-w-md backdrop-blur-sm bg-opacity-90 border border-gray-100">
+          <h2 className="text-3xl font-bold text-center mb-16 bg-gradient-to-t from-[#d72b59] to-[#fbe851] bg-clip-text text-transparent">
+            Meeting Preparation
+          </h2>
 
-        <div className="flex flex-col gap-2 w-full max-w-md">
-          <div className="flex justify-between items-center">
-            <span>Camera:</span>
-            <span
-              className={
-                deviceStatus.camera ? "text-green-500" : "text-red-500"
-              }
-            >
-              {deviceStatus.camera ? "Ready" : "Not Ready"}
-            </span>
-          </div>
+          <div className="space-y-6">
+            <div className="p-6 rounded-xl bg-black border border-gray-200 hover:border-blue-300 transition-all duration-300 shadow-sm">
+              <div className="flex justify-between items-center mb-4">
+                <div className="flex items-center gap-3">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6 text-white"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
+                    />
+                  </svg>
+                  <span className="font-medium text-white">Camera</span>
+                </div>
+                <span
+                  className={`px-3 py-1 rounded-full text-sm font-medium ${deviceStatus.camera ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}
+                >
+                  {deviceStatus.camera ? "Ready" : "Not Ready"}
+                </span>
+              </div>
 
-          <div className="flex justify-between items-center">
-            <span>Microphone:</span>
-            <span
-              className={
-                deviceStatus.microphone ? "text-green-500" : "text-red-500"
-              }
+              <div className="flex justify-between items-center">
+                <div className="flex items-center gap-3">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6 text-white"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"
+                    />
+                  </svg>
+                  <span className="font-medium text-white">Microphone</span>
+                </div>
+                <span
+                  className={`px-3 py-1 rounded-full text-sm font-medium ${deviceStatus.microphone ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}
+                >
+                  {deviceStatus.microphone ? "Ready" : "Not Ready"}
+                </span>
+              </div>
+            </div>
+
+            <Button
+              asChild
+              className="px-3 py-2 rounded-full border-2 border-red-600 font-bold text-lg transition-all duration-300 flex items-center justify-center gap-2 mt-8 w-64 mx-auto cursor-pointer"
             >
-              {deviceStatus.microphone ? "Ready" : "Not Ready"}
-            </span>
+              <a href="https://meet.google.com/cnk-ozns-edk">
+                <span className="relative flex h-3 w-3">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-red-600"></span>
+                </span>
+                Join Meeting
+              </a>
+            </Button>
+
+            <Button
+              asChild
+              disabled={!deviceStatus.camera || !deviceStatus.microphone}
+              onClick={handleJoinMeeting}
+              className="px-3 py-2 rounded-full border-2 border-red-600 font-bold text-lg transition-all duration-300 flex items-center justify-center gap-2 mt-8 w-64 mx-auto cursor-pointer"
+            >
+              <div>
+                <span className="relative flex h-3 w-3">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-red-600"></span>
+                </span>
+                {deviceStatus.camera && deviceStatus.microphone
+                  ? "Join to the Quiz"
+                  : "Please Enable Devices"}
+              </div>
+            </Button>
           </div>
         </div>
-
-        <Button
-          onClick={handleJoinMeeting}
-          disabled={!deviceStatus.camera || !deviceStatus.microphone}
-          className="mt-4"
-        >
-          Join Meeting
-        </Button>
       </div>
     );
   }

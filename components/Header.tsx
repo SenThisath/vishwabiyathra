@@ -32,7 +32,14 @@ const menuItems = [
     color: "from-blue-500 to-teal-500",
   },
   {
-    number: "03",
+    number: "05",
+    title: "COMPETITIONS",
+    href: "/",
+    icon: Gamepad2,
+    color: "from-red-500 to-pink-500",
+  },
+  {
+    number: "04",
     title: "LEADERBOARD",
     href: "/",
     icon: Trophy,
@@ -40,13 +47,13 @@ const menuItems = [
   },
   {
     number: "04",
-    title: "COMPETITIONS",
+    title: "SPONSORS",
     href: "/",
-    icon: Gamepad2,
-    color: "from-red-500 to-pink-500",
+    icon: Trophy,
+    color: "from-yellow-500 to-orange-500",
   },
   {
-    number: "05",
+    number: "06",
     title: "CONTACT US",
     href: "/",
     icon: Phone,
@@ -100,39 +107,36 @@ export default function Header() {
 
   return (
     <header className="fixed w-full z-50 overflow-hidden comicFont">
-      <div className="flex justify-between items-center py-2 xs:py-3 sm:py-4 px-3 xs:px-4 sm:px-6 lg:px-8 bg-black/30 backdrop-blur-md overflow-hidden border-b border-white/10">
+      <div className="flex justify-between items-center py-2 xs:py-3 sm:py-7 px-3 xs:px-4 sm:px-6 lg:px-6 bg-black/30 backdrop-blur-md overflow-hidden border-b border-white/10">
         {/* Logo */}
-        <Link href="/" className="relative z-50 flex items-center">
+        <Link href="/" className="relative z-50 flex items-center pl-5">
           <div className="relative">
             <Image
               src="/logo.png"
               alt="Logo"
-              className="object-contain w-24 xs:w-28 sm:w-32 md:w-36 h-auto"
+              className="object-contain w-24 xs:w-28 sm:w-32 md:w-45 h-auto"
               width={150}
               height={150}
               priority
             />
           </div>
-          <span className="ml-1 xs:ml-2 text-[10px] xs:text-xs font-bold text-white hidden xs:block uppercase tracking-widest">
-            BCSS 2025
-          </span>
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center space-x-6">
-          {menuItems.map((item, i) => (
-            <Link
-              key={i}
-              href={item.href}
-              className="text-sm text-white font-medium hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-purple-400 hover:to-pink-600 transition-all duration-200"
-            >
-              <span className="flex items-center">{item.title}</span>
-            </Link>
-          ))}
-        </nav>
 
         {/* Sign In / User Button and Mobile Menu Toggle */}
-        <div className="flex items-center space-x-2 xs:space-x-3 sm:space-x-4">
+        <div className="flex items-center">
+          <nav className="hidden md:flex items-center space-x-6 mx-10">
+            {menuItems.map((item, i) => (
+              <Link
+                key={i}
+                href={item.href}
+                className="text-2xl text-white font-extrabold hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-purple-400 hover:to-pink-600 transition-all duration-200"
+              >
+                <span className="flex items-center">{item.title}</span>
+              </Link>
+            ))}
+          </nav>
           <SignedOut>
             <SignInButton mode="modal">
               <button className="bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white px-2 xs:px-3 sm:px-4 py-1 xs:py-1.5 rounded-full text-xs sm:text-sm font-medium transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-purple-500/30 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-black">

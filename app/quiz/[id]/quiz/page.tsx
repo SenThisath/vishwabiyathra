@@ -12,6 +12,7 @@ import {
   Trophy,
   Book,
   LayoutList,
+  RotateCcw,
 } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -32,11 +33,11 @@ import { api } from "@/convex/_generated/api";
 import { useUser } from "@clerk/nextjs";
 import { useParams } from "next/navigation";
 import { Id } from "@/convex/_generated/dataModel";
+import { subjects } from "@/components/SubjectSelection";
 
 export default function QuizApp() {
   // State variables
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [selectedAnswer, setSelectedAnswer] = useState<number | null>();
   const [score, setScore] = useState(0);
   const [timer, setTimer] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
@@ -45,7 +46,6 @@ export default function QuizApp() {
   const [showFeedbackAlert, setShowFeedbackAlert] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
   const [quizStarted, setQuizStarted] = useState(false);
-  const [animateIn, setAnimateIn] = useState(false);
   const [resultSubmitted, setResultSubmitted] = useState(false);
   const [competitionType, setCompetitionType] = useState<
     "inter" | "intra" | null
@@ -254,12 +254,11 @@ export default function QuizApp() {
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+    return `${mins.toString().padStart(2, "0")} : ${secs.toString().padStart(2, "0")}`;
   };
 
   const startQuiz = () => {
     setQuizStarted(true);
-    setAnimateIn(true);
     setTimeout(() => {
       setIsRunning(true);
     }, 500);
@@ -268,7 +267,6 @@ export default function QuizApp() {
   const handleAnswerSelect = (answerIndex: number) => {
     if (!currentQuestion) return;
 
-    setSelectedAnswer(answerIndex);
     setFeedbackShown(true);
 
     const correct = currentQuestion.answers[answerIndex].isCorrect;
@@ -291,14 +289,7 @@ export default function QuizApp() {
       setTimeout(() => {
         if (currentQuestionIndex < totalQuestions - 1) {
           setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
-          setSelectedAnswer(null);
           setFeedbackShown(false);
-          setAnimateIn(false);
-
-          // Brief pause before animating in the next question
-          setTimeout(() => {
-            setAnimateIn(true);
-          }, 150);
         } else {
           // End quiz
           setIsRunning(false);
@@ -311,40 +302,6 @@ export default function QuizApp() {
         }
       }, 300);
     }, 1500);
-  };
-
-  const getAnswerStyle = (index: number) => {
-    if (!feedbackShown) {
-      return "bg-white text-purple-900 hover:bg-purple-100 hover:border-purple-500 hover:shadow-xl";
-    }
-
-    if (currentQuestion.answers[index].isCorrect) {
-      return "bg-green-600 hover:bg-green-600 text-white border-green-700";
-    }
-
-    if (selectedAnswer === index && !currentQuestion.answers[index].isCorrect) {
-      return "bg-red-600 hover:bg-red-600 text-white border-red-700";
-    }
-
-    return "opacity-60";
-  };
-
-  const getScoreDescription = () => {
-    const percentage = (score / totalQuestions) * 100;
-    if (percentage >= 90) return "Genius Level!";
-    if (percentage >= 75) return "Outstanding!";
-    if (percentage >= 60) return "Good job!";
-    if (percentage >= 40) return "Not bad!";
-    return "Better luck next time!";
-  };
-
-  const getScoreEmoji = () => {
-    const percentage = (score / totalQuestions) * 100;
-    if (percentage >= 90) return "🏆";
-    if (percentage >= 75) return "🎯";
-    if (percentage >= 60) return "🎉";
-    if (percentage >= 40) return "👍";
-    return "🌱";
   };
 
   // Define TeamMark interface to fix type error
@@ -454,21 +411,17 @@ export default function QuizApp() {
     }
   };
 
+
   // Show subject selection for intra competition
   if (subjectSelectionMode && competitionType === "intra") {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-950 via-purple-800 to-purple-900 p-4 md:p-8 flex flex-col items-center justify-center">
-        <Card className="max-w-md w-full bg-white shadow-2xl">
-          <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600"></div>
-
+      <div className="min-h-screen bg-black p-4 md:p-8 flex flex-col items-center justify-center">
+        <Card className="max-w-md w-full bg-transparent shadow-2xl">
           <CardHeader className="text-center">
-            <div className="mx-auto w-16 h-16 rounded-full bg-purple-100 flex items-center justify-center mb-4">
-              <Book size={28} className="text-purple-700" />
-            </div>
-            <CardTitle className="text-2xl font-bold text-purple-900">
+            <CardTitle className="text-2xl font-bold bg-gradient-to-t from-[#d72b59] to-[#fbe851] bg-clip-text text-transparent">
               Select a Subject
             </CardTitle>
-            <CardDescription className="text-purple-700">
+            <CardDescription className="bg-gradient-to-t from-[#d72b59] to-[#fbe851] bg-clip-text text-transparent">
               Choose a subject to start the quiz
             </CardDescription>
           </CardHeader>
@@ -480,10 +433,39 @@ export default function QuizApp() {
                   key={subject}
                   onClick={() => selectSubject(subject)}
                   variant="outline"
-                  className="w-full py-6 text-lg justify-start border-2 hover:border-purple-500 hover:bg-purple-50"
+                  disabled={getAllIntra?.some(
+                    (entry) =>
+                      entry.userId === anonId &&
+                      entry.subjectMarks?.some(
+                        (mark) =>
+                          (mark.subject === "Combined Mathematics" &&
+                            subject === "Biology") ||
+                          (mark.subject === "Biology" &&
+                            subject === "Combined Mathematics") ||
+                          (mark.subject === "Chemistry" && subject === "ICT") ||
+                          (mark.subject === "ICT" && subject === "Chemistry"),
+                      ),
+                  )}
+                  className={`w-full py-6 text-lg justify-start border-2 ${
+                    getAllIntra?.some(
+                      (entry) =>
+                        entry.userId === anonId &&
+                        entry.subjectMarks?.some(
+                          (mark) =>
+                            (mark.subject === "Combined Mathematics" &&
+                              subject === "Biology") ||
+                            (mark.subject === "Biology" &&
+                              subject === "Combined Mathematics") ||
+                            (mark.subject === "Chemistry" &&
+                              subject === "ICT") ||
+                            (mark.subject === "ICT" && subject === "Chemistry"),
+                        ),
+                    )
+                      ? ""
+                      : "hover:border-purple-500 hover:bg-purple-50"
+                  }`}
                 >
-                  <LayoutList className="mr-3 text-purple-600" size={20} />
-                  <span>{subject}</span>
+                  {subjects.find((s) => s.name === subject)?.icon} {subject}
                 </Button>
               ))
             ) : (
@@ -496,22 +478,34 @@ export default function QuizApp() {
               </Alert>
             )}
 
-            {completedSubjects.length > 0 && (
+            {getAllIntra?.find(
+              (entry) =>
+                entry.competitionId === identifiedCompetitionId &&
+                entry.userId === anonId &&
+                entry.subjectMarks &&
+                entry.subjectMarks.length > 0,
+            ) && (
               <div className="mt-4">
                 <p className="text-sm text-gray-500 mb-2">
                   Completed subjects:
                 </p>
                 <div className="flex flex-wrap gap-2">
-                  {completedSubjects.map((subject) => (
-                    <Badge
-                      key={subject}
-                      variant="secondary"
-                      className="bg-green-100 text-green-800 border-green-300"
-                    >
-                      <CheckCircle size={12} className="mr-1" />
-                      {subject}
-                    </Badge>
-                  ))}
+                  {getAllIntra
+                    ?.find(
+                      (entry) =>
+                        entry.competitionId === identifiedCompetitionId &&
+                        entry.userId === anonId,
+                    )
+                    ?.subjectMarks?.map((mark) => (
+                      <Badge
+                        key={mark.subject}
+                        variant="secondary"
+                        className="bg-green-100 text-green-800 border-green-300"
+                      >
+                        <CheckCircle size={12} className="mr-1" />
+                        {mark.subject}
+                      </Badge>
+                    ))}
                 </div>
               </div>
             )}
@@ -541,7 +535,7 @@ export default function QuizApp() {
     competitionType === "intra" &&
     quizCompleted &&
     resultSubmitted &&
-    completedSubjects.length > 0
+    completedSubjects.length > 3
   ) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-indigo-950 via-purple-800 to-purple-900 p-4 md:p-8 flex flex-col items-center justify-center">
@@ -567,16 +561,22 @@ export default function QuizApp() {
                 Completed subjects:
               </p>
               <div className="flex flex-wrap gap-2">
-                {completedSubjects.map((subject) => (
-                  <Badge
-                    key={subject}
-                    variant="secondary"
-                    className="bg-green-100 text-green-800 border-green-300"
-                  >
-                    <CheckCircle size={12} className="mr-1" />
-                    {subject}
-                  </Badge>
-                ))}
+                {getAllIntra
+                  ?.find(
+                    (entry) =>
+                      entry.competitionId === identifiedCompetitionId &&
+                      entry.userId === anonId,
+                  )
+                  ?.subjectMarks?.map((mark) => (
+                    <Badge
+                      key={mark.subject}
+                      variant="secondary"
+                      className="bg-green-100 text-green-800 border-green-300"
+                    >
+                      <CheckCircle size={12} className="mr-1" />
+                      {mark.subject}
+                    </Badge>
+                  ))}
               </div>
             </div>
           </CardContent>
@@ -595,30 +595,29 @@ export default function QuizApp() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-950 via-purple-800 to-purple-900 p-4 md:p-8 flex flex-col items-center justify-center overflow-hidden">
-      <div className="absolute inset-0 bg-[url('/api/placeholder/2000/2000')] opacity-5 mix-blend-soft-light pointer-events-none"></div>
-
+    <div className="min-h-screen bg-black p-4 md:p-8 flex flex-col items-center justify-center overflow-hidden comicFont">
       <div className="container mx-auto max-w-4xl relative z-10">
         {!quizStarted ? (
           // Welcome Screen
-          <Card className="bg-white shadow-2xl overflow-hidden">
-            <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600"></div>
-
+          <Card className="bg-black shadow-2xl overflow-hidden">
             <CardHeader className="text-center pb-2 relative">
-              <div className="mx-auto w-24 h-24 rounded-full bg-purple-100 flex items-center justify-center mb-6 ring-4 ring-purple-200">
-                <BrainCircuit size={40} className="text-purple-700" />
-              </div>
-              <CardTitle className="text-4xl font-bold tracking-tight text-purple-900">
+              <CardTitle
+                className="text-4xl font-bold tracking-tight bg-gradient-to-r from-pink-600 via-orange-400 to-yellow-400 
+    bg-clip-text text-transparent"
+              >
                 {userSubject || "Quiz Time"}
               </CardTitle>
-              <CardDescription className="text-purple-700 mt-2 text-lg">
+              <CardDescription
+                className="bg-gradient-to-r from-pink-600 via-orange-400 to-yellow-400 
+    bg-clip-text text-transparent mt-2 text-lg"
+              >
                 Test your knowledge with this awesome quiz
               </CardDescription>
             </CardHeader>
 
             <CardContent className="pt-4 pb-6">
               <div className="space-y-4 text-center mb-8">
-                <div className="px-4 py-3 rounded-lg bg-purple-50 flex items-center justify-center space-x-3">
+                <div className="px-4 py-3 rounded-lg bg-black flex items-center justify-center space-x-3">
                   <Badge
                     variant="outline"
                     className="py-1.5 px-3 text-indigo-800 border-indigo-300 bg-indigo-100"
@@ -632,21 +631,11 @@ export default function QuizApp() {
                     className="py-1.5 px-3 text-pink-800 border-pink-300 bg-pink-100"
                   >
                     <Clock size={14} className="mr-1" />
-                    Timed Quiz
-                  </Badge>
-
-                  <Badge
-                    variant="outline"
-                    className="py-1.5 px-3 text-purple-800 border-purple-300 bg-purple-100"
-                  >
-                    <Trophy size={14} className="mr-1" />
-                    {competitionType === "inter"
-                      ? "Team Competition"
-                      : "Individual Competition"}
+                    Timed Quiz: 30 min
                   </Badge>
                 </div>
 
-                <p className="text-gray-700">
+                <p className="text-white">
                   Are you ready to challenge yourself? This quiz will test your
                   knowledge about {userSubject}. Answer the questions correctly
                   to earn a high score!
@@ -656,18 +645,24 @@ export default function QuizApp() {
 
             <CardFooter className="flex justify-center pb-8">
               <Button
-                size="lg"
+                asChild
                 disabled={!currentQuestion}
-                className="px-8 py-6 text-lg font-semibold group relative overflow-hidden bg-gradient-to-r from-indigo-600 to-purple-700 hover:from-indigo-700 hover:to-purple-800 border-0 text-white"
                 onClick={startQuiz}
+                className="px-3 py-2 rounded-full border-2 border-red-600 font-bold text-lg transition-all duration-300 flex items-center justify-center gap-2 mt-8 w-64 mx-auto cursor-pointer"
               >
-                <span className="relative z-10 flex items-center">
-                  Start Quiz
-                  <ArrowRight
-                    size={18}
-                    className="ml-2 group-hover:translate-x-1 transition-transform"
-                  />
-                </span>
+                <div>
+                  <span className="relative flex h-3 w-3">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-3 w-3 bg-red-600"></span>
+                  </span>
+                  <span className="relative z-10 flex items-center">
+                    Start Quiz
+                    <ArrowRight
+                      size={18}
+                      className="ml-2 group-hover:translate-x-1 transition-transform"
+                    />
+                  </span>
+                </div>
               </Button>
             </CardFooter>
           </Card>
@@ -675,38 +670,19 @@ export default function QuizApp() {
           // Quiz in progress
           <>
             {/* Header with progress and stats */}
-            <div className="bg-white rounded-lg p-4 mb-6 flex items-center justify-between border border-gray-200 shadow-lg">
-              <div className="flex items-center space-x-3">
-                <Badge
-                  variant="outline"
-                  className="text-lg py-1.5 px-3 bg-purple-100 border-purple-300 text-purple-800"
-                >
-                  {currentQuestionIndex + 1}/{totalQuestions}
-                </Badge>
-
-                <Progress
-                  value={(currentQuestionIndex / totalQuestions) * 100}
-                  className="h-2 w-32 md:w-48 bg-gray-200"
-                />
+            <div className="text-center mb-6">
+              <div className="inline-flex items-center space-x-2 bg-black bg-gradient-to-t from-[#d72b59] to-[#fbe851] bg-clip-text text-transparent font-mono text-7xl mb-4 digital">
+                <span className="tabular-nums">{formatTime(timer)}</span>
               </div>
-
-              <div className="flex items-center space-x-4">
-                <Badge
-                  variant="secondary"
-                  className="flex items-center space-x-2 py-1.5 px-3 bg-gray-100 text-gray-800"
-                >
-                  <Clock size={14} />
-                  <span>{formatTime(timer)}</span>
-                </Badge>
-
-                <Badge
-                  variant="secondary"
-                  className="flex items-center space-x-2 py-1.5 px-3 bg-green-100 text-green-800"
-                >
-                  <CheckCircle size={14} />
-                  <span>{score} correct</span>
-                </Badge>
-              </div>
+            </div>
+            <div className="rounded-lg mb-3 flex items-center justify-end">
+              <Badge
+                variant="secondary"
+                className="flex items-center space-x-2 py-1.5 px-3 bg-green-100 text-green-800"
+              >
+                <CheckCircle size={14} />
+                <span>{score} correct</span>
+              </Badge>
             </div>
 
             {showFeedbackAlert && (
@@ -737,34 +713,25 @@ export default function QuizApp() {
             )}
 
             {/* Question card */}
-            <Card
-              className={cn(
-                "bg-white shadow-2xl transition-all duration-500 relative overflow-hidden",
-                animateIn
-                  ? "opacity-100 transform translate-y-0"
-                  : "opacity-0 transform translate-y-4",
-              )}
-            >
-              <div className="absolute top-0 left-0 right-0 h-2 bg-purple-600"></div>
-
+            <Card className="bg-transparent">
               <CardHeader>
-                <div className="flex justify-center mb-4">
+                <div className="flex justify-center mb-8">
                   <Badge
                     variant="outline"
-                    className="px-3 py-1.5 text-purple-800 border-purple-400 bg-purple-100"
+                    className="px-3 py-1.5 text-xl font-extrabold bg-gradient-to-t from-[#d72b59] to-[#fbe851] bg-clip-text text-transparent border-white"
                   >
                     Question {currentQuestionIndex + 1}
                   </Badge>
                 </div>
-                <CardTitle className="text-2xl text-center font-bold text-purple-900">
+                <CardTitle className="text-3xl text-center font-bold bg-gradient-to-t from-[#d72b59] to-[#fbe851] bg-clip-text text-transparent">
                   {currentQuestion?.quiz}
                 </CardTitle>
               </CardHeader>
 
-              <CardContent className="space-y-6 relative z-10">
+              <CardContent className="space-y-10 relative z-10">
                 {currentQuestion?.image && (
                   <div className="flex justify-center">
-                    <div className="relative rounded-lg overflow-hidden border-2 border-gray-300 shadow-xl">
+                    <div className="relative rounded-lg overflow-hidden border-2 shadow-xl">
                       <img
                         src={currentQuestion.image}
                         alt="Question"
@@ -778,13 +745,8 @@ export default function QuizApp() {
                   {currentQuestion?.answers.map((answer, index) => (
                     <Button
                       key={index}
-                      variant="outline"
-                      size="lg"
-                      className={cn(
-                        "h-auto py-6 border-2 flex items-center justify-center text-lg font-medium transition-all duration-300",
-                        getAnswerStyle(index),
-                      )}
                       onClick={() => handleAnswerSelect(index)}
+                      className="py-8 text-2xl"
                       disabled={feedbackShown}
                     >
                       {answer.answer}
@@ -796,86 +758,96 @@ export default function QuizApp() {
           </>
         ) : (
           // Quiz completed view
-          <Card className="bg-white shadow-2xl max-w-lg mx-auto animate-fadeIn relative overflow-hidden">
-            <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600"></div>
+          <>
+            <Card className="bg-transparent shadow-2xl max-w-lg mx-auto animate-fadeIn relative overflow-hidden">
+              <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-l from-[#d72b59] to-[#fbe851]"></div>
 
-            <CardHeader className="text-center pb-2">
-              <div className="mx-auto w-24 h-24 rounded-full bg-purple-100 flex items-center justify-center mb-4 ring-4 ring-purple-200">
-                <Award size={40} className="text-purple-700" />
+              <CardHeader className="text-center pb-2">
+                <div className="text-6xl font-bold mb-2">🏆</div>
+                <CardTitle className="text-3xl font-bold bg-gradient-to-t from-[#d72b59] to-[#fbe851] bg-clip-text text-transparent">
+                  Quiz Completed!
+                </CardTitle>
+              </CardHeader>
+
+              <CardContent className="pt-4">
+                <div className="grid grid-cols-2 gap-4 mb-6">
+                  <div className="border border-white rounded-lg p-4 text-center">
+                    <p className="text-white text-sm mb-1">Score</p>
+                    <p className="text-3xl font-bold bg-gradient-to-t from-[#d72b59] to-[#fbe851] bg-clip-text text-transparent">
+                      {score}/{totalQuestions}
+                    </p>
+                    <p className="text-white text-sm mt-1">
+                      {Math.round((score / totalQuestions) * 100)}%
+                    </p>
+                  </div>
+
+                  <div className="border border-white rounded-lg p-4 text-center">
+                    <p className="text-white text-sm mb-1">Time</p>
+                    <p className="text-3xl font-bold bg-gradient-to-t from-[#d72b59] to-[#fbe851] bg-clip-text text-transparent">
+                      {formatTime(timer)}
+                    </p>
+                    <p className="text-white text-sm mt-1">
+                      {Math.round(timer / totalQuestions)} sec/question
+                    </p>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center px-1">
+                    <span className="flex items-center text-gray-800">
+                      <CheckCircle size={16} className="text-green-600 mr-2" />
+                      Correct Answers
+                    </span>
+                    <Badge
+                      variant="outline"
+                      className="bg-green-100 text-green-800 border-green-300"
+                    >
+                      {score}
+                    </Badge>
+                  </div>
+
+                  <div className="flex justify-between items-center px-1">
+                    <span className="flex items-center text-gray-800">
+                      <XCircle size={16} className="text-red-600 mr-2" />
+                      Incorrect Answers
+                    </span>
+                    <Badge
+                      variant="outline"
+                      className="bg-red-100 text-red-800 border-red-300"
+                    >
+                      {totalQuestions - score}
+                    </Badge>
+                  </div>
+                </div>
+
+                {resultSubmitted && (
+                  <div className="px-3 py-2 rounded-full border-2 border-red-600 font-bold text-lg transition-all duration-300 flex items-center justify-center gap-2 mt-8">
+                    <div className="flex items-center justify-between gap-3">
+                      <span className="relative flex h-3 w-3">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-3 w-3 bg-red-600"></span>
+                      </span>
+                      <span className="relative z-10 flex items-center text-white">
+                        Your quiz results have been submitted successfully.
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            <div className="w-full flex items-center justify-end mt-8">
+              <div className="relative flex flex-col items-center">
+                <div
+                  onClick={() => (window.location.href = "/")}
+                  className="bg-transparent text-white z-10 relative -mb-8 "
+                >
+                  Back to Home
+                </div>
+                <img src="/arrow-right.svg" alt="Back" className="w-15 ml-40" />
               </div>
-              <div className="text-6xl font-bold mb-2">{getScoreEmoji()}</div>
-              <CardTitle className="text-3xl font-bold text-purple-900">
-                Quiz Completed!
-              </CardTitle>
-              <CardDescription className="text-purple-700 mt-2 text-lg">
-                {getScoreDescription()}
-              </CardDescription>
-            </CardHeader>
-
-            <CardContent className="pt-6">
-              <div className="grid grid-cols-2 gap-4 mb-6">
-                <div className="bg-indigo-100 border border-indigo-300 rounded-lg p-4 text-center">
-                  <p className="text-indigo-700 text-sm mb-1">Score</p>
-                  <p className="text-3xl font-bold text-indigo-900">
-                    {score}/{totalQuestions}
-                  </p>
-                  <p className="text-indigo-700 text-sm mt-1">
-                    {Math.round((score / totalQuestions) * 100)}%
-                  </p>
-                </div>
-
-                <div className="bg-purple-100 border border-purple-300 rounded-lg p-4 text-center">
-                  <p className="text-purple-700 text-sm mb-1">Time</p>
-                  <p className="text-3xl font-bold text-purple-900">
-                    {formatTime(timer)}
-                  </p>
-                  <p className="text-purple-700 text-sm mt-1">
-                    {Math.round(timer / totalQuestions)} sec/question
-                  </p>
-                </div>
-              </div>
-
-              <Separator className="my-6 bg-gray-300" />
-
-              <div className="space-y-4">
-                <div className="flex justify-between items-center px-1">
-                  <span className="flex items-center text-gray-800">
-                    <CheckCircle size={16} className="text-green-600 mr-2" />
-                    Correct Answers
-                  </span>
-                  <Badge
-                    variant="outline"
-                    className="bg-green-100 text-green-800 border-green-300"
-                  >
-                    {score}
-                  </Badge>
-                </div>
-
-                <div className="flex justify-between items-center px-1">
-                  <span className="flex items-center text-gray-800">
-                    <XCircle size={16} className="text-red-600 mr-2" />
-                    Incorrect Answers
-                  </span>
-                  <Badge
-                    variant="outline"
-                    className="bg-red-100 text-red-800 border-red-300"
-                  >
-                    {totalQuestions - score}
-                  </Badge>
-                </div>
-              </div>
-
-              {resultSubmitted && (
-                <Alert className="mt-6 bg-blue-100 border-blue-300 text-blue-800">
-                  <AlertCircle className="h-5 w-5 text-blue-600" />
-                  <AlertTitle className="ml-2">Results Submitted</AlertTitle>
-                  <AlertDescription>
-                    Your quiz results have been submitted successfully.
-                  </AlertDescription>
-                </Alert>
-              )}
-            </CardContent>
-          </Card>
+            </div>
+          </>
         )}
       </div>
     </div>

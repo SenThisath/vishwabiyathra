@@ -17,6 +17,7 @@ import type * as competitions from "../competitions.js";
 import type * as inter from "../inter.js";
 import type * as intra from "../intra.js";
 import type * as meetings from "../meetings.js";
+import type * as posts from "../posts.js";
 import type * as quizzes from "../quizzes.js";
 import type * as reservations from "../reservations.js";
 import type * as users from "../users.js";
@@ -34,6 +35,7 @@ declare const fullApi: ApiFromModules<{
   inter: typeof inter;
   intra: typeof intra;
   meetings: typeof meetings;
+  posts: typeof posts;
   quizzes: typeof quizzes;
   reservations: typeof reservations;
   users: typeof users;

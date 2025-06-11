@@ -5,12 +5,21 @@ import { ConvexClientProvider } from "@/components/ConvexClientProvider";
 import ClientProvider from "@/components/ClientProvider";
 import "./globals.css";
 import "@stream-io/video-react-sdk/dist/css/styles.css";
+import localFont from 'next/font/local'
+import { Toaster } from "@/components/ui/sonner"
 
 const comicNeue = Comic_Neue({
   variable: "--font-comic-neue",
   weight: ["300", "400", "700"],
   subsets: ["latin"],
 });
+
+const myLocalFont = localFont({
+  src: '../public/digital-7.ttf',
+  variable: '--font-digital',
+  display: 'swap',
+})
+
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -26,12 +35,13 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en">
         <body
-          className={`${comicNeue.variable} antialiased`}
+          className={`${comicNeue.variable} ${myLocalFont.variable} antialiased`}
           suppressHydrationWarning
         >
           <ClientProvider>
             <ConvexClientProvider>{children}</ConvexClientProvider>
           </ClientProvider>
+          <Toaster />
         </body>
       </html>
     </ClerkProvider>

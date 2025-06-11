@@ -125,3 +125,12 @@
   font-family: var(--font-comic-neue);
   font-weight: 700;
 }
+
+.digital {
+  font-family: var(--font-digital);
+  font-weight: 700;
+}
+
+.cl-modalContent{
+  background-color: black;
+}

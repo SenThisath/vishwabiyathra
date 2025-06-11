@@ -83,4 +83,23 @@ export default defineSchema({
       v.array(v.object({ user: v.string(), status: v.boolean() })),
     ),
   }),
+  posts: defineTable({
+    title: v.string(),
+    description: v.string(),
+    imageUrl: v.string(),
+    designedBy: v.string(),
+    school: v.string(),
+    grade: v.string(),
+    votes: v.number(),
+    createdAt: v.number(),
+  }),
+  
+  voters: defineTable({
+    voterId: v.string(), // Could be user ID, email, or unique identifier
+    postId: v.id("posts"),
+    votedAt: v.number(),
+    ipAddress: v.optional(v.string()),
+  }).index("by_voter", ["voterId"])
+   .index("by_post", ["postId"])
+   .index("by_voter_post", ["voterId", "postId"]),
 });

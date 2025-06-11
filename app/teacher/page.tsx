@@ -23,7 +23,7 @@ const TeachersPage = () => {
                 </h1>
 
                 {getSelectedSubjectOfTeacher === null ?
-                    <SubjectSelection />
+                    <SubjectSelection /> 
                 :   getSelectedSubjectOfTeacher && (
                         <div>
                             <div className="flex items-center mb-6">
