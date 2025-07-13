@@ -5,19 +5,17 @@ export const insertCompetition = mutation({
     args: {
         name: v.string(),
         description: v.string(),
-        img: v.string(),
         isTeam: v.boolean(),
         startTime: v.number(),
         endTime: v.number(),
     },
     handler: async (
         ctx,
-        { name, description, img, isTeam, startTime, endTime }
+        { name, description, isTeam, startTime, endTime }
     ) => {
         await ctx.db.insert("competitions", {
             name,
             description,
-            img,
             isTeam,
             startTime,
             endTime,
