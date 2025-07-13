@@ -221,56 +221,6 @@ export default function Hero() {
               </p>
             </FadeInWhenVisible>
           </div>
-          <motion.div
-            className="absolute bottom-20 sm:bottom-10 left-0 right-0 flex justify-center"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.3, duration: 0.5 }}
-          >
-            <div className="px-6 sm:px-8 py-2 sm:py-3 rounded-full bg-purple-900/10 backdrop-blur-md flex items-center gap-3 border border-purple-500/20">
-              <div className="w-2 sm:w-3 h-2 sm:h-3 bg-green-500 rounded-full animate-pulse" />
-              <motion.span
-                className="font-mono text-blue-100 text-sm sm:text-base comicFont"
-                animate={{
-                  textShadow: [
-                    "0 0 5px rgba(56, 189, 248, 0)",
-                    "0 0 10px rgba(56, 189, 248, 0.5)",
-                    "0 0 5px rgba(56, 189, 248, 0)",
-                  ],
-                }}
-                transition={{ duration: 2, repeat: Infinity }}
-              >
-                May 15-17, 2025
-              </motion.span>
-            </div>
-          </motion.div>
-
-          {/* Scroll indicator - hidden on mobile */}
-          <motion.div
-            className="fixed bottom-10 right-10 hidden md:block"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.5, duration: 0.5 }}
-          >
-            <motion.div
-              className="w-8 h-14 rounded-full border-2 border-purple-400 flex justify-center pt-2"
-              animate={{
-                opacity: [0.5, 1, 0.5],
-                boxShadow: [
-                  "0 0 5px rgba(167, 139, 250, 0)",
-                  "0 0 15px rgba(167, 139, 250, 0.5)",
-                  "0 0 5px rgba(167, 139, 250, 0)",
-                ],
-              }}
-              transition={{ duration: 2, repeat: Infinity }}
-            >
-              <motion.div
-                className="w-1 h-2 bg-purple-500"
-                animate={{ y: [0, 8, 0] }}
-                transition={{ duration: 1.5, repeat: Infinity }}
-              />
-            </motion.div>
-          </motion.div>
         </motion.section>
       </main>
     </div>

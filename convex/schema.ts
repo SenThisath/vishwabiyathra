@@ -14,11 +14,11 @@ export default defineSchema({
   competitions: defineTable({
     name: v.string(),
     description: v.string(),
-    img: v.string(),
     startTime: v.number(),
     endTime: v.number(),
     isOpened: v.boolean(),
     isTeam: v.boolean(),
+    rules: v.optional(v.array(v.string())),
   }),
   reservations: defineTable({
     competitionId: v.id("competitions"),
@@ -93,13 +93,14 @@ export default defineSchema({
     votes: v.number(),
     createdAt: v.number(),
   }),
-  
+
   voters: defineTable({
     voterId: v.string(), // Could be user ID, email, or unique identifier
     postId: v.id("posts"),
     votedAt: v.number(),
     ipAddress: v.optional(v.string()),
-  }).index("by_voter", ["voterId"])
-   .index("by_post", ["postId"])
-   .index("by_voter_post", ["voterId", "postId"]),
+  })
+    .index("by_voter", ["voterId"])
+    .index("by_post", ["postId"])
+    .index("by_voter_post", ["voterId", "postId"]),
 });

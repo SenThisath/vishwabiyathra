@@ -40,11 +40,11 @@ const Competitions = () => {
     _creationTime: number;
     name: string;
     description: string;
-    img: string;
     startTime: number;
     endTime: number;
     isOpened: boolean;
     isTeam: boolean;
+    rules?: string[];
   }>();
 
   const { user } = useUser();
@@ -113,11 +113,11 @@ const Competitions = () => {
     _creationTime: number;
     name: string;
     description: string;
-    img: string;
     startTime: number;
     endTime: number;
     isOpened: boolean;
     isTeam: boolean;
+    rules?: string[];
   }) => {
     return !competition.isTeam;
   };
@@ -129,11 +129,11 @@ const Competitions = () => {
     _creationTime: number;
     name: string;
     description: string;
-    img: string;
     startTime: number;
     endTime: number;
     isOpened: boolean;
     isTeam: boolean;
+    rules?: string[];
   }) => {
     return (
       <div
@@ -202,20 +202,14 @@ const Competitions = () => {
                       </Swiper>
                     </div>
 
-                    {/* Rules and Regulations */}
                     <h3 className="text-xl font-bold mb-4 text-purple-400">
                       Rules and Regulations
                     </h3>
                     <ul className="list-disc pl-4 space-y-2 text-gray-200">
-                      <li>
-                        All participants must register before the deadline
-                      </li>
-                      <li>Follow ethical guidelines and fair play</li>
-                      <li>Submit original work only</li>
-                      <li>Respect time limits for submissions</li>
-                      <li>Judges decisions are final</li>
-                      <li>No late submissions will be accepted</li>
-                      <li>Maintain professional conduct throughout</li>
+                      {competition.rules &&
+                        competition.rules.map((rule, idx) => (
+                          <li key={idx}>{rule}</li>
+                        ))}
                     </ul>
                   </div>
 
@@ -319,7 +313,7 @@ const Competitions = () => {
                                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
                                   <span className="relative inline-flex rounded-full h-3 w-3 bg-red-600"></span>
                                 </span>
-                               Join Live
+                                Join Live
                               </Link>
                             </Button>
                           )
@@ -478,9 +472,7 @@ const Competitions = () => {
                                   </Link>
                                 </Button>
                               )
-                            ) : (
-                              undefined
-                            )}
+                            ) : undefined}
                           </>
                         )}
                     </div>
@@ -656,27 +648,27 @@ const Competitions = () => {
                       )
                     ) : (
                       /* Competition doesn't require project submission, show participation status */
-                        <Button
+                      <Button
                         asChild
                         className="px-3 py-2 rounded-full border-2 border-red-600 font-bold text-lg transition-all duration-300 flex items-center justify-center gap-2 mt-4 w-48 mx-auto"
-                        >
+                      >
                         <Link
                           href={`/quiz/${
-                          getIntra?.find(
-                            (intra) =>
-                            intra.userId === anonId &&
-                            intra.competitionId === competition._id,
-                          )?._id
+                            getIntra?.find(
+                              (intra) =>
+                                intra.userId === anonId &&
+                                intra.competitionId === competition._id,
+                            )?._id
                           }`}
                           className="flex items-center justify-center"
                         >
                           <span className="relative flex h-3 w-3">
-                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
-                          <span className="relative inline-flex rounded-full h-3 w-3 bg-red-600"></span>
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-3 w-3 bg-red-600"></span>
                           </span>
                           Intra Join Live
                         </Link>
-                        </Button>
+                      </Button>
                     )
                   ) : (
                     /* User is not registered for this intra-school competition */
@@ -691,13 +683,13 @@ const Competitions = () => {
                           {/* Left Content */}
                           <div className="md:w-1/2 p-4 overflow-y-auto">
                             <h3 className="text-xl font-bold mb-4 text-purple-400">
-                              Intra-School Competition Rules
+                              Rules and Regulations
                             </h3>
                             <ul className="list-disc pl-4 space-y-2 text-gray-200">
-                              <li>Open to all students within the school</li>
-                              <li>Submit original work only</li>
-                              <li>Follow time limits strictly</li>
-                              <li>Maintain academic integrity</li>
+                              {competition.rules &&
+                                competition.rules.map((rule, idx) => (
+                                  <li key={idx}>{rule}</li>
+                                ))}
                             </ul>
                           </div>
 

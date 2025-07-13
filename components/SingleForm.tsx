@@ -24,7 +24,6 @@ interface competition {
   _creationTime: number;
   name: string;
   description: string;
-  img: string;
   startTime: number;
   endTime: number;
   isOpened: boolean;

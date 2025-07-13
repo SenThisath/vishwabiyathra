@@ -122,8 +122,6 @@ export default function Header() {
           </div>
         </Link>
 
-        {/* Desktop Navigation */}
-
         {/* Sign In / User Button and Mobile Menu Toggle */}
         <div className="flex items-center">
           <nav className="hidden md:flex items-center space-x-6 mx-10">
@@ -131,12 +129,13 @@ export default function Header() {
               <Link
                 key={i}
                 href={item.href}
-                className="text-2xl text-white font-extrabold hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-purple-400 hover:to-pink-600 transition-all duration-200"
+                className="text-2xl text-white font-light hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-purple-400 hover:to-pink-600 transition-all duration-200"
               >
                 <span className="flex items-center">{item.title}</span>
               </Link>
             ))}
           </nav>
+
           <SignedOut>
             <SignInButton mode="modal">
               <button className="bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white px-2 xs:px-3 sm:px-4 py-1 xs:py-1.5 rounded-full text-xs sm:text-sm font-medium transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-purple-500/30 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-black">

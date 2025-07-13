@@ -47,7 +47,7 @@ const LeaderBoard = () => {
             </div>
           </FadeInWhenVisible>
 
-          <div className="bg-black rounded-3xl overflow-hidden shadow-[0_0_50px_-12px_rgba(234,179,8,0.3)] backdrop-blur-sm comicFont">
+          <div className="rounded-3xl overflow-hidden comicFont">
             {!leaderboard ? (
               <div className="min-h-[50vh] flex flex-col items-center justify-center bg-black text-white text-center px-4 py-10">
                 <motion.h2
@@ -91,7 +91,7 @@ const LeaderBoard = () => {
             ) : (
               <Table className="w-full">
                 <TableHeader>
-                  <TableRow className="bg-black">
+                  <TableRow className="">
                     <TableHead className="bg-gradient-to-t from-[#d72b59] to-[#fbe851] bg-clip-text text-transparent font-bold text-left py-6 px-6 w-[100px] tracking-wider">
                       Rank
                     </TableHead>
@@ -118,7 +118,7 @@ const LeaderBoard = () => {
                             ? "bg-gradient-to-r from-yellow-900/30 to-yellow-800/20 border-l-4 border-l-yellow-400 shadow-lg"
                             : "",
                         textStyle:
-                          "border-gray-700/50 hover:bg-gray-700/30 transition-all duration-300",
+                          "border-gray-700/50 transition-all duration-300",
                       };
 
                       const rankCellStyles: CellStyles = {

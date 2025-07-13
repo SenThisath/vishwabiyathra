@@ -97,7 +97,7 @@ const Voting = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#0d0d0d]">
+    <div className="min-h-screen flex flex-col bg-[#0d0d0d] hidden">
       <section
         id="competitions"
         className="min-h-screen py-8 md:py-16 lg:py-24 relative z-0 flex flex-col items-center justify-center"
