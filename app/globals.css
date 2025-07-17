@@ -134,3 +134,31 @@
 .cl-modalContent{
   background-color: black;
 }
+
+/* Custom Scrollbar Styles */
+::-webkit-scrollbar {
+  width: 16px; /* Increased width */
+  background: #000;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(90deg, #fb923c 50%, #facc15 100%);
+  border-radius: var(--radius-md);
+  border: 2px solid #000;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(90deg, #fb923c 50%, #facc15 100%);
+  filter: brightness(1.1);
+}
+
+::-webkit-scrollbar-track {
+  background: #000;
+  border-radius: var(--radius-md);
+}
+
+/* Firefox */
+* {
+  scrollbar-width: auto; /* "thin" is too small, use "auto" for wider scrollbars */
+  scrollbar-color: #fb923c #000;
+}

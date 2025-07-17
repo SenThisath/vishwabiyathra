@@ -83,15 +83,11 @@ export default function Footer() {
       {/* Decorative top border */}
       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-500 via-blue-500 to-pink-500"></div>
 
-      {/* Background decorative elements */}
-      <div className="absolute top-20 left-10 w-64 h-64 bg-purple-500/5 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-40 right-10 w-80 h-80 bg-blue-500/5 rounded-full blur-3xl"></div>
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
         {/* Main footer content */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12 justify-center">
           {/* Logo & description section */}
-          <div className="lg:col-span-4">
+          <div>
             <div className="flex items-center mb-4">
               <Image
                 src="/logo.png"
@@ -105,7 +101,6 @@ export default function Footer() {
                 BCSS 2025
               </span>
             </div>
-
             <p className="text-gray-400 text-sm mb-6 max-w-sm">
               Bandarayanayaka College Science Society - A paradise where legends
               are born. Join us in exploring the wonders of science and
@@ -114,23 +109,23 @@ export default function Footer() {
           </div>
 
           {/* Links section */}
-          <div className="lg:col-span-4">
-            <div className="grid grid-cols-2 gap-8">
+          <div className="flex justify-center items-center">
+            <div className="grid grid-cols-1 gap-8 text-center">
               {footerLinks.map((section, i) => (
                 <div key={i}>
                   <h3
                     className="text-sm uppercase tracking-widest mb-4 font-medium text-gray-400 
-                                border-b border-gray-800 pb-2"
+            border-b border-gray-800 pb-2"
                   >
                     {section.title}
                   </h3>
-                  <ul className="space-y-2">
+                  <ul>
                     {section.links.map((link, j) => (
                       <li key={j}>
                         <Link
                           href={link.href}
                           className="text-sm text-gray-300 hover:text-white transition-colors 
-                                   duration-300 flex items-center group"
+               duration-300 flex items-center group"
                         >
                           <ArrowRight
                             size={14}
@@ -147,7 +142,7 @@ export default function Footer() {
           </div>
 
           {/* Contact & newsletter section */}
-          <div className="lg:col-span-4">
+          <div>
             <h3 className="text-white text-sm uppercase tracking-widest mb-4 font-medium">
               Stay{" "}
               <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-500">
@@ -160,8 +155,8 @@ export default function Footer() {
                   key={i}
                   href={social.href}
                   className={`w-9 h-9 rounded-full bg-white flex items-center justify-center 
-                             ${social.color} hover:bg-white/20 transition-all duration-300 
-                             transform hover:scale-110 hover:rotate-6`}
+             ${social.color} hover:bg-white/20 transition-all duration-300 
+             transform hover:scale-110 hover:rotate-6`}
                   aria-label={social.name}
                 >
                   <social.icon size={18} />
@@ -178,8 +173,8 @@ export default function Footer() {
             Society. All rights reserved.
           </p>
           {/* <p className="text-xs text-gray-500">
-            Designed with 💜 by{" "}
-            <span className="text-purple-400">Designed By BCSS Web</span>
+        Designed with 💜 by{" "}
+        <span className="text-purple-400">Designed By BCSS Web</span>
           </p> */}
         </div>
       </div>

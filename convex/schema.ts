@@ -18,7 +18,7 @@ export default defineSchema({
     endTime: v.number(),
     isOpened: v.boolean(),
     isTeam: v.boolean(),
-    rules: v.optional(v.array(v.string())),
+    rules: v.optional(v.string()),
   }),
   reservations: defineTable({
     competitionId: v.id("competitions"),

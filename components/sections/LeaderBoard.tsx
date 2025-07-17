@@ -89,7 +89,7 @@ const LeaderBoard = () => {
                 </div>
               </div>
             ) : (
-              <Table className="w-full">
+              <Table className="w-full border-none">
                 <TableHeader>
                   <TableRow className="">
                     <TableHead className="bg-gradient-to-t from-[#d72b59] to-[#fbe851] bg-clip-text text-transparent font-bold text-left py-6 px-6 w-[100px] tracking-wider">

@@ -107,7 +107,7 @@ export default function Header() {
 
   return (
     <header className="fixed w-full z-50 overflow-hidden comicFont">
-      <div className="flex justify-between items-center py-2 xs:py-3 sm:py-7 px-3 xs:px-4 sm:px-6 lg:px-6 bg-black/30 backdrop-blur-md overflow-hidden border-b border-white/10">
+  <div className="flex justify-between items-center py-1 xs:py-2 sm:py-4 px-3 xs:px-4 sm:px-6 lg:px-6 bg-black/30 backdrop-blur-md overflow-hidden border-b border-white/10">
         {/* Logo */}
         <Link href="/" className="relative z-50 flex items-center pl-5">
           <div className="relative">
@@ -129,7 +129,7 @@ export default function Header() {
               <Link
                 key={i}
                 href={item.href}
-                className="text-2xl text-white font-light hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-purple-400 hover:to-pink-600 transition-all duration-200"
+                className="text-xl text-white font-light hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-purple-400 hover:to-pink-600 transition-all duration-200"
               >
                 <span className="flex items-center">{item.title}</span>
               </Link>
