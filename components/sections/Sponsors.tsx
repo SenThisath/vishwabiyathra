@@ -92,7 +92,7 @@ export default function Sponsors() {
   return (
     <div className="min-h-screen flex flex-col bg-black ">
       <section
-        id="about"
+        id="sponsors"
         className="min-h-screen py-8 md:py-16 lg:py-24 relative z-10 flex flex-col items-center justify-center"
       >
         <div className="absolute inset-0 pointer-events-none" />

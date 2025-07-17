@@ -43,10 +43,10 @@ export default function Footer() {
       title: "Quick Links",
       links: [
         { name: "Home", href: "/" },
-        { name: "Introduction", href: "#about" },
+        { name: "Introduction", href: "#introduction" },
         { name: "Competitions", href: "#competitions" },
         { name: "Leaderboard", href: "#leaderboard" },
-        { name: "Sponsors", href: "#contact" },
+        { name: "Sponsors", href: "#sponsors" },
       ],
     },
   ];
@@ -79,7 +79,7 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="relative bg-[#0d0d0d] comicFont">
+    <footer className="relative bg-[#0d0d0d] comicFont" id="contactus">
       {/* Decorative top border */}
       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-500 via-blue-500 to-pink-500"></div>
 

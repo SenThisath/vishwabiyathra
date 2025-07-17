@@ -59,7 +59,7 @@ const About = () => {
   return (
     <div ref={containerRef} className="bg-black">
       <section
-        id="about"
+        id="introduction"
         className="py-16 md:py-24 lg:py-32 relative z-10 overflow-hidden"
       >
         <div className="absolute top-40 left-0 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl"></div>

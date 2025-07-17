@@ -37,7 +37,7 @@ const LeaderBoard = () => {
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-black via-gray-900 to-black">
       <section
-        id="about"
+        id="leaderboard"
         className="min-h-screen py-8 md:py-16 lg:py-24 relative z-10 flex flex-col items-center justify-center"
       >
         <div className="z-10 px-4 md:px-8 lg:px-16 w-full max-w-7xl mx-auto text-center">

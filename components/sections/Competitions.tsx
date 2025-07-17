@@ -138,6 +138,7 @@ const Competitions = () => {
     return (
       <div
         className={`bg-black rounded-4xl overflow-hidden shadow-xl transform transition-all duration-300 comicFont min-h-[400px] flex flex-col justify-around`}
+        id="competitions"
       >
         <div className="relative bg-black p-4 rounded-t-4xl">
           <div className="w-full aspect-[2/1] flex items-center justify-center">
