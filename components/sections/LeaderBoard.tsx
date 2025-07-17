@@ -43,7 +43,7 @@ const LeaderBoard = () => {
         <div className="z-10 px-4 md:px-8 lg:px-16 w-full max-w-7xl mx-auto text-center">
           <FadeInWhenVisible>
             <div className="flex flex-col items-center mb-24">
-              <Title subText="Table top" />
+              <Title subText="LeaderBoard" />
             </div>
           </FadeInWhenVisible>
 
@@ -91,7 +91,7 @@ const LeaderBoard = () => {
             ) : (
               <Table className="w-full border-none">
                 <TableHeader>
-                  <TableRow className="">
+                  <TableRow className="hover:bg-transparent">
                     <TableHead className="bg-gradient-to-t from-[#d72b59] to-[#fbe851] bg-clip-text text-transparent font-bold text-left py-6 px-6 w-[100px] tracking-wider">
                       Rank
                     </TableHead>

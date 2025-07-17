@@ -19,6 +19,8 @@ export default defineSchema({
     isOpened: v.boolean(),
     isTeam: v.boolean(),
     rules: v.optional(v.string()),
+    isInterOpen: v.optional(v.boolean()),
+    inIntraOpen: v.optional(v.boolean()),
   }),
   reservations: defineTable({
     competitionId: v.id("competitions"),

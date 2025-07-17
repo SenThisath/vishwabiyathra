@@ -45,6 +45,8 @@ const Competitions = () => {
     isOpened: boolean;
     isTeam: boolean;
     rules?: string;
+    isInterOpen?: boolean;
+    inIntraOpen?: boolean;
   }>();
 
   const { user } = useUser();
@@ -118,6 +120,8 @@ const Competitions = () => {
     isOpened: boolean;
     isTeam: boolean;
     rules?: string;
+    isInterOpen?: boolean;
+    inIntraOpen?: boolean;
   }) => {
     return !competition.isTeam;
   };
@@ -134,6 +138,8 @@ const Competitions = () => {
     isOpened: boolean;
     isTeam: boolean;
     rules?: string;
+    isInterOpen?: boolean;
+    inIntraOpen?: boolean;
   }) => {
     return (
       <div
@@ -165,9 +171,11 @@ const Competitions = () => {
           <div>
             <Dialog>
               <DialogTrigger asChild>
-                <Button className="uppercase font-bold text-white px-6 py-2 rounded-full border-2 border-pink-500 mt-5">
-                  Inter-School
-                </Button>
+                {competition.isInterOpen && (
+                  <Button className="uppercase font-bold text-white px-6 py-2 rounded-full border-2 border-pink-500 mt-5">
+                    Inter-School
+                  </Button>
+                )}
               </DialogTrigger>
               <DialogContent className="max-w-[95vw] md:max-w-5xl w-full max-h-[70vh] bg-black overflow-y-auto">
                 <DialogHeader className="flex flex-row items-center justify-end">
@@ -292,6 +300,7 @@ const Competitions = () => {
                             <DialogHeader>
                               <DialogTitle>Submit Your Project.</DialogTitle>
                             </DialogHeader>
+
                             <form
                               onSubmit={(e) => {
                                 e.preventDefault();
@@ -328,100 +337,6 @@ const Competitions = () => {
                           </DialogContent>
                         </Dialog>
                       ))}
-
-                    {competition.isOpened &&
-                      !getReservations?.some(
-                        (res) => res.competitionId === competition._id,
-                      ) && (
-                        <>
-                          {isIntraRegistered(competition._id) ? (
-                            requiresProjectSubmission(competition) ? (
-                              hasSubmittedProject(competition._id) ? (
-                                <Button className="bg-green-600 text-white mt-4">
-                                  You&apos;ve Submitted Your Project
-                                </Button>
-                              ) : (
-                                <Dialog>
-                                  <DialogTrigger asChild>
-                                    <Button
-                                      className="bg-blue-600 hover:bg-blue-700 text-white mt-4"
-                                      onClick={() => {
-                                        setSelectedCompetition(competition);
-                                      }}
-                                    >
-                                      Submit Your Work
-                                    </Button>
-                                  </DialogTrigger>
-                                  <DialogContent>
-                                    <DialogHeader>
-                                      <DialogTitle>
-                                        Submit Your Project
-                                      </DialogTitle>
-                                    </DialogHeader>
-                                    <form
-                                      onSubmit={(e) => {
-                                        e.preventDefault();
-                                        const form = new FormData(
-                                          e.currentTarget,
-                                        );
-                                        const projectLink =
-                                          form.get("projectLink");
-                                        if (
-                                          projectLink &&
-                                          selectedCompetition &&
-                                          anonId
-                                        ) {
-                                          patchIntra({
-                                            userId: anonId,
-                                            competitionId:
-                                              selectedCompetition._id,
-                                            projectLink: projectLink.toString(),
-                                          });
-                                        } else {
-                                          alert("Please fill all fields.");
-                                        }
-                                      }}
-                                      className="space-y-4"
-                                    >
-                                      <div>
-                                        <Input
-                                          name="projectLink"
-                                          placeholder="Project Link"
-                                        />
-                                      </div>
-                                      <Button type="submit" className="w-full">
-                                        Submit
-                                      </Button>
-                                    </form>
-                                  </DialogContent>
-                                </Dialog>
-                              )
-                            ) : (
-                              <Button
-                                asChild
-                                className="px-3 py-2 rounded-full border-2 border-red-600 font-bold text-lg transition-all duration-300 items-center justify-center gap-2 mt-4 w-32 mx-auto"
-                              >
-                                <Link
-                                  href={`/quiz/${
-                                    getIntra?.find(
-                                      (intra) =>
-                                        intra.userId === anonId &&
-                                        intra.competitionId === competition._id,
-                                    )?._id
-                                  }`}
-                                  className="items-center justify-center"
-                                >
-                                  <span className="relative flex h-3 w-3">
-                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
-                                    <span className="relative inline-flex rounded-full h-3 w-3 bg-red-600"></span>
-                                  </span>
-                                  Join Live
-                                </Link>
-                              </Button>
-                            )
-                          ) : undefined}
-                        </>
-                      )}
                   </div>
                 </DialogHeader>
                 <div className="p-4">
@@ -577,56 +492,117 @@ const Competitions = () => {
                   {isIntraRegistered(competition._id) ? (
                     requiresProjectSubmission(competition) ? (
                       hasSubmittedProject(competition._id) ? (
-                        <Button className="bg-green-600 text-white mt-4">
+                        <Button className="border border-green-600 text-white mt-4 rounded-full">
                           You&apos;ve Submitted Your Project
                         </Button>
                       ) : (
                         <Dialog>
                           <DialogTrigger asChild>
                             <Button
-                              className="bg-blue-600 hover:bg-blue-700 text-white mt-4"
                               onClick={() => {
                                 setSelectedCompetition(competition);
                               }}
+                              className="uppercase font-bold text-white px-6 py-2 rounded-full border-2 border-green-500 m-5"
                             >
                               Submit Your Work
                             </Button>
                           </DialogTrigger>
-                          <DialogContent>
+
+                          <DialogContent className="max-w-2xl bg-black">
                             <DialogHeader>
-                              <DialogTitle>Submit Your Project</DialogTitle>
+                              <DialogTitle className="text-center bg-gradient-to-r from-pink-600 via-orange-400 to-yellow-400 bg-clip-text text-transparent">
+                                Submit Your Project
+                              </DialogTitle>
                             </DialogHeader>
-                            <form
-                              onSubmit={(e) => {
-                                e.preventDefault();
-                                const form = new FormData(e.currentTarget);
-                                const projectLink = form.get("projectLink");
-                                if (
-                                  projectLink &&
-                                  selectedCompetition &&
-                                  anonId
-                                ) {
-                                  patchIntra({
-                                    userId: anonId,
-                                    competitionId: selectedCompetition._id,
-                                    projectLink: projectLink.toString(),
-                                  });
-                                } else {
-                                  alert("Please fill all fields.");
-                                }
-                              }}
-                              className="space-y-4"
-                            >
-                              <div>
-                                <Input
-                                  name="projectLink"
-                                  placeholder="Project Link"
-                                />
+
+                            <div className="space-y-6">
+                              {/* Competition Rules Section */}
+                              <div className="bg-black rounded-lg p-4 border">
+                                <h4 className="font-semibold mb-3 text-white">
+                                  Competition Rules
+                                </h4>
+                                <div className="max-h-64 overflow-y-auto">
+                                  <ReactMarkdown
+                                    components={{
+                                      h3: ({ children }) => (
+                                        <h3 className="font-bold bg-gradient-to-r from-pink-600 via-orange-400 to-yellow-400 bg-clip-text text-transparent mb-4">
+                                          {children}
+                                        </h3>
+                                      ),
+                                      p: ({ children }) => (
+                                        <p className="text-gray-300 mb-4">
+                                          {children}
+                                        </p>
+                                      ),
+                                      ul: ({ children }) => (
+                                        <ul className="list-disc pl-6 text-gray-300 mb-4 space-y-2">
+                                          {children}
+                                        </ul>
+                                      ),
+                                      ol: ({ children }) => (
+                                        <ol className="list-decimal pl-6 text-gray-300 mb-4 space-y-2">
+                                          {children}
+                                        </ol>
+                                      ),
+                                      li: ({ children }) => (
+                                        <li className="text-gray-300">
+                                          {children}
+                                        </li>
+                                      ),
+                                    }}
+                                  >
+                                    {competition.rules}
+                                  </ReactMarkdown>
+                                </div>
                               </div>
-                              <Button type="submit" className="w-full">
-                                Submit
-                              </Button>
-                            </form>
+
+                              {/* Submission Form */}
+                              <form
+                                onSubmit={(e) => {
+                                  e.preventDefault();
+                                  const form = new FormData(e.currentTarget);
+                                  const projectLink = form.get("projectLink");
+
+                                  if (
+                                    projectLink &&
+                                    selectedCompetition &&
+                                    anonId
+                                  ) {
+                                    patchIntra({
+                                      userId: anonId,
+                                      competitionId: selectedCompetition._id,
+                                      projectLink: projectLink.toString(),
+                                    });
+                                  } else {
+                                    alert("Please fill all fields.");
+                                  }
+                                }}
+                                className="space-y-4"
+                              >
+                                <div className="flex items-center justify-center flex-col">
+                                  <label
+                                    htmlFor="projectLink"
+                                    className="block text-sm font-medium text-gray-300 mb-2 text-center"
+                                  >
+                                    Project Link
+                                  </label>
+                                  <Input
+                                    id="projectLink"
+                                    name="projectLink"
+                                    type="url"
+                                    placeholder="https://your-project-link.com"
+                                    className="w-full bg-gray-800 border-gray-600 text-white placeholder-gray-400 focus:border-blue-500"
+                                    required
+                                  />
+                                  <Button
+                                    type="submit"
+                                    className="mt-5 uppercase font-bold text-white px-6 py-2 rounded-full border-2 border-green-500"
+                                  >
+                                    Submit Project
+                                  </Button>
+                                </div>
+                              </form>
+                            </div>
                           </DialogContent>
                         </Dialog>
                       )
@@ -656,11 +632,111 @@ const Competitions = () => {
                   ) : (
                     <Dialog>
                       <DialogTrigger asChild>
-                        <Button className="uppercase font-bold text-white px-6 py-2 rounded-full border-2 border-pink-500 m-5">
-                          Intra-School
-                        </Button>
+                        {competition.inIntraOpen && (
+                          <Button className="uppercase font-bold text-white px-6 py-2 rounded-full border-2 border-pink-500 m-5">
+                            Intra-School
+                          </Button>
+                        )}
                       </DialogTrigger>
                       <DialogContent className="max-w-[95vw] md:max-w-5xl w-full max-h-[70vh] bg-black overflow-y-auto">
+                        {competition.isOpened &&
+                          !getReservations?.some(
+                            (res) => res.competitionId === competition._id,
+                          ) && (
+                            <>
+                              {isIntraRegistered(competition._id) ? (
+                                requiresProjectSubmission(competition) ? (
+                                  hasSubmittedProject(competition._id) ? (
+                                    <Button className="border border-green-600 text-white mt-4">
+                                      You&apos;ve Submitted Your Project
+                                    </Button>
+                                  ) : (
+                                    <Dialog>
+                                      <DialogTrigger asChild>
+                                        <Button
+                                          onClick={() => {
+                                            setSelectedCompetition(competition);
+                                          }}
+                                          className="uppercase font-bold text-white px-6 py-2 rounded-full border-2 border-green-500 bg-green-500 hover:bg-green-600 m-5"
+                                        >
+                                          Submit Your Work
+                                        </Button>
+                                      </DialogTrigger>
+                                      <DialogContent>
+                                        <DialogHeader>
+                                          <DialogTitle>
+                                            Submit Your Project
+                                          </DialogTitle>
+                                        </DialogHeader>
+                                        <form
+                                          onSubmit={(e) => {
+                                            e.preventDefault();
+                                            const form = new FormData(
+                                              e.currentTarget,
+                                            );
+                                            const projectLink =
+                                              form.get("projectLink");
+                                            if (
+                                              projectLink &&
+                                              selectedCompetition &&
+                                              anonId
+                                            ) {
+                                              patchIntra({
+                                                userId: anonId,
+                                                competitionId:
+                                                  selectedCompetition._id,
+                                                projectLink:
+                                                  projectLink.toString(),
+                                              });
+                                            } else {
+                                              alert("Please fill all fields.");
+                                            }
+                                          }}
+                                          className="space-y-4"
+                                        >
+                                          <div>
+                                            <Input
+                                              name="projectLink"
+                                              placeholder="Project Link"
+                                            />
+                                          </div>
+                                          <Button
+                                            type="submit"
+                                            className="w-full"
+                                          >
+                                            Submit
+                                          </Button>
+                                        </form>
+                                      </DialogContent>
+                                    </Dialog>
+                                  )
+                                ) : (
+                                  <Button
+                                    asChild
+                                    className="px-3 py-2 rounded-full border-2 border-red-600 font-bold text-lg transition-all duration-300 items-center justify-center gap-2 mt-4 w-32 mx-auto"
+                                  >
+                                    <Link
+                                      href={`/quiz/${
+                                        getIntra?.find(
+                                          (intra) =>
+                                            intra.userId === anonId &&
+                                            intra.competitionId ===
+                                              competition._id,
+                                        )?._id
+                                      }`}
+                                      className="items-center justify-center"
+                                    >
+                                      <span className="relative flex h-3 w-3">
+                                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
+                                        <span className="relative inline-flex rounded-full h-3 w-3 bg-red-600"></span>
+                                      </span>
+                                      Join Live
+                                    </Link>
+                                  </Button>
+                                )
+                              ) : undefined}
+                            </>
+                          )}
                         <DialogHeader className="flex flex-row items-center justify-end">
                           <Dialog>
                             <DialogTrigger asChild>
@@ -814,7 +890,7 @@ const Competitions = () => {
         <div className="z-10 px-4 md:px-8 lg:px-16 w-full max-w-7xl mx-auto text-center">
           <FadeInWhenVisible>
             <div className="flex flex-col items-center">
-              <Title subText="Competitions" />
+              <Title subText="The Trials of the Nexus" />
             </div>
           </FadeInWhenVisible>
 
