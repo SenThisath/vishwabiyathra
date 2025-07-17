@@ -80,14 +80,11 @@ export default function Footer() {
 
   return (
     <footer className="relative bg-[#0d0d0d] comicFont" id="contactus">
-      {/* Decorative top border */}
       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-500 via-blue-500 to-pink-500"></div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
-        {/* Main footer content */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12 justify-center">
-          {/* Logo & description section */}
-          <div>
+          <div className="flex flex-col items-center sm:items-start text-center sm:text-left px-4 py-8">
             <div className="flex items-center mb-4">
               <Image
                 src="/logo.png"
@@ -101,62 +98,56 @@ export default function Footer() {
                 BCSS 2025
               </span>
             </div>
-            <p className="text-gray-400 text-sm mb-6 max-w-sm">
-              Bandarayanayaka College Science Society - A paradise where legends
+
+            <p className="text-gray-400 text-sm max-w-sm">
+              Bandarayanayaka College Science Society – A paradise where legends
               are born. Join us in exploring the wonders of science and
               technology.
             </p>
           </div>
 
-          {/* Links section */}
-          <div className="flex justify-center items-center">
-            <div className="grid grid-cols-1 gap-8 text-center">
-              {footerLinks.map((section, i) => (
-                <div key={i}>
-                  <h3
-                    className="text-sm uppercase tracking-widest mb-4 font-medium text-gray-400 
-            border-b border-gray-800 pb-2"
-                  >
-                    {section.title}
-                  </h3>
-                  <ul>
-                    {section.links.map((link, j) => (
-                      <li key={j}>
-                        <Link
-                          href={link.href}
-                          className="text-sm text-gray-300 hover:text-white transition-colors 
-               duration-300 flex items-center group"
-                        >
-                          <ArrowRight
-                            size={14}
-                            className="mr-2 opacity-0 group-hover:opacity-100 transform -translate-x-2 group-hover:translate-x-0 transition-all duration-300"
-                          />
-                          <span>{link.name}</span>
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
+          <div className="flex items-start justify-center flex-wrap gap-12">
+            {footerLinks.map((section, i) => (
+              <div key={i} className="text-center sm:text-left min-w-[200px]">
+                <h3 className="text-sm uppercase tracking-widest mb-4 font-medium text-gray-400 border-b border-gray-800 pb-2">
+                  {section.title}
+                </h3>
+                <ul className="space-y-2">
+                  {section.links.map((link, j) => (
+                    <li key={j}>
+                      <Link
+                        href={link.href}
+                        className="text-sm text-gray-300 hover:text-white transition-colors duration-300 flex items-center justify-center sm:justify-start gap-2 group"
+                      >
+                        <ArrowRight
+                          size={14}
+                          className="opacity-0 group-hover:opacity-100 transform -translate-x-2 group-hover:translate-x-0 transition-all duration-300"
+                        />
+                        <span>{link.name}</span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
           </div>
 
-          {/* Contact & newsletter section */}
-          <div>
+          <div className="flex flex-col items-center sm:items-start text-center sm:text-left">
             <h3 className="text-white text-sm uppercase tracking-widest mb-4 font-medium">
               Stay{" "}
               <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-500">
                 Connected
               </span>
             </h3>
-            <div className="flex space-x-4 mb-8">
+
+            <div className="flex flex-wrap justify-center sm:justify-start gap-4 mb-8">
               {socialLinks.map((social, i) => (
                 <Link
                   key={i}
                   href={social.href}
-                  className={`w-9 h-9 rounded-full bg-white flex items-center justify-center 
-             ${social.color} hover:bg-white/20 transition-all duration-300 
-             transform hover:scale-110 hover:rotate-6`}
+                  className={`w-10 h-10 rounded-full bg-white flex items-center justify-center 
+          ${social.color} hover:bg-white/20 transition-all duration-300 
+          transform hover:scale-110 hover:rotate-6`}
                   aria-label={social.name}
                 >
                   <social.icon size={18} />

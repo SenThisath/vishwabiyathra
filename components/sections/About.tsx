@@ -68,7 +68,7 @@ const About = () => {
         <div className="z-10 px-4 md:px-8 lg:px-16 w-full max-w-7xl mx-auto">
           <FadeInWhenVisible>
             <div className="flex flex-col items-center text-center mb-16 md:mb-24">
-              <Title mainText="THE FUTURE OF" subText="SCIENCE IS HERE" />
+              <Title mainText="Vishwabhiyathra Presents" subText="SCIENCE IS HERE" />
             </div>
           </FadeInWhenVisible>
 

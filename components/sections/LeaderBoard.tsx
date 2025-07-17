@@ -32,7 +32,7 @@ interface CellStyles {
 }
 
 const LeaderBoard = () => {
-  const leaderboard: School[] = []; // Initialize as empty array
+  const leaderboard: School[] = [];
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-black via-gray-900 to-black">
@@ -43,7 +43,7 @@ const LeaderBoard = () => {
         <div className="z-10 px-4 md:px-8 lg:px-16 w-full max-w-7xl mx-auto text-center">
           <FadeInWhenVisible>
             <div className="flex flex-col items-center mb-24">
-              <Title mainText="THE FUTURE OF" subText="TABLETOP IS HERE" />
+              <Title subText="Table top" />
             </div>
           </FadeInWhenVisible>
 

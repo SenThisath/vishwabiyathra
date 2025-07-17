@@ -1,9 +1,9 @@
 export const Title = ({
-  mainText,
+  mainText = "Vishwabhiyathra Presents",
   subText,
   bgText = "VISHWABHIYATHRA",
 }: {
-  mainText: string;
+  mainText?: string;
   subText: string;
   bgText?: string;
 }) => {
