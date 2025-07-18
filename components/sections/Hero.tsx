@@ -75,14 +75,18 @@ export default function Hero() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#0d0d0d]">
-      {/* Hero section */}
-      <main className={`overflow-x-hidden ${checkOtherDetails ? "blur-sm" : ""}`} ref={containerRef}>
+    <div className="flex flex-col bg-black">
+      <main
+        className={`overflow-x-hidden ${checkOtherDetails ? "blur-sm" : ""}`}
+        ref={containerRef}
+      >
         {checkOtherDetails && role && role === "competitor" && (
           <Dialog open={checkOtherDetails}>
             <DialogContent className="sm:max-w-[425px] bg-black">
               <DialogHeader>
-                <DialogTitle className="bg-gradient-to-t from-[#d72b59] to-[#fbe851] bg-clip-text text-transparent">Please Fill the Details To Continue.</DialogTitle>
+                <DialogTitle className="bg-gradient-to-t from-[#d72b59] to-[#fbe851] bg-clip-text text-transparent">
+                  Please Fill the Details To Continue.
+                </DialogTitle>
               </DialogHeader>
               <Form {...form}>
                 <form
@@ -120,7 +124,9 @@ export default function Hero() {
                     name="phoneNumber"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-white">Phone Number</FormLabel>
+                        <FormLabel className="text-white">
+                          Phone Number
+                        </FormLabel>
                         <FormControl>
                           <Input
                             {...field}
@@ -139,7 +145,9 @@ export default function Hero() {
                     name="whatsappNumber"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-white">WhatsApp Number</FormLabel>
+                        <FormLabel className="text-white">
+                          WhatsApp Number
+                        </FormLabel>
                         <FormControl>
                           <Input
                             {...field}
@@ -153,8 +161,12 @@ export default function Hero() {
                       </FormItem>
                     )}
                   />
-                  <Button type="submit" className="uppercase font-bold text-white px-6 py-2 rounded-full border-2 border-pink-500 hover:bg-pink-500 transition-colors duration-200">Save changes</Button>
-                  
+                  <Button
+                    type="submit"
+                    className="uppercase font-bold text-white px-6 py-2 rounded-full border-2 border-pink-500 hover:bg-pink-500 transition-colors duration-200"
+                  >
+                    Save changes
+                  </Button>
                 </form>
               </Form>
             </DialogContent>
@@ -162,7 +174,7 @@ export default function Hero() {
         )}
         <motion.section
           style={{ y, opacity }}
-          className="relative min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 md:p-10"
+          className="relative flex flex-col items-center justify-center py-25 px-4 sm:px-6 md:px-10"
         >
           <div className="text-center w-full max-w-4xl mx-auto">
             <FadeInWhenVisible direction="down" delay={0.1}>
@@ -176,8 +188,6 @@ export default function Hero() {
                     sizes="(max-width: 640px) 350px, (max-width: 768px) 400px, 500px"
                     priority
                   />
-
-                  {/* Glow effect behind logo */}
                   <motion.div
                     className="absolute inset-0 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full filter blur-3xl opacity-30 z-10"
                     animate={{

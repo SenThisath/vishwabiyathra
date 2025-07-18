@@ -882,10 +882,10 @@ const Competitions = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#0d0d0d]">
+    <div className="flex flex-col bg-[#0d0d0d]">
       <section
         id="competitions"
-        className="min-h-screen py-8 md:py-16 lg:py-24 relative z-0 flex flex-col items-center justify-center"
+        className="py-8 md:py-16 lg:py-24 relative z-0 flex flex-col items-center justify-center"
       >
         <div className="z-10 px-4 md:px-8 lg:px-16 w-full max-w-7xl mx-auto text-center">
           <FadeInWhenVisible>
