@@ -105,7 +105,7 @@ export default function Sponsors() {
 
           {isLoading ? (
             <div className="bg-black rounded-3xl overflow-hidden shadow-[0_0_50px_-12px_rgba(234,179,8,0.3)] backdrop-blur-sm comicFont">
-              <div className="min-h-[25vh] flex flex-col items-center justify-center bg-black text-white text-center px-4 py-10 comicFont">
+              <div className="flex flex-col items-center justify-center bg-black text-white text-center px-4 py-10 comicFont">
                 <motion.h2
                   className="text-3xl md:text-4xl font-extrabold tracking-wide bg-gradient-to-r from-pink-600 via-orange-400 to-yellow-400 
     bg-clip-text text-transparent"

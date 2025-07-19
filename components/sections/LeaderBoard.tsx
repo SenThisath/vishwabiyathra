@@ -89,7 +89,7 @@ const LeaderBoard = () => {
                 </div>
               </div>
             ) : (
-                <div className="mb-20">
+                <div className="mb-35">
               <Table className="w-full border-none">
                 <TableHeader>
                   <TableRow className="hover:bg-transparent">
