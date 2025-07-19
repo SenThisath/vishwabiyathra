@@ -98,14 +98,14 @@ export default function Sponsors() {
         <div className="absolute inset-0 pointer-events-none" />
         <div className="z-10 px-4 md:px-8 lg:px-16 w-full max-w-7xl mx-auto text-center">
           <FadeInWhenVisible>
-            <div className="flex flex-col items-center mb-24">
+            <div className="flex flex-col items-center mb-12 md:mb-24">
               <Title subText="Sponsors & Partners" />
             </div>
           </FadeInWhenVisible>
 
           {isLoading ? (
             <div className="bg-black rounded-3xl overflow-hidden shadow-[0_0_50px_-12px_rgba(234,179,8,0.3)] backdrop-blur-sm comicFont">
-              <div className="min-h-[50vh] flex flex-col items-center justify-center bg-black text-white text-center px-4 py-10 comicFont">
+              <div className="min-h-[25vh] flex flex-col items-center justify-center bg-black text-white text-center px-4 py-10 comicFont">
                 <motion.h2
                   className="text-3xl md:text-4xl font-extrabold tracking-wide bg-gradient-to-r from-pink-600 via-orange-400 to-yellow-400 
     bg-clip-text text-transparent"

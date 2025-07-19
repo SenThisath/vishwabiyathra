@@ -1,6 +1,7 @@
 import React from "react";
 import { FadeInWhenVisible } from "../FadeInWhenVisible";
 import { Title } from "../Title";
+import { motion } from "framer-motion";
 import {
   Table,
   TableBody,
@@ -9,7 +10,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { motion } from "framer-motion";
 
 interface School {
   rank: number;
@@ -35,14 +35,14 @@ const LeaderBoard = () => {
   const leaderboard: School[] = [];
 
   return (
-    <div className="flex flex-col bg-gradient-to-b from-black via-gray-900 to-black">
+    <div className="h-max bg-gradient-to-b from-black via-gray-900 to-black">
       <section
         id="leaderboard"
         className="py-8 md:py-16 lg:py-24 relative z-10 flex flex-col items-center justify-center"
       >
         <div className="z-10 px-4 md:px-8 lg:px-16 w-full max-w-7xl mx-auto text-center">
           <FadeInWhenVisible>
-            <div className="flex flex-col items-center mb-24">
+            <div className="flex flex-col items-center mb-12 md:mb-24">
               <Title subText="LeaderBoard" />
             </div>
           </FadeInWhenVisible>
@@ -89,6 +89,7 @@ const LeaderBoard = () => {
                 </div>
               </div>
             ) : (
+                <div className="mb-20">
               <Table className="w-full border-none">
                 <TableHeader>
                   <TableRow className="hover:bg-transparent">
@@ -175,6 +176,7 @@ const LeaderBoard = () => {
                     })}
                 </TableBody>
               </Table>
+                </div>
             )}
           </div>
         </div>
