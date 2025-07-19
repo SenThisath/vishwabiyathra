@@ -222,8 +222,8 @@ export default function Hero() {
                     }}
                   />
                   <span className="relative comicFont">
-                    Bandaranayake Collage Science Society <br /> proudly presents{" "}
-                    <br /> Vishwabhiyathra`25`
+                    Bandaranayake Collage Science Society <br /> proudly
+                    presents <br /> Vishwabhiyathra`25
                   </span>
                 </span>
               </p>
