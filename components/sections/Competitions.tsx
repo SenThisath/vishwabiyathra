@@ -47,6 +47,7 @@ const Competitions = () => {
     rules?: string;
     isInterOpen?: boolean;
     inIntraOpen?: boolean;
+    whatsappGroupLink?: string;
   }>();
 
   const { user } = useUser();
@@ -122,6 +123,7 @@ const Competitions = () => {
     rules?: string;
     isInterOpen?: boolean;
     inIntraOpen?: boolean;
+    whatsappGroupLink?: string;
   }) => {
     return !competition.isTeam;
   };
@@ -140,6 +142,7 @@ const Competitions = () => {
     rules?: string;
     isInterOpen?: boolean;
     inIntraOpen?: boolean;
+    whatsappGroupLink?: string;
   }) => {
     return (
       <div
@@ -496,138 +499,171 @@ const Competitions = () => {
                           You&apos;ve Submitted Your Project
                         </Button>
                       ) : (
-                        <Dialog>
-                          <DialogTrigger asChild>
-                            <Button
-                              onClick={() => {
-                                setSelectedCompetition(competition);
-                              }}
-                              className="uppercase font-bold text-white px-6 py-2 rounded-full border-2 border-green-500 m-5"
-                            >
-                              Submit Your Work
-                            </Button>
-                          </DialogTrigger>
-
-                          <DialogContent className="max-w-2xl bg-black">
-                            <DialogHeader>
-                              <DialogTitle className="text-center bg-gradient-to-r from-pink-600 via-orange-400 to-yellow-400 bg-clip-text text-transparent">
-                                Submit Your Project
-                              </DialogTitle>
-                            </DialogHeader>
-
-                            <div className="space-y-6">
-                              {/* Competition Rules Section */}
-                              <div className="bg-black rounded-lg p-4 border">
-                                <h4 className="font-semibold mb-3 text-white">
-                                  Competition Rules
-                                </h4>
-                                <div className="max-h-64 overflow-y-auto">
-                                  <ReactMarkdown
-                                    components={{
-                                      h3: ({ children }) => (
-                                        <h3 className="font-bold bg-gradient-to-r from-pink-600 via-orange-400 to-yellow-400 bg-clip-text text-transparent mb-4">
-                                          {children}
-                                        </h3>
-                                      ),
-                                      p: ({ children }) => (
-                                        <p className="text-gray-300 mb-4">
-                                          {children}
-                                        </p>
-                                      ),
-                                      ul: ({ children }) => (
-                                        <ul className="list-disc pl-6 text-gray-300 mb-4 space-y-2">
-                                          {children}
-                                        </ul>
-                                      ),
-                                      ol: ({ children }) => (
-                                        <ol className="list-decimal pl-6 text-gray-300 mb-4 space-y-2">
-                                          {children}
-                                        </ol>
-                                      ),
-                                      li: ({ children }) => (
-                                        <li className="text-gray-300">
-                                          {children}
-                                        </li>
-                                      ),
-                                    }}
-                                  >
-                                    {competition.rules}
-                                  </ReactMarkdown>
-                                </div>
-                              </div>
-
-                              {/* Submission Form */}
-                              <form
-                                onSubmit={(e) => {
-                                  e.preventDefault();
-                                  const form = new FormData(e.currentTarget);
-                                  const projectLink = form.get("projectLink");
-
-                                  if (
-                                    projectLink &&
-                                    selectedCompetition &&
-                                    anonId
-                                  ) {
-                                    patchIntra({
-                                      userId: anonId,
-                                      competitionId: selectedCompetition._id,
-                                      projectLink: projectLink.toString(),
-                                    });
-                                  } else {
-                                    alert("Please fill all fields.");
-                                  }
+                        <>
+                          <Dialog>
+                            <DialogTrigger asChild>
+                              <Button
+                                onClick={() => {
+                                  setSelectedCompetition(competition);
                                 }}
-                                className="space-y-4"
+                                className="uppercase font-bold text-white px-6 py-2 rounded-full border-2 border-green-500 m-5"
                               >
-                                <div className="flex items-center justify-center flex-col">
-                                  <label
-                                    htmlFor="projectLink"
-                                    className="block text-sm font-medium text-gray-300 mb-2 text-center"
-                                  >
-                                    Project Link
-                                  </label>
-                                  <Input
-                                    id="projectLink"
-                                    name="projectLink"
-                                    type="url"
-                                    placeholder="https://your-project-link.com"
-                                    className="w-full bg-gray-800 border-gray-600 text-white placeholder-gray-400 focus:border-blue-500"
-                                    required
-                                  />
-                                  <Button
-                                    type="submit"
-                                    className="mt-5 uppercase font-bold text-white px-6 py-2 rounded-full border-2 border-green-500"
-                                  >
-                                    Submit Project
-                                  </Button>
+                                Submit Your Work
+                              </Button>
+                            </DialogTrigger>
+
+                            <DialogContent className="max-w-2xl bg-black">
+                              <DialogHeader>
+                                <DialogTitle className="mb-2 text-2xl text-center bg-gradient-to-r from-pink-600 via-orange-400 to-yellow-400 bg-clip-text text-transparent">
+                                  Submit Your Project
+                                </DialogTitle>
+                              </DialogHeader>
+
+                              <div className="space-y-6">
+                                <div className="bg-black rounded-lg p-4 border">
+                                  <div className="flex items-center justify-between mb-6">
+                                    <h4 className="font-semibold mb-3 text-white">
+                                      Competition Rules
+                                    </h4>
+                                    {competition.whatsappGroupLink && (
+                                      <Button
+                                        asChild
+                                        className="px-3 py-2 rounded-full border-2 border-green-600 text-green-700 font-bold text-sm transition-all duration-300"
+                                      >
+                                        <Link
+                                          href={competition.whatsappGroupLink} // <-- replace with actual group link
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                        >
+                                          Join WhatsApp Group
+                                        </Link>
+                                      </Button>
+                                    )}
+                                  </div>
+                                  <div className="max-h-64 overflow-y-auto">
+                                    <ReactMarkdown
+                                      components={{
+                                        h3: ({ children }) => (
+                                          <h3 className="font-bold bg-gradient-to-r from-pink-600 via-orange-400 to-yellow-400 bg-clip-text text-transparent mb-4">
+                                            {children}
+                                          </h3>
+                                        ),
+                                        p: ({ children }) => (
+                                          <p className="text-gray-300 mb-4">
+                                            {children}
+                                          </p>
+                                        ),
+                                        ul: ({ children }) => (
+                                          <ul className="list-disc pl-6 text-gray-300 mb-4 space-y-2">
+                                            {children}
+                                          </ul>
+                                        ),
+                                        ol: ({ children }) => (
+                                          <ol className="list-decimal pl-6 text-gray-300 mb-4 space-y-2">
+                                            {children}
+                                          </ol>
+                                        ),
+                                        li: ({ children }) => (
+                                          <li className="text-gray-300">
+                                            {children}
+                                          </li>
+                                        ),
+                                      }}
+                                    >
+                                      {competition.rules}
+                                    </ReactMarkdown>
+                                  </div>
                                 </div>
-                              </form>
-                            </div>
-                          </DialogContent>
-                        </Dialog>
+
+                                {/* Submission Form */}
+                                <form
+                                  onSubmit={(e) => {
+                                    e.preventDefault();
+                                    const form = new FormData(e.currentTarget);
+                                    const projectLink = form.get("projectLink");
+
+                                    if (
+                                      projectLink &&
+                                      selectedCompetition &&
+                                      anonId
+                                    ) {
+                                      patchIntra({
+                                        userId: anonId,
+                                        competitionId: selectedCompetition._id,
+                                        projectLink: projectLink.toString(),
+                                      });
+                                    } else {
+                                      alert("Please fill all fields.");
+                                    }
+                                  }}
+                                  className="space-y-4"
+                                >
+                                  <div className="flex items-center justify-center flex-col">
+                                    <label
+                                      htmlFor="projectLink"
+                                      className="block text-sm font-medium text-gray-300 mb-2 text-center"
+                                    >
+                                      Project Link
+                                    </label>
+                                    <Input
+                                      id="projectLink"
+                                      name="projectLink"
+                                      type="url"
+                                      placeholder="https://your-project-link.com"
+                                      className="w-full bg-gray-800 border-gray-600 text-white placeholder-gray-400 focus:border-blue-500"
+                                      required
+                                    />
+                                    <Button
+                                      type="submit"
+                                      className="mt-5 uppercase font-bold text-white px-6 py-2 rounded-full border-2 border-green-500"
+                                    >
+                                      Submit Project
+                                    </Button>
+                                  </div>
+                                </form>
+                              </div>
+                            </DialogContent>
+                          </Dialog>
+                        </>
                       )
                     ) : (
-                      <Button
-                        asChild
-                        className="px-3 py-2 rounded-full border-2 border-red-600 font-bold text-lg transition-all duration-300 flex items-center justify-center gap-2 mt-4 w-48 mx-auto"
-                      >
-                        <Link
-                          href={`/quiz/${
-                            getIntra?.find(
-                              (intra) =>
-                                intra.userId === anonId &&
-                                intra.competitionId === competition._id,
-                            )?._id
-                          }`}
-                          className="flex items-center justify-center"
+                      <div className="flex items-center flex-col gap-4 mt-5">
+                        <Button
+                          asChild
+                          className="px-3 py-2 rounded-full border-2 border-red-600 font-bold text-lg transition-all duration-300 flex items-center justify-center gap-2 w-48 mx-auto"
                         >
-                          <span className="relative flex h-3 w-3">
-                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
-                            <span className="relative inline-flex rounded-full h-3 w-3 bg-red-600"></span>
-                          </span>
-                          Intra Join Live
-                        </Link>
-                      </Button>
+                          <Link
+                            href={`/quiz/${
+                              getIntra?.find(
+                                (intra) =>
+                                  intra.userId === anonId &&
+                                  intra.competitionId === competition._id,
+                              )?._id
+                            }`}
+                            className="flex items-center justify-center"
+                          >
+                            <span className="relative flex h-3 w-3">
+                              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
+                              <span className="relative inline-flex rounded-full h-3 w-3 bg-red-600"></span>
+                            </span>
+                            Intra Join Live
+                          </Link>
+                        </Button>
+                        {competition.whatsappGroupLink && (
+                          <Button
+                            asChild
+                            className="px-6 py-2 rounded-full border-2 border-green-600 text-green-700 font-bold text-lg transition-all duration-300"
+                          >
+                            <Link
+                              href={competition.whatsappGroupLink} // <-- replace with actual group link
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              Join WhatsApp Group
+                            </Link>
+                          </Button>
+                        )}
+                      </div>
                     )
                   ) : (
                     <Dialog>
@@ -737,11 +773,14 @@ const Competitions = () => {
                               ) : undefined}
                             </>
                           )}
-                        <DialogHeader className="flex flex-row items-center justify-end">
+
+                        <DialogHeader
+                          className={`flex flex-row items-center ${competition.isTeam ? "justify-center" : "justify-end"}`}
+                        >
                           <Dialog>
                             <DialogTrigger asChild>
                               <Button
-                                className="mt-4 px-6 py-2 rounded-full border-2 border-pink-500 font-bold text-lg uppercase"
+                                className="px-6 py-2 rounded-full border-2 border-pink-500 font-bold text-lg uppercase"
                                 onClick={() =>
                                   setSelectedCompetition(competition)
                                 }
@@ -832,44 +871,48 @@ const Competitions = () => {
                             </DialogContent>
                           </Dialog>
                         </DialogHeader>
-                        <div className="p-4">
-                          <h3
-                            className="text-3xl font-bold mb-8 bg-gradient-to-r from-pink-600 via-orange-400 to-yellow-400 
-    bg-clip-text text-transparent  text-center"
-                          >
-                            Rules and Regulations
-                          </h3>
-                          <ReactMarkdown
-                            components={{
-                              h3: ({ children }) => (
-                                <h3
-                                  className="text-xl font-bold bg-gradient-to-r from-pink-600 via-orange-400 to-yellow-400 
-    bg-clip-text text-transparent  mb-4"
-                                >
-                                  {children}
-                                </h3>
-                              ),
-                              p: ({ children }) => (
-                                <p className="text-gray-300 mb-4">{children}</p>
-                              ),
-                              ul: ({ children }) => (
-                                <ul className="list-disc pl-6 text-gray-300 mb-4 space-y-2">
-                                  {children}
-                                </ul>
-                              ),
-                              ol: ({ children }) => (
-                                <ol className="list-decimal pl-6 text-gray-300 mb-4 space-y-2">
-                                  {children}
-                                </ol>
-                              ),
-                              li: ({ children }) => (
-                                <li className="text-gray-300">{children}</li>
-                              ),
-                            }}
-                          >
-                            {competition.rules}
-                          </ReactMarkdown>
-                        </div>
+                        {!competition.isTeam && (
+                          <div className="p-4">
+                            <h3
+                              className="text-3xl font-bold mb-8 bg-gradient-to-r from-pink-600 via-orange-400 to-yellow-400 
+    bg-clip-text text-transparent  text-center uppercase"
+                            >
+                              Rules and Regulations
+                            </h3>
+                            <ReactMarkdown
+                              components={{
+                                h3: ({ children }) => (
+                                  <h3
+                                    className="text-xl font-bold bg-gradient-to-r from-pink-600 via-orange-400 to-yellow-400 
+    bg-clip-text text-transparent mb-4"
+                                  >
+                                    {children}
+                                  </h3>
+                                ),
+                                p: ({ children }) => (
+                                  <p className="text-gray-300 mb-4">
+                                    {children}
+                                  </p>
+                                ),
+                                ul: ({ children }) => (
+                                  <ul className="list-disc pl-6 text-gray-300 mb-4 space-y-2">
+                                    {children}
+                                  </ul>
+                                ),
+                                ol: ({ children }) => (
+                                  <ol className="list-decimal pl-6 text-gray-300 mb-4 space-y-2">
+                                    {children}
+                                  </ol>
+                                ),
+                                li: ({ children }) => (
+                                  <li className="text-gray-300">{children}</li>
+                                ),
+                              }}
+                            >
+                              {competition.rules}
+                            </ReactMarkdown>
+                          </div>
+                        )}
                       </DialogContent>
                     </Dialog>
                   )}

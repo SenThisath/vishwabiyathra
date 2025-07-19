@@ -8,6 +8,7 @@ import "@stream-io/video-react-sdk/dist/css/styles.css";
 import localFont from "next/font/local";
 import { Toaster } from "@/components/ui/sonner";
 import Head from "next/head";
+import ClientProtection from "@/components/Protection";
 
 const comicNeue = Comic_Neue({
   variable: "--font-comic-neue",
@@ -40,6 +41,7 @@ export default function RootLayout({
           className={`${comicNeue.variable} ${myLocalFont.variable} antialiased`}
           suppressHydrationWarning
         >
+          <ClientProtection />
           <ClientProvider>
             <ConvexClientProvider>{children}</ConvexClientProvider>
           </ClientProvider>

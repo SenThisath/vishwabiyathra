@@ -174,7 +174,7 @@ export default function Hero() {
         )}
         <motion.section
           style={{ y, opacity }}
-          className="relative flex flex-col items-center justify-center py-25 px-4 sm:px-6 md:px-10"
+          className="relative flex flex-col items-center justify-center py-23 px-4 sm:px-6 md:px-10"
         >
           <div className="text-center w-full max-w-4xl mx-auto">
             <FadeInWhenVisible direction="down" delay={0.1}>

@@ -90,10 +90,10 @@ export default function Sponsors() {
     sponsors.bronze.length === 0;
 
   return (
-    <div className="min-h-screen flex flex-col bg-black ">
+    <div className="flex flex-col bg-black ">
       <section
         id="sponsors"
-        className="min-h-screen py-8 md:py-16 lg:py-24 relative z-10 flex flex-col items-center justify-center"
+        className="py-8 md:py-16 lg:py-24 relative z-10 flex flex-col items-center justify-center"
       >
         <div className="absolute inset-0 pointer-events-none" />
         <div className="z-10 px-4 md:px-8 lg:px-16 w-full max-w-7xl mx-auto text-center">

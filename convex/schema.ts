@@ -21,6 +21,7 @@ export default defineSchema({
     rules: v.optional(v.string()),
     isInterOpen: v.optional(v.boolean()),
     inIntraOpen: v.optional(v.boolean()),
+    whatsappGroupLink: v.optional(v.string())
   }),
   reservations: defineTable({
     competitionId: v.id("competitions"),

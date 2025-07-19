@@ -145,6 +145,7 @@ export default function Footer() {
                 <Link
                   key={i}
                   href={social.href}
+                  target="_blank"
                   className={`w-10 h-10 rounded-full bg-white flex items-center justify-center 
           ${social.color} hover:bg-white/20 transition-all duration-300 
           transform hover:scale-110 hover:rotate-6`}
