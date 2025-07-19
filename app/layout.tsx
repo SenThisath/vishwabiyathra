@@ -23,7 +23,7 @@ const myLocalFont = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Vishwabhiyathra",
+  title: "Vishwabhiyathra `25",
 };
 
 export default function RootLayout({
