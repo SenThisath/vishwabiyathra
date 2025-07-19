@@ -222,10 +222,8 @@ export default function Hero() {
                     }}
                   />
                   <span className="relative comicFont">
-                    VISHWABHIYATHRA&apos;25 is organized proudly by <br /> The
-                    Science Society of
-                    <br />
-                    Bandaranayake College, Gampaha.
+                    Bandaranayake Collage Science Society <br /> proudly presents{" "}
+                    <br /> Vishwabhiyathra`25`
                   </span>
                 </span>
               </p>

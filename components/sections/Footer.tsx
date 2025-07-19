@@ -100,9 +100,7 @@ export default function Footer() {
             </div>
 
             <p className="text-gray-400 text-sm max-w-sm">
-              Bandarayanayaka College Science Society – A paradise where legends
-              are born. Join us in exploring the wonders of science and
-              technology.
+              Bandarayanayake College Science Society
             </p>
           </div>
 
@@ -161,7 +159,7 @@ export default function Footer() {
         {/* Bottom credits section */}
         <div className="mt-12 pt-6 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center">
           <p className="text-xs text-gray-500 mb-4 md:mb-0">
-            &copy; {new Date().getFullYear()} Bandarayanayake College Science
+            &copy; {new Date().getFullYear()} Bandaranayake College Science
             Society. All rights reserved.
           </p>
           {/* <p className="text-xs text-gray-500">

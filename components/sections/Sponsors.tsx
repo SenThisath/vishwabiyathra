@@ -116,15 +116,6 @@ export default function Sponsors() {
                   Sponsor information is on the way...
                 </motion.h2>
 
-                <motion.p
-                  className="mt-4 text-lg text-gray-300"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 1, duration: 1 }}
-                >
-                  Stay tuned while we finalize our amazing partners!
-                </motion.p>
-
                 <div className="flex space-x-2 mt-8">
                   {[...Array(3)].map((_, i) => (
                     <motion.div

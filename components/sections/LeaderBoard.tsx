@@ -100,10 +100,10 @@ const LeaderBoard = () => {
                       School Name
                     </TableHead>
                     <TableHead className="bg-gradient-to-t from-[#d72b59] to-[#fbe851] bg-clip-text text-transparent font-bold text-center py-6 px-6 tracking-wider">
-                      Major Comp Places
+                      Major Comp points
                     </TableHead>
                     <TableHead className="bg-gradient-to-t from-[#d72b59] to-[#fbe851] bg-clip-text text-transparent font-bold text-center py-6 px-6 tracking-wider">
-                      Other Comp Nominations
+                      Minor Comp points
                     </TableHead>
                     <TableHead className="bg-gradient-to-t from-[#d72b59] to-[#fbe851] bg-clip-text text-transparent font-bold text-right py-6 px-6 tracking-wider">
                       Total Points
