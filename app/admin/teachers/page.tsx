@@ -50,6 +50,7 @@ const Teachers = () => {
                     email: values.email,
                     name: values.name,
                     role: "teacher",
+                    grade: 0,
                     userId: createdAccount.userId,
                 });
             }
