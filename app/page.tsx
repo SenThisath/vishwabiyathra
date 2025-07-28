@@ -9,8 +9,7 @@ import Footer from "@/components/sections/Footer";
 import Header from "@/components/Header";
 import { useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs";
-import { Roles } from "@/types/globals";
-import { useMutation } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import Sponsors from "@/components/sections/Sponsors";
 import LeaderBoard from "@/components/sections/LeaderBoard";
@@ -19,15 +18,18 @@ import Voting from "@/components/sections/Voting";
 export default function Home() {
   const { user } = useUser();
   const insertStudent = useMutation(api.users.saveUser);
+  const getUser = useQuery(
+    api.users.getUserDetails,
+    user ? { userId: user.id } : "skip",
+  );
 
   useEffect(() => {
-    if (user) {
-      const role: Roles = user.publicMetadata.role as Roles;
-      console.log(role);
-      if (role === "competitor") {
+    if (!getUser) {
+      if (user) {
         insertStudent({
           email: user.emailAddresses[0].emailAddress,
           name: user.username || user.fullName || user.lastName || "",
+          grade: 0,
           userId: user.id,
           role: "competitor",
         });

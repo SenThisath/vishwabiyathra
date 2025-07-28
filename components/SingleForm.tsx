@@ -20,17 +20,24 @@ import { useUser } from "@clerk/nextjs";
 import { api } from "@/convex/_generated/api";
 
 interface competition {
-  _id: Id<"competitions">;
-  _creationTime: number;
-  name: string;
-  description: string;
-  startTime: number;
-  endTime: number;
-  isOpened: boolean;
-  isTeam: boolean;
+  competition: {
+    _id: Id<"competitions">;
+    name: string;
+    description: string;
+    startTime: number;
+    endTime: number;
+    isOpened: boolean;
+    isTeam: boolean;
+    rules?: string;
+    isInterOpen?: boolean;
+    inIntraOpen?: boolean;
+    whatsappGroupLink?: string;
+    _creationTime: number;
+  };
+  setModelOpen: (open: boolean) => void;
 }
 
-const SingleForm = ({ _id, isTeam }: competition) => {
+const SingleForm = ({ competition, setModelOpen }: competition) => {
   const { user } = useUser();
   const getUserDetails = useQuery(
     api.users.getUserDetails,
@@ -58,9 +65,10 @@ const SingleForm = ({ _id, isTeam }: competition) => {
     },
   });
   async function onSubmit() {
-    if (!isTeam && user) {
+    setModelOpen(false);
+    if (!competition.isTeam && user) {
       insertReservation({
-        competitionId: _id,
+        competitionId: competition._id,
         teamLeader: user.id,
       });
     }
@@ -145,7 +153,7 @@ const SingleForm = ({ _id, isTeam }: competition) => {
           type="submit"
           className="uppercase font-bold text-white px-6 py-2 rounded-full border-2 border-pink-500 hover:bg-pink-500 transition-colors duration-200 mt-5"
         >
-          Save changes
+          Submit
         </Button>
       </form>
     </Form>

@@ -28,6 +28,7 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Roles } from "@/types/globals";
+import { updateUserEmail } from "@/actions/updateUser";
 
 export default function Hero() {
   const containerRef = useRef(null);
@@ -40,6 +41,7 @@ export default function Hero() {
   });
   const y = useTransform(scrollYProgress, [0, 0.5], [0, -150]);
   const opacity = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
+
   const checkOtherDetails = useQuery(
     api.users.checkDetailsSaved,
     user ? { userId: user.id } : "skip",
@@ -48,6 +50,7 @@ export default function Hero() {
   const formSchema = z.object({
     name: z.string({ required_error: "Please enter your school name." }),
     school: z.string({ required_error: "Please enter your school name." }),
+    grade: z.number({ required_error: "PLease enter your grade." }),
     phoneNumber: z.number({
       required_error: "Please enter a phone number.",
     }),
@@ -60,6 +63,7 @@ export default function Hero() {
     defaultValues: {
       name: undefined,
       school: undefined,
+      grade: undefined,
       phoneNumber: undefined,
       whatsappNumber: undefined,
     },
@@ -74,104 +78,142 @@ export default function Hero() {
     }
   }
 
+  if (role === undefined) {
+    const handleRoleCheck = async () => {
+      if (role === undefined && user) {
+        await updateUserEmail({
+          userId: user.id,
+          role: "competitor",
+        }); // call your async function here
+      }
+    };
+    handleRoleCheck();
+  }
+
+  console.log(role);
+  console.log(checkOtherDetails);
+
   return (
     <div className="flex flex-col bg-black">
-      <main
-        className={`overflow-x-hidden ${checkOtherDetails ? "blur-sm" : ""}`}
-        ref={containerRef}
-      >
-        {checkOtherDetails && role && role === "competitor" && (
-          <Dialog open={checkOtherDetails}>
-            <DialogContent className="sm:max-w-[425px] bg-black">
-              <DialogHeader>
-                <DialogTitle className="bg-gradient-to-t from-[#d72b59] to-[#fbe851] bg-clip-text text-transparent">
-                  Please Fill the Details To Continue.
-                </DialogTitle>
-              </DialogHeader>
-              <Form {...form}>
-                <form
-                  onSubmit={form.handleSubmit(onSubmit)}
-                  className="space-y-8"
-                >
-                  <FormField
-                    control={form.control}
-                    name="name"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-white">Full Name</FormLabel>
-                        <FormControl>
-                          <Input {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="school"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-white">School</FormLabel>
-                        <FormControl>
-                          <Input {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="phoneNumber"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-white">
-                          Phone Number
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            {...field}
-                            type="number"
-                            onChange={(e) =>
-                              field.onChange(Number(e.target.value))
-                            }
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="whatsappNumber"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-white">
-                          WhatsApp Number
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            {...field}
-                            type="number"
-                            onChange={(e) =>
-                              field.onChange(Number(e.target.value))
-                            }
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <Button
-                    type="submit"
-                    className="uppercase font-bold text-white px-6 py-2 rounded-full border-2 border-pink-500 hover:bg-pink-500 transition-colors duration-200"
+      <main className={`overflow-x-hidden`} ref={containerRef}>
+        {checkOtherDetails &&
+          role &&
+          role !== "admin" &&
+          role !== "teacher" && (
+            <Dialog open={checkOtherDetails}>
+              <DialogContent className="sm:max-w-[425px] bg-black">
+                <DialogHeader>
+                  <DialogTitle className="bg-gradient-to-t from-[#d72b59] to-[#fbe851] bg-clip-text text-transparent">
+                    Please Fill the Details To Continue.
+                  </DialogTitle>
+                </DialogHeader>
+                <Form {...form}>
+                  <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className="space-y-8"
                   >
-                    Save changes
-                  </Button>
-                </form>
-              </Form>
-            </DialogContent>
-          </Dialog>
-        )}
+                    <FormField
+                      control={form.control}
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-white">
+                            Full Name
+                          </FormLabel>
+                          <FormControl>
+                            <Input {...field} className="text-white" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="school"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-white">School</FormLabel>
+                          <FormControl>
+                            <Input {...field} className="text-white" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="phoneNumber"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-white">
+                            Phone Number
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              className="text-white"
+                              type="number"
+                              onChange={(e) =>
+                                field.onChange(Number(e.target.value))
+                              }
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="grade"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-white">Grade</FormLabel>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              className="text-white"
+                              type="number"
+                              onChange={(e) =>
+                                field.onChange(Number(e.target.value))
+                              }
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="whatsappNumber"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-white">
+                            WhatsApp Number
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              type="number"
+                              onChange={(e) =>
+                                field.onChange(Number(e.target.value))
+                              }
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <Button
+                      type="submit"
+                      className="uppercase font-bold text-white px-6 py-2 rounded-full border-2 border-pink-500 hover:bg-pink-500 transition-colors duration-200"
+                    >
+                      Save changes
+                    </Button>
+                  </form>
+                </Form>
+              </DialogContent>
+            </Dialog>
+          )}
         <motion.section
           style={{ y, opacity }}
           className="relative flex flex-col items-center justify-center py-23 px-4 sm:px-6 md:px-10"
@@ -222,7 +264,7 @@ export default function Hero() {
                     }}
                   />
                   <span className="relative comicFont">
-                    Bandaranayake Collage Science Society <br /> proudly
+                    Bandaranayake College Science Society <br /> proudly
                     presents <br /> Vishwabhiyathra`25
                   </span>
                 </span>

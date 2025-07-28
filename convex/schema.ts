@@ -8,6 +8,7 @@ export default defineSchema({
     userId: v.string(),
     school: v.optional(v.string()),
     role: v.union(v.literal("competitor"), v.literal("teacher")),
+    grade: v.number(),
     phoneNumber: v.optional(v.number()),
     whatsappNumber: v.optional(v.number()),
   }),
@@ -43,7 +44,7 @@ export default defineSchema({
         }),
       ),
     ),
-  }),
+  }).index("by_reservationId", ["reservationId"]),
   intra: defineTable({
     userId: v.string(),
     fullName: v.string(),

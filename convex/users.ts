@@ -6,14 +6,16 @@ export const saveUser = mutation({
     email: v.string(),
     name: v.string(),
     userId: v.string(),
+    grade: v.number(),
     role: v.union(v.literal("competitor"), v.literal("teacher")),
   },
-  handler: async (ctx, { name, email, userId, role }) => {
+  handler: async (ctx, { name, email, userId, grade, role }) => {
     const user = await ctx.db
       .query("users")
       .filter((q) => q.eq(q.field("userId"), userId))
       .first();
-    if (!user) await ctx.db.insert("users", { name, email, userId, role });
+    if (!user)
+      await ctx.db.insert("users", { name, email, userId, grade, role });
   },
 });
 
@@ -46,12 +48,13 @@ export const saveOtherDetails = mutation({
     userId: v.string(),
     name: v.string(),
     school: v.string(),
+    grade: v.number(),
     phoneNumber: v.number(),
     whatsappNumber: v.number(),
   },
   handler: async (
     ctx,
-    { userId, name, school, phoneNumber, whatsappNumber },
+    { userId, name, school, grade, phoneNumber, whatsappNumber },
   ) => {
     const user = await ctx.db
       .query("users")
@@ -61,6 +64,7 @@ export const saveOtherDetails = mutation({
       await ctx.db.patch(user._id, {
         name,
         school,
+        grade,
         phoneNumber,
         whatsappNumber,
       });

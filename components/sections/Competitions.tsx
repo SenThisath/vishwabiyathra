@@ -181,12 +181,12 @@ const Competitions = () => {
                 )}
               </DialogTrigger>
               <DialogContent className="max-w-[95vw] md:max-w-5xl w-full max-h-[70vh] bg-black overflow-y-auto">
-                <DialogHeader className="flex flex-row items-center justify-end">
-                  <div className="p-4 flex items-center justify-center">
+                <DialogHeader className="">
+                  <div className="p-4 flex items-center justify-between gap-2">
                     <Dialog open={modalOpen} onOpenChange={setModelOpen}>
                       <DialogTrigger asChild>
                         <Button
-                          className={`rounded-full border-2 font-bold text-lg uppercase w-full
+                          className={`rounded-full border-2 font-bold text-lg uppercase
                             ${competition.isOpened ? "border-orange-400" : "border-gray-400 text-gray-400 cursor-not-allowed"}
                             ${!!getReservations?.find((res) => res.competitionId === competition._id) ? "bg-green-100 text-green-700 border-green-300" : ""}`}
                           disabled={
@@ -217,7 +217,7 @@ const Competitions = () => {
                           })()}
                         </Button>
                       </DialogTrigger>
-                      <DialogContent className="max-w-[95vw] md:max-w-5xl w-full h-[95vh] overflow-hidden bg-black rounded-3xl border-none">
+                      <DialogContent className="max-w-[80vw] md:max-w-2xl w-full overflow-hidden bg-black rounded-3xl border-none">
                         {selectedCompetition && selectedCompetition.isTeam ? (
                           <div className="bg-black">
                             <TeamForm
@@ -227,7 +227,10 @@ const Competitions = () => {
                           </div>
                         ) : (
                           selectedCompetition && (
-                            <SingleForm {...selectedCompetition} />
+                            <SingleForm
+                              competition={selectedCompetition}
+                              setModelOpen={setModelOpen}
+                            />
                           )
                         )}
                       </DialogContent>
@@ -291,7 +294,7 @@ const Competitions = () => {
                         <Dialog>
                           <DialogTrigger asChild>
                             <Button
-                              className="bg-blue-600 hover:bg-blue-700 text-white mt-4"
+                              className="px-8 py-2 rounded-full border-2 border-orange-600 font-bold text-lg transition-all duration-300 flex items-center justify-center gap-2 w-64"
                               onClick={() => {
                                 setSelectedCompetition(competition);
                               }}
@@ -299,9 +302,14 @@ const Competitions = () => {
                               Submit Your Work.
                             </Button>
                           </DialogTrigger>
-                          <DialogContent>
+                          <DialogContent className="bg-black">
                             <DialogHeader>
-                              <DialogTitle>Submit Your Project.</DialogTitle>
+                              <DialogTitle
+                                className="text-xl md:text-2xl font-bold mb-2 bg-gradient-to-r from-pink-600 via-orange-400 to-yellow-400 
+    bg-clip-text text-transparent text-center"
+                              >
+                                Submit Your Project.
+                              </DialogTitle>
                             </DialogHeader>
 
                             <form
@@ -327,15 +335,19 @@ const Competitions = () => {
                               }}
                               className="space-y-4"
                             >
-                              <div>
+                              <div className="flex flex-col items-center gap-4">
                                 <Input
+                                  className="text-white"
                                   name="projectLink"
                                   placeholder="Project Link"
                                 />
+                                <Button
+                                  type="submit"
+                                  className="px-8 py-2 rounded-full border-2 border-green-600 font-bold text-lg transition-all duration-300 flex items-center justify-center gap-2 w-64"
+                                >
+                                  Submit
+                                </Button>
                               </div>
-                              <Button type="submit" className="w-full">
-                                Submit
-                              </Button>
                             </form>
                           </DialogContent>
                         </Dialog>
@@ -441,7 +453,7 @@ const Competitions = () => {
                 <Dialog>
                   <DialogTrigger asChild>
                     <Button
-                      className="bg-blue-600 hover:bg-blue-700 text-white mt-4"
+                      className="px-3 py-2 rounded-full border-2 border-green-500 font-bold text-lg transition-all duration-300 flex items-center justify-center gap-2 mt-4 w-50 mx-auto"
                       onClick={() => {
                         setSelectedCompetition(competition);
                       }}
@@ -449,9 +461,10 @@ const Competitions = () => {
                       Submit Your Work.
                     </Button>
                   </DialogTrigger>
-                  <DialogContent>
+                  <DialogContent className="bg-black">
                     <DialogHeader>
-                      <DialogTitle>Submit Your Project.</DialogTitle>
+                      <DialogTitle className="text-xl md:text-2xl font-bold mb-2 bg-gradient-to-r from-pink-600 via-orange-400 to-yellow-400 
+    bg-clip-text text-transparent text-center">Submit Your Project.</DialogTitle>
                     </DialogHeader>
                     <form
                       onSubmit={(e) => {
@@ -476,12 +489,19 @@ const Competitions = () => {
                       }}
                       className="space-y-4"
                     >
-                      <div>
-                        <Input name="projectLink" placeholder="Project Link" />
+                      <div className="flex flex-col items-center gap-4">
+                        <Input
+                          className="text-white"
+                          name="projectLink"
+                          placeholder="Project Link"
+                        />
+                        <Button
+                          type="submit"
+                          className="px-8 py-2 rounded-full border-2 border-green-600 font-bold text-lg transition-all duration-300 flex items-center justify-center gap-2 w-64"
+                        >
+                          Submit
+                        </Button>
                       </div>
-                      <Button type="submit" className="w-full">
-                        Submit
-                      </Button>
                     </form>
                   </DialogContent>
                 </Dialog>
